@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object>
+    <type>enemy</type>
+    <sprite>goomba</sprite>
+
+    <!-- Physical properties -->
+    <elasticity>0</elasticity>
+    <friction>100</friction>
+    <run-speed>40</run-speed>
+    <max-speed>50</max-speed>
+
+    <width>16</width>
+    <height>16</height>
+    
+    <!-- Can be killed by being jumped on -->
+    <stompable>true</stompable>
+</object>

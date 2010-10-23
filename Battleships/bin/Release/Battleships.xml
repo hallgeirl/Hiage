@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>/home/hallgeir/Programming/CSharp/Hiage/Battleships/bin/Release/Battleships</name>
+    </assembly>
+    <members>
+        <member name="T:Battleships.FlyingState">
+            <summary>
+            In-game game state (where you do the actual flying)
+            </summary>
+        </member>
+        <member name="M:Battleships.Component.#ctor(Battleships.Ship,System.Double,System.Double,System.Boolean,Battleships.Arena,System.Int32,System.Int32)">
+            <summary>
+            Construct a new
+            </summary>
+            <param name="parent">
+            A <see cref="T:Battleships.Ship" /></param>
+            <param name="x">
+            A <see cref="T:System.Double" /></param>
+            <param name="y">
+            A <see cref="T:System.Double" /></param>
+        </member>
+        <member name="P:Battleships.Component.Health">
+            <value>
+            Health of the component
+            </value>
+        </member>
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Component.Cost-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Component.Parent-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Component.AbsoluteX-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Component.AbsoluteY-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Component.X-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Component.Y-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Component.Left-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Component.Right-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Component.Rotation-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Component.Width-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Component.Height-->
+        <member name="T:Battleships.Ship">
+            <summary>
+            </summary>
+        </member>
+        <!--FIXME: Invalid documentation markup was found for member T:Battleships.Ship.ExhaustPort-->
+        <member name="M:Battleships.Ship.ExhaustPort.#ctor(System.Int32,System.Int32,System.Int32,System.Double,System.Int32,Battleships.Ship)">
+            <summary>
+            Construct an exhaust port object.
+            </summary>
+            <param name="x">
+            A <see cref="T:System.Int32" /></param>
+            <param name="y">
+            A <see cref="T:System.Int32" /></param>
+            <param name="size">
+            A <see cref="T:System.Int32" /></param>
+            <param name="spread">
+            A <see cref="T:System.Double" /></param>
+            <param name="lifetime">
+            A <see cref="T:System.Int32" /></param>
+            <param name="parent">
+            A <see cref="T:Battleships.Ship" /></param>
+        </member>
+        <member name="M:Battleships.Ship.ExhaustPort.Fire(System.Double)">
+            <summary>
+            Fire exhaust.
+            </summary>
+            <param name="direction">
+            A <see cref="T:System.Double" />. Direction in degrees.
+            </param>
+        </member>
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Ship.GameRef-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Ship.Components-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Ship.X-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Ship.Y-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Ship.Rotation-->
+        <!--FIXME: Invalid documentation markup was found for member P:Battleships.Ship.Velocity-->
+        <member name="M:Battleships.Ship.AddExhaustPort(System.Int32,System.Int32,System.Int32,System.Double,System.Int32)">
+            <summary>
+            Add a new exhaust port on the ship.
+            </summary>
+            <param name="x">
+            A <see cref="T:System.Int32" /></param>
+            <param name="y">
+            A <see cref="T:System.Int32" /></param>
+            <param name="size">
+            A <see cref="T:System.Int32" /></param>
+            <param name="spread">
+            A <see cref="T:System.Double" /></param>
+            <param name="lifetime">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:Battleships.Ship.Render">
+            <summary>
+            Render all components.
+            </summary>
+        </member>
+        <member name="M:Battleships.Ship.Accellerate(Engine.Vector)">
+            <summary>
+            Accellerate along a specified vector.
+            </summary>
+            <param name="accelvector">
+            A <see cref="T:Engine.Vector" /></param>
+        </member>
+        <member name="M:Battleships.Ship.Accellerate(System.Double)">
+            <summary>
+            Accellerate in the direction the ship is facing.
+            </summary>
+            <param name="magnitude">
+            A <see cref="T:System.Double" /></param>
+        </member>
+        <member name="M:Battleships.Ship.Brake(System.Double)">
+            <summary>
+            Apply negative accelleration until the ship stops.
+            </summary>
+            <param name="magnitude">
+            A <see cref="T:System.Double" /></param>
+        </member>
+        <member name="M:Battleships.Ship.Update">
+            <summary>
+            Update the position and all components
+            </summary>
+        </member>
+        <member name="M:Battleships.Ship.Fire">
+            <summary>
+            Tell all components to fire their weapons
+            </summary>
+        </member>
+        <member name="M:Battleships.Ship.FireExhaust(System.Double)">
+            <summary>
+            Fire exhaust from all ports
+            </summary>
+        </member>
+        <member name="T:Battleships.SimpleGunTurret">
+            <summary>
+            Simple gun turret, firing a single bullet / shell. Must always be attached to a ship, so its x and y positions are always relative.
+            </summary>
+        </member>
+        <member name="T:Battleships.Arena">
+            <summary>
+            Battle arena (the map).
+            </summary>
+        </member>
+        <member name="T:Battleships.PlayerShipBody">
+            <summary>
+            Body of the player's ship
+            </summary>
+        </member>
+        <member name="T:Battleships.SimpleBullet">
+            <summary>
+            Simple gun bullet.
+            </summary>
+        </member>
+        <member name="T:Battleships.IntroState">
+            <summary>
+            Handles the introduction.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sprite>
+  <texture name="bullet" />
+
+  <animation name="active">
+    <frame x="0" y="0" delay="0" next="0" w="4" h="4" />
+  </animation>
+</sprite>

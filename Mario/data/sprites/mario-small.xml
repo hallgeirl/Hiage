@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sprite>
+  <texture>mario-small</texture>
+
+  <defaults>
+    <frame-width>14</frame-width>
+    <frame-height>20</frame-height>
+  </defaults>
+
+  <animation>
+    <name>stand</name>
+    <frame x="1" y="4" delay="1" next="0" />
+  </animation>
+
+  <animation>
+    <name>crouch</name>
+    <frame x="177" y="10" delay="1" next="0" h="14" />
+  </animation>
+
+  <animation>
+    <name>walk</name>
+    <frame x="1" y="4" delay="0.2" next="1" />
+    <frame x="17" y="4" delay="0.2" next="0" w="15" />
+  </animation>
+
+  <animation>
+    <name>run</name>
+    <frame x="113" y="4" delay="0.2" next="1" w="15" />
+    <frame x="129" y="4" delay="0.2" next="0" w="16" />
+  </animation>
+
+  <animation>
+    <name>brake</name>
+    <frame x="97" y="3" delay="1" next="0" w="15" h="21" />
+  </animation>
+
+  <animation>
+    <name>jump</name>
+    <frame x="32" y="2" delay="1" next="0" w="16" h="23" />
+  </animation>
+
+  <animation>
+    <name>fall</name>
+    <frame x="48" y="3" delay="1" next="0" w="16" h="21" />
+  </animation>
+
+  <animation>
+    <name>die</name>
+    <frame x="0" y="24" delay="1" next="1" />
+    <frame x="104" y="24" delay="1" next="1" />
+  </animation>
+</sprite>

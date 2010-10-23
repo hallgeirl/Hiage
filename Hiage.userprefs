@@ -1,0 +1,45 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Engine/GameLogic/CollisionManager.cs" ctype="Workbench">
+    <Files>
+      <File FileName="Mario/Objects/BasicGroundEnemy.cs" Line="1" Column="1" />
+      <File FileName="Engine/Rendering/Display.cs" Line="1" Column="1" />
+      <File FileName="Mario/LevelState.cs" Line="1" Column="1" />
+      <File FileName="Mario/Main.cs" Line="9" Column="4" />
+      <File FileName="Engine/Rendering/IRenderable.cs" Line="1" Column="1" />
+      <File FileName="Engine/Rendering/Renderer.cs" Line="1" Column="1" />
+      <File FileName="Engine/GameLogic/Game.cs" Line="1" Column="1" />
+      <File FileName="Engine/GameLogic/CollisionManager.cs" Line="511" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Engine" expanded="True">
+            <Node name="References" expanded="True" />
+            <Node name="Common" expanded="True" />
+            <Node name="GameLogic" expanded="True">
+              <Node name="CollisionManager.cs" selected="True" />
+            </Node>
+            <Node name="Rendering" expanded="True" />
+            <Node name="Resources" expanded="True" />
+          </Node>
+          <Node name="MapEditor" expanded="True" />
+          <Node name="Mario" expanded="True">
+            <Node name="Controllers" expanded="True" />
+            <Node name="Objects" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True">
+          <Node name="Engine" expanded="True">
+            <Node name="Engine" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ctype="Workspace" />
+</Properties>

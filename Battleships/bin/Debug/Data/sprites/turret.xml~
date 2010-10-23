@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sprite>
+  <texture name="turret" />
+
+  <animation name="active">
+    <frame x="0" y="0" delay="10" next="1" w="16" h="16" />
+    <frame x="16" y="0" delay="10" next="2" w="16" h="16" />
+    <frame x="32" y="0" delay="10" next="0" w="16" h="16" />
+  </animation>
+</sprite>

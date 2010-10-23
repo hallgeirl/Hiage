@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Backgrounds -->
+    <resource type="texture" name="background-blue-domes" path="bg_domes_blue.png" />
+    <resource type="texture" name="background-forest" path="bg_forest.png" />
+    <resource type="texture" name="background-green-mountains" path="bg_mountains_green.png" />
+
+    <!-- Sprites -->
+    <resource type="texture" name="goomba" path="sprites/goomba.png" />
+    <resource type="texture" name="mario-small" path="sprites/mario_small.png" />
+    <resource type="texture" name="mario-big" path="sprites/mario_big.png" />
+
+</resources>

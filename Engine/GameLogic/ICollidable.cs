@@ -1,14 +1,29 @@
 
 using System;
+using System.Collections.Generic;
 
 namespace Engine
 {
+	public class BoundingPolygon : ICloneable
+	{
+		public BoundingPolygon() {}
+		
+		/// <summary>
+		/// Vertices of polygon. Edges are implicit between consecutive vertices.
+		/// </summary>
+		public List<Vector> Vertices
+		{
+			get;
+			private set;
+		}
+	}
+	
 	/// <summary>
 	/// Bounding box class
 	/// </summary>
-	public class BoundingBox : ICloneable
+	public class BoundingBox : ICloneable, BoundingPolygon
 	{
-		public BoundingBox(double left, double top, double right, double bottom)
+		public BoundingBox(double left, double top, double right, double bottom) : base()
 		{
 			Left = left;
 			Right = right;

@@ -12,6 +12,9 @@ namespace Engine
 			edgeNormals = new List<Vector>();
 		}
 		
+		/// <summary>
+		/// Construct a bounding polygon from a list of vertices
+		/// </summary>
 		public BoundingPolygon(List<Vector> vertices)
 		{
 			vertices = new List<Vector>();
@@ -19,31 +22,28 @@ namespace Engine
 			{
 				vertices.Add((Vector)v.Clone());
 			}
-			buildNormals();
+			buildNormals(0);
 		}
 		
 		/// <summary>
-		/// Build the edge normals.
+		/// Build the edge normals, and updates the boundaries (Left,Right,...).
+		/// Assumes that all vertices are in the vertices list, and that some arbitrary items has been added to the edgeNormals list.
 		/// </summary>
-		private void buildNormals()
+		private void buildNormals(int start)
 		{
-			edgeNormals = new List<Vector>();
-			
-			for (int i = 0; i < vertices.Count; i++)
+			for (int i = start; i < vertices.Count; i++)
 			{
 				Vector edge = vertices[i == vertices.Count - 1 ? 0 : i+1] - vertices[i];
 				Vector normal = new Vector(-edge.Y, edge.X);
 				normal.Normalize();
-				edgeNormals.Add(normal);
+				edgeNormals[i] = normal;
+				
+				//Update outer boundaries
+				if (vertices[i].X < Left) left = i;
+				if (vertices[i].X > Right) right = i;
+				if (vertices[i].Y < Bottom) bottom = i;
+				if (vertices[i].Y > Top) top = i;
 			}
-		}
-		
-		/// <summary>
-		/// From ICloneable
-		/// </summary>
-		public object Clone()
-		{
-			return new BoundingPolygon(Vertices);
 		}
 		
 		/// <summary>
@@ -55,30 +55,23 @@ namespace Engine
 			edgeNormals.Add(new Vector());
 			
 			//Calculate the last two edge normals as they have changed.
-			for (int i = vertices.Count - 2; i < vertices.Count; i++)
-			{
-				Vector edge = vertices[i == vertices.Count - 1 ? 0 : i+1] - vertices[i];
-				Vector normal = new Vector(-edge.Y, edge.X);
-				normal.Normalize();
-				edgeNormals[i] = normal;
-			}
+			buildNormals(Math.Max(0, vertices.Count - 2));
 		}
 		
+		/// <summary>
+		/// Add a collection of vertices, rebuilding edge normals as neccesary.
+		/// </summary>
 		public void AddVertices(List<Vector> verts)
 		{
 			vertices.AddRange(verts);
 			
 			for (int i = 0; i < verts.Count; i++)
-				edgeNormals.Add(new Vector());
-			
-			//Rebuild last vertices
-			for (int i = Math.Max(vertices.Count - 1 - verts.Count, 0); i < vertices.Count; i++)
 			{
-				Vector edge = vertices[i == vertices.Count - 1 ? 0 : i+1] - vertices[i];
-				Vector normal = new Vector(-edge.Y, edge.X);
-				normal.Normalize();
-				edgeNormals[i] = normal;
+				edgeNormals.Add(new Vector());
 			}
+			
+			//Build the last normals
+			buildNormals(Math.Max(vertices.Count - 1 - verts.Count, 0));
 		}
 		
 		/// <summary>
@@ -114,6 +107,49 @@ namespace Engine
 			
 			return this;
 		}
+		/// <summary>
+		/// X-position of leftmost vertex
+		/// </summary>
+		public double Left
+		{
+			get { return vertices[left].X; }
+		}
+		int left;
+		
+		/// <summary>
+		/// Y-position of topmost vertex
+		/// </summary>
+		public double Top
+		{
+			get { return vertices[top].Y; }
+		}
+		int top;
+		
+		/// <summary>
+		/// X-position of rightmost vertex
+		/// </summary>
+		public double Right
+		{
+			get { return vertices[right].X; }
+		}
+		int right;
+		
+		/// <summary>
+		/// Y-position of bottommost vertex
+		/// </summary>
+		public double Bottom
+		{
+			get { return vertices[bottom].Y; }
+		}
+		int bottom;
+		
+		/// <summary>
+		/// From ICloneable
+		/// </summary>
+		public object Clone()
+		{
+			return new BoundingPolygon(Vertices);
+		}
 		
 		public override string ToString()
 		{
@@ -145,26 +181,6 @@ namespace Engine
 			verts.Add(new Vector(right, bottom));
 			verts.Add(new Vector(left, bottom));
 			AddVertices(verts);
-		}
-		
-		public double Left 
-		{ 
-			get { return Vertices[0].X; } 
-		}
-		
-		public double Right
-		{ 
-			get { return Vertices[1].X; }
-		}
-		
-		public double Top
-		{ 
-			get { return Vertices[0].Y; }
-		}
-		
-		public double Bottom
-		{ 
-			get { return Vertices[2].Y; }
 		}
 		
 		public double Width

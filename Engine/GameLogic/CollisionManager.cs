@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace Engine
 {
+	//Represents the results from a collision test.
 	public class CollisionResult
 	{
 		public bool WillIntersect = false;
@@ -80,7 +81,6 @@ namespace Engine
 		{
 			public Projection(double min, double max, Vector axis)
 			{
-				//Axis = (Vector)axis.Clone();
 				Min = min;
 				Max = max;
 			}
@@ -98,7 +98,6 @@ namespace Engine
 			}
 			
 			//Extend the projection by adding to one of the ends.
-			//Used to detect collisions on fast moving objects.
 			public void Extend(Vector v, Vector axis)
 			{
 				double dot = axis.DotProduct(v);
@@ -135,24 +134,8 @@ namespace Engine
 					return Math.Max(p.Min - Max, Min - p.Max);
 				
 				return 0;
-				/*
-				if (Min < p.Min)
-					return p.Min - Max;
-				else
-					return Min - p.Max;*/
 			}
-			
-			/// <summary>
-			/// Get signed distance from this projection to p.
-			/// </summary>
-			public double GetDistance2(Projection p)
-			{
-				if (IsOverlapping(p)) return 0;
-				
-				if (Max < p.Min) return p.Min - Max;
-				return p.Max - Min;
-			}
-			
+						
 			public bool IsOverlapping(Projection p)
 			{
 				return ((Min >= p.Min && Min <= p.Max) || (Max >= p.Min && Max <= p.Max) || (p.Min >= Min && p.Min <= Max) || (p.Max >= Min && p.Max <= Max));
@@ -474,12 +457,9 @@ namespace Engine
 			List<Vector>[] polygons = {o1.BoundingBox.EdgeNormals, o2.BoundingBox.EdgeNormals};
 			
 			// Find each edge normal in the bounding polygons, which is used as axes.
-			//for (int j = 0; j < 2; j++)
 			foreach (var poly in polygons)
 			{
-				//var verts = polygons[j];
 				// If the result is ever null, we have a separating axis, and we can cancel the search.
-				//for (int i = 0; i < verts.Count && !separating; i++)
 				foreach (var axis in poly)
 				{
 					//Vector edge = verts[i == verts.Count - 1 ? 0 : i+1] - verts[i];
@@ -490,7 +470,10 @@ namespace Engine
 					
 					//No separation.
 					if (!r.IsIntersecting && !r.WillIntersect)
+					{
 						separating = true;
+						break;
+					}
 					//Find the "best" determination of HOW the objects collides.
 					//That is, what direction, and what normal was intersected first.
 					else if (bestResult == null || //No previously stored result
@@ -507,6 +490,7 @@ namespace Engine
 						#endif
 					}
 				}
+				if (separating) break;
 			}			
 
 			if (!separating)

@@ -9,7 +9,7 @@ namespace Mario
 		{
 			Game game = new Game();
 			game.Initialize(800, 600, false, "Hiage Mario");
-			game.MaxFPS = 0;
+			game.MaxFPS = 60;
 			game.Display.Zoom = 150;
 
 			//For testing

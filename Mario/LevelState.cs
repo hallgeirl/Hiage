@@ -97,6 +97,14 @@ namespace Mario
 			
 			SortObjects(frameTime);
 			
+			foreach (var o in objects)
+			{
+				CollisionManager.TestCollision(o, tileMap.GetEdgesInRegion(o.GetCollisionCheckArea(frameTime), 0), frameTime);
+			}
+			CollisionManager.PerformCollisionEvents();
+			
+			SortObjects(frameTime);
+			
 			for (int i = 0; i < objects.Count; i++)
 			{
 				for (int j = i+1; j < objects.Count && objects[i].Right >= objects[j].Left; j++)
@@ -110,13 +118,6 @@ namespace Mario
 			}
 			
 			CollisionManager.PerformCollisionEvents();
-			
-			SortObjects(frameTime);
-			
-			foreach (var o in objects)
-			{
-				CollisionManager.TestCollision(o, tileMap.GetEdgesInRegion(o.GetCollisionCheckArea(frameTime), 0), frameTime);
-			}
 			
 			
 		}

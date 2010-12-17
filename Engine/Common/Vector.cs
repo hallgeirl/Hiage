@@ -173,10 +173,22 @@ namespace Engine
 			return !(v1 == v2);
 		}
 		
+		//Simply a length check. If v1 is shorter than v2, return true.
+		public static bool operator<(Vector v1,  Vector v2)
+		{
+			return (v1.DotProduct(v1) < v2.DotProduct(v2));
+		}
+		
+		public static bool operator>(Vector v1,  Vector v2)
+		{
+			return (v1.DotProduct(v1) > v2.DotProduct(v2));
+		}
+		
 		public override bool Equals (object obj)
 		{
 			return this == obj;
 		}
+		
 		
 		public override int GetHashCode ()
 		{

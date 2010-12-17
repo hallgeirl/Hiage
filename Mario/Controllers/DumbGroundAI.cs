@@ -46,6 +46,7 @@ namespace Mario
 		public void HandleCollision(GameObject obj1, GameObject obj2, CollisionResult collisionResult)
 		{
 			if (!(obj2 is Player) && collisionResult.CollisionTime > 1e-10)
+			//if (collisionResult.CollisionTime > 1e-10)
 			{
 				direction *= -1;
 				obj1.Velocity.X *= -1;

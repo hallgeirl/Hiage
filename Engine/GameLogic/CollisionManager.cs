@@ -1,17 +1,21 @@
+//#define DEBUG_COLLISION
 
 using System;
 using System.Collections.Generic;
+
 
 namespace Engine
 {
 	public class CollisionResult
 	{
-		public bool WillIntersect;
-		//public bool IsIntersecting;
+		public bool WillIntersect = false;
+		public bool IsIntersecting = false;
 		public double CollisionTime;
 		public Vector MinimumTranslationVector;
 		public double FrameTime;
 		
+		//Used internally to determine MTD
+		internal double distance;
 	}
 	
 	/// <summary>
@@ -93,11 +97,18 @@ namespace Engine
 				private set;
 			}
 			
-			//Extend the projection in either end.
-			public void Extend(double a)
+			//Extend the projection by adding to one of the ends.
+			//Used to detect collisions on fast moving objects.
+			public void Extend(Vector v, Vector axis)
 			{
-				if (a < 0) Min += a;
+				double dot = axis.DotProduct(v);
+				if (dot < 0) Min += dot;
+				else Max += dot;
+				
+				/*if (a < 0) Min += a;
 				else Max += a;
+				Min -= Math.Abs(a);
+				Max += Math.Abs(a);*/
 			}
 			
 			/*public Vector Axis
@@ -129,6 +140,17 @@ namespace Engine
 					return p.Min - Max;
 				else
 					return Min - p.Max;*/
+			}
+			
+			/// <summary>
+			/// Get signed distance from this projection to p.
+			/// </summary>
+			public double GetDistance2(Projection p)
+			{
+				if (IsOverlapping(p)) return 0;
+				
+				if (Max < p.Min) return p.Min - Max;
+				return p.Max - Min;
 			}
 			
 			public bool IsOverlapping(Projection p)
@@ -380,24 +402,59 @@ namespace Engine
 		/// </summary>
 		private static CollisionResult testAxis(BoundingPolygon p1, BoundingPolygon p2, Vector relativeVelocity, double frameTime, Vector axis)
 		{
-			//Calculate velocity component in direction of axis
-			double velAxis = axis.DotProduct(relativeVelocity), distance = 0;
+			CollisionResult r = new CollisionResult();
+			
 			Projection prj1 = ProjectPolygon(p1, axis);
 			Projection prj2 = ProjectPolygon(p2, axis);
-			
-			//Cut-off value for velocity
-			if (Math.Abs(velAxis) < 1e-12)
-				velAxis = 0;
+			//Calculate velocity component in direction of axis
+			double velAxis = axis.DotProduct(relativeVelocity), distance = 0;
 			
 			//Positive distance means we don't have an overlap. Negative means we have an overlap.
 			distance = prj1.GetDistance(prj2);
-			/*if (prj1.Max > prj2.Min)
-				distance *= -1;*/
 			
+			#if (DEBUG_COLLISION)
+			Log.Write("Testing axis " + axis + ", relative vel: " + relativeVelocity);
+			Log.Write("Projection 1: " + prj1 + " Projection 2: " + prj2);
+			Log.Write("Distance " + distance);
+			#endif
+			
+			//Round off distance if it's too small
+			if (Math.Abs(distance) < Constants.MinDouble) distance = 0; 
+			if (distance <= 0)
+			{
+				r.IsIntersecting = true;
+				r.distance = -distance;
+				return r;
+			}
+			
+			//If projection of polygon 2 is to the right of polygon 1, AND we have a positive velocity along the axis
+			//OR projection of polygon 1 is to the left of polygon 2 AND we have a negative velocity along axis
+			//then we might have a collision in the future. If not, the objects are either moving in separate directions
+			//or they are staying still.
+			#if (DEBUG_COLLISION)
+			Log.Write("VelAxis: " + velAxis);
+			#endif
+			if ((velAxis > 0 && prj2.Min > prj1.Max) || (velAxis < 0 && prj1.Min > prj2.Max))
+			{
+				r.CollisionTime = distance / Math.Abs(velAxis);
+				if (r.CollisionTime < 1)
+					r.WillIntersect = true;
+				#if (DEBUG_COLLISION)
+				Log.Write("Coll. time: " + r.CollisionTime);
+				#endif
+				
+				return r;
+			}
+			
+			//Won't intersect. Return with WillIntersect=false, IsIntersecting=false.
+			return r;
+			
+			//No overlap, so we need to figure out WHEN it will overlap, if ever.
 			//Calculate the time it takes to travel the distance to the other object on this axis.
-			double t = (distance < 1e-12 ? 0 : (Math.Abs(velAxis) > 0 ? distance / velAxis : double.MaxValue));
+			/*double t = (distance < 1e-12 ? 0 : (Math.Abs(velAxis) > 0 ? distance / velAxis : double.MaxValue));
+			Log.Write("t=" + t);
 			//If it takes more than the remaining frame time (or less than 0, which means the objects are moving apart) to collide, it won't happen
-			if ((t > 1 || t < 0) && distance > 0)
+			if ((t > 1) && distance > 0)
 			{
 				return null;
 			}
@@ -406,7 +463,7 @@ namespace Engine
 				CollisionResult r = new CollisionResult();
 				r.CollisionTime = t * frameTime;
 				return r;
-			}
+			}*/
 		}
 		
 		/// <summary>
@@ -414,50 +471,85 @@ namespace Engine
 		/// </summary>
 		public static void TestCollision(ICollidable o1, ICollidable o2, double frameTime)
 		{
-			Log.Write(o1.BoundingBox.ToString());
-			Log.Write(o2.BoundingBox.ToString());
-			//Calculate relative speed between o1 and o2
-			Vector relativeVelocity  = (o1.Velocity - o2.Velocity)*frameTime;
+			#if (DEBUG_COLLISION)
+			Log.Write("Begin collision test");
+			#endif
+			//Log.Write(o1.BoundingBox.ToString());
+			//Log.Write(o2.BoundingBox.ToString());
 			
+			//Calculate relative velocity between o1 and o2, as seen from o1
+			Vector relativeVelocity  = (o1.Velocity - o2.Velocity)*frameTime;
+			#if (DEBUG_COLLISION)
+			Log.Write("Velocity 1 " + o1.Velocity + " Velocity 2 " + o2.Velocity);
+			#endif
 			CollisionResult bestResult = null;
 			Vector bestNormal = null;
 			bool separating = false;
+//			bool o1Normal = true;
 			
 			List<Vector>[] polygons = {o1.BoundingBox.Vertices, o2.BoundingBox.Vertices};
-
+			
 			// Find each edge normal in the bounding polygons, which is used as axes.
-			foreach (var verts in polygons)
+			for (int j = 0; j < 2; j++)
 			{
+				var verts = polygons[j];
 				// If the result is ever null, we have a separating axis, and we can cancel the search.
 				for (int i = 0; i < verts.Count && !separating; i++)
 				{
 					Vector edge = verts[i == verts.Count - 1 ? 0 : i+1] - verts[i];
 					Vector axis = new Vector(-edge.Y, edge.X);
 					
+					//tmp - don't think it's neccesary
+					axis.Normalize();
+					
 					//Test for collision on one axis
-					CollisionResult result = testAxis(o1.BoundingBox, o2.BoundingBox, relativeVelocity, frameTime, axis);
-					if (result == null)
-					{
+					CollisionResult r = testAxis(o1.BoundingBox, o2.BoundingBox, relativeVelocity, frameTime, axis);
+					
+					//No separation.
+					if (!r.IsIntersecting && !r.WillIntersect)
 						separating = true;
-						//Log.Write("Test failed - failing axis: " + axis);
-					}
-					else if (bestResult == null || result.CollisionTime > bestResult.CollisionTime) 
+					//Find the "best" determination of HOW the objects collides.
+					//That is, what direction, and what normal was intersected first.
+					else if (bestResult == null || //No previously stored result
+					        //Previous result was an overlapping one, while the latest result indicate o1 and o2 will collide in the future instead, OR there is a smaller minimum translation vector.
+					        (bestResult.IsIntersecting && (r.WillIntersect || bestResult.distance < r.distance)) || 
+					        //Previous result was that o1 and o2 collides in the future, but this result indicates that they collide later.
+					        (bestResult.WillIntersect && (r.WillIntersect && r.CollisionTime > bestResult.CollisionTime)))
 					{
-						bestResult = result;
+						bestResult = r;
 						bestNormal = axis;
+						//o1Normal = (j==0);
+						#if (DEBUG_COLLISION)
+						Log.Write("New best axis");
+						#endif
 					}
 				}
 			}			
 
 			if (!separating)
 			{
-				Log.Write("Collision. Normal: " + bestNormal + " Time: " + bestResult.CollisionTime);
-				bestResult.WillIntersect = true;
+				#if (DEBUG_COLLISION)
+				Log.Write("COLLISION. Normal: " + bestNormal + " Time: " + bestResult.CollisionTime);
+				#endif
+				if (bestResult.IsIntersecting)
+					bestResult.MinimumTranslationVector = bestNormal.Normalize() * bestResult.distance;
+				else
+					bestNormal.Normalize();
+
 				bestResult.FrameTime = frameTime;
 									
 				collisionEvents.Add(new CollisionEvent(o1, o2, bestNormal, bestResult));
-				collisionEvents.Add(new CollisionEvent(o2, o1, -bestNormal, bestResult));
+				collisionEvents.Add(new CollisionEvent(o2, o1, bestNormal, bestResult));
 			}
+			else
+			{
+				#if (DEBUG_COLLISION)
+				Log.Write("NO COLLISION");
+				#endif
+			}
+			#if (DEBUG_COLLISION)
+			Log.Write("");
+			#endif
 		}
 	}
 }

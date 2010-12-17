@@ -8,23 +8,87 @@ namespace Engine
 	{
 		public BoundingPolygon() 
 		{
-			Vertices = new List<Vector>();
+			vertices = new List<Vector>();
+			edgeNormals = new List<Vector>();
 		}
 		
 		public BoundingPolygon(List<Vector> vertices)
 		{
-			Vertices = new List<Vector>();
+			vertices = new List<Vector>();
 			foreach (var v in vertices)
 			{
-				Vertices.Add((Vector)v.Clone());
+				vertices.Add((Vector)v.Clone());
 			}
-			
+			buildNormals();
 		}
 		
+		/// <summary>
+		/// Build the edge normals.
+		/// </summary>
+		private void buildNormals()
+		{
+			edgeNormals = new List<Vector>();
+			
+			for (int i = 0; i < vertices.Count; i++)
+			{
+				Vector edge = vertices[i == vertices.Count - 1 ? 0 : i+1] - vertices[i];
+				Vector normal = new Vector(-edge.Y, edge.X);
+				normal.Normalize();
+				edgeNormals.Add(normal);
+			}
+		}
+		
+		/// <summary>
+		/// From ICloneable
+		/// </summary>
 		public object Clone()
 		{
 			return new BoundingPolygon(Vertices);
 		}
+		
+		/// <summary>
+		/// Add a new vertex, rebuilding edge normals as neccesary.
+		/// </summary>
+		public void AddVertex(Vector vertex)
+		{
+			vertices.Add(vertex);
+			edgeNormals.Add(new Vector());
+			
+			//Calculate the last two edge normals as they have changed.
+			for (int i = vertices.Count - 2; i < vertices.Count; i++)
+			{
+				Vector edge = vertices[i == vertices.Count - 1 ? 0 : i+1] - vertices[i];
+				Vector normal = new Vector(-edge.Y, edge.X);
+				normal.Normalize();
+				edgeNormals[i] = normal;
+			}
+		}
+		
+		public void AddVertices(List<Vector> verts)
+		{
+			vertices.AddRange(verts);
+			
+			for (int i = 0; i < verts.Count; i++)
+				edgeNormals.Add(new Vector());
+			
+			//Rebuild last vertices
+			for (int i = Math.Max(vertices.Count - 1 - verts.Count, 0); i < vertices.Count; i++)
+			{
+				Vector edge = vertices[i == vertices.Count - 1 ? 0 : i+1] - vertices[i];
+				Vector normal = new Vector(-edge.Y, edge.X);
+				normal.Normalize();
+				edgeNormals[i] = normal;
+			}
+		}
+		
+		/// <summary>
+		/// Edge normals.
+		/// </summary>
+		public List<Vector> EdgeNormals
+		{
+			get { return edgeNormals; }
+		}
+		private List<Vector> edgeNormals;
 
 		/// <summary>
 		/// Vertices of polygon. 
@@ -33,10 +97,13 @@ namespace Engine
 		/// </summary>
 		public List<Vector> Vertices
 		{
-			get;
-			private set;
+			get { return vertices; }
 		}
+		private List<Vector> vertices;
 		
+		/// <summary>
+		/// Translate the whole polygon by a translation vector.
+		/// </summary>
 		public BoundingPolygon Translate(Vector v)
 		{
 			foreach (var vert in Vertices)
@@ -72,10 +139,12 @@ namespace Engine
 	{
 		public BoundingBox(double left, double top, double right, double bottom) : base()
 		{
-			Vertices.Add(new Vector(left, top));
-			Vertices.Add(new Vector(right, top));
-			Vertices.Add(new Vector(right, bottom));
-			Vertices.Add(new Vector(left, bottom));
+			List<Vector> verts = new List<Vector>();
+			verts.Add(new Vector(left, top));
+			verts.Add(new Vector(right, top));
+			verts.Add(new Vector(right, bottom));
+			verts.Add(new Vector(left, bottom));
+			AddVertices(verts);
 		}
 		
 		public double Left 

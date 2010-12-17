@@ -5,7 +5,7 @@ namespace Engine
 	{
 		// This is used as a roundoff point to zero for doubles.
 		// So anything below MinDouble may be treated as zero, because of rounding errors.
-		public const double MinDouble = 1e-12;		
+		public const double MinDouble = 1e-12;
 	}
 }
 

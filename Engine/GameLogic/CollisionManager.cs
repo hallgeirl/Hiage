@@ -427,13 +427,14 @@ namespace Engine
 				return r;
 			}
 			
+			#if (DEBUG_COLLISION)
+			Log.Write("VelAxis: " + velAxis);
+			#endif
+			
 			//If projection of polygon 2 is to the right of polygon 1, AND we have a positive velocity along the axis
 			//OR projection of polygon 1 is to the left of polygon 2 AND we have a negative velocity along axis
 			//then we might have a collision in the future. If not, the objects are either moving in separate directions
 			//or they are staying still.
-			#if (DEBUG_COLLISION)
-			Log.Write("VelAxis: " + velAxis);
-			#endif
 			if ((velAxis > 0 && prj2.Min > prj1.Max) || (velAxis < 0 && prj1.Min > prj2.Max))
 			{
 				r.CollisionTime = distance / Math.Abs(velAxis);
@@ -448,22 +449,6 @@ namespace Engine
 			
 			//Won't intersect. Return with WillIntersect=false, IsIntersecting=false.
 			return r;
-			
-			//No overlap, so we need to figure out WHEN it will overlap, if ever.
-			//Calculate the time it takes to travel the distance to the other object on this axis.
-			/*double t = (distance < 1e-12 ? 0 : (Math.Abs(velAxis) > 0 ? distance / velAxis : double.MaxValue));
-			Log.Write("t=" + t);
-			//If it takes more than the remaining frame time (or less than 0, which means the objects are moving apart) to collide, it won't happen
-			if ((t > 1) && distance > 0)
-			{
-				return null;
-			}
-			else
-			{
-				CollisionResult r = new CollisionResult();
-				r.CollisionTime = t * frameTime;
-				return r;
-			}*/
 		}
 		
 		/// <summary>
@@ -485,22 +470,20 @@ namespace Engine
 			CollisionResult bestResult = null;
 			Vector bestNormal = null;
 			bool separating = false;
-//			bool o1Normal = true;
 			
-			List<Vector>[] polygons = {o1.BoundingBox.Vertices, o2.BoundingBox.Vertices};
+			List<Vector>[] polygons = {o1.BoundingBox.EdgeNormals, o2.BoundingBox.EdgeNormals};
 			
 			// Find each edge normal in the bounding polygons, which is used as axes.
-			for (int j = 0; j < 2; j++)
+			//for (int j = 0; j < 2; j++)
+			foreach (var poly in polygons)
 			{
-				var verts = polygons[j];
+				//var verts = polygons[j];
 				// If the result is ever null, we have a separating axis, and we can cancel the search.
-				for (int i = 0; i < verts.Count && !separating; i++)
+				//for (int i = 0; i < verts.Count && !separating; i++)
+				foreach (var axis in poly)
 				{
-					Vector edge = verts[i == verts.Count - 1 ? 0 : i+1] - verts[i];
-					Vector axis = new Vector(-edge.Y, edge.X);
-					
-					//tmp - don't think it's neccesary
-					axis.Normalize();
+					//Vector edge = verts[i == verts.Count - 1 ? 0 : i+1] - verts[i];
+					//Vector axis = new Vector(-edge.Y, edge.X);
 					
 					//Test for collision on one axis
 					CollisionResult r = testAxis(o1.BoundingBox, o2.BoundingBox, relativeVelocity, frameTime, axis);
@@ -518,7 +501,7 @@ namespace Engine
 					{
 						bestResult = r;
 						bestNormal = axis;
-						//o1Normal = (j==0);
+						
 						#if (DEBUG_COLLISION)
 						Log.Write("New best axis");
 						#endif

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Engine
 {
-	public struct CollisionResult
+	public class CollisionResult
 	{
 		public bool WillIntersect;
 		//public bool IsIntersecting;
@@ -20,12 +20,15 @@ namespace Engine
 	/// </summary>
 	public class CollisionManager
 	{
+		/// <summary>
+		/// Class that describes the collision that occured (time, type of collision, what objects, etc.)
+		/// </summary>
 		private class CollisionEvent
 		{
 			enum Type
 			{
-				OBJECT_EDGE = 1,
-				OBJECT_OBJECT = 2
+				OBJECT_EDGE = 1,  //Collision between an object and an edge
+				OBJECT_OBJECT = 2 //And object vs object
 			}
 			
 			CollisionEvent.Type collisionType;
@@ -66,11 +69,14 @@ namespace Engine
 			}
 		}
 		
+		/// <summary>
+		/// Represents the accumulated result from multiple vector projections.
+		/// </summary>
 		private class Projection
 		{
 			public Projection(double min, double max, Vector axis)
 			{
-				Axis = (Vector)axis.Clone();
+				//Axis = (Vector)axis.Clone();
 				Min = min;
 				Max = max;
 			}
@@ -87,17 +93,18 @@ namespace Engine
 				private set;
 			}
 			
+			//Extend the projection in either end.
 			public void Extend(double a)
 			{
 				if (a < 0) Min += a;
 				else Max += a;
 			}
 			
-			public Vector Axis
+			/*public Vector Axis
 			{
 				get;
 				private set;
-			}
+			}*/
 			
 			public double Length
 			{
@@ -131,7 +138,7 @@ namespace Engine
 			
 			public override string ToString()
 			{
-				return "Projection(Min=" + Min + ",Max=" + Max + ",Axis=" + Axis + ")";
+				return "Projection(Min=" + Min + ",Max=" + Max + ",Axis=";// + Axis + ")";
 			}
 		}
 		
@@ -148,7 +155,24 @@ namespace Engine
 			collisionEvents.Clear();
 		}
 		
-		private static Projection ProjectBox(BoundingBox b, Vector axis)
+		/// <summary>
+		/// Project a convex polygon on a vector.
+		/// </summary>
+		private static Projection ProjectPolygon(BoundingPolygon p, Vector axis)
+		{
+			double min = double.PositiveInfinity, max = double.NegativeInfinity;
+			
+			foreach (Vector v in p.Vertices)
+			{
+				double dot = v.DotProduct(axis);
+				if (dot < min) min = dot;
+				if (dot > max) max = dot;
+			}
+			
+			return new Projection(min, max, axis);
+		}
+		
+		/*private static Projection ProjectPolygon(BoundingBox b, Vector axis)
 		{
 			double min = double.PositiveInfinity, max = double.NegativeInfinity;
 			
@@ -170,7 +194,7 @@ namespace Engine
 			
 			
 			return new Projection(min, max, axis);
-		}
+		}*/
 		
 		private static Projection ProjectLine(Vector p1, Vector p2, Vector axis)
 		{
@@ -180,12 +204,6 @@ namespace Engine
 		/// <summary>
 		/// Test collision against a series of edges
 		/// </summary>
-		/// <param name="o1">
-		/// A <see cref="ICollidable"/>
-		/// </param>
-		/// <param name="edges">
-		/// A <see cref="List"/>
-		/// </param>
 		public static void TestCollision(ICollidable o, List<Edge> edges, double frameTime)
 		{
 			bool outputDebug = false;
@@ -255,7 +273,7 @@ namespace Engine
 					foreach (Vector a in axis)
 					{
 						//Project line and box
-						Projection prj1 = ProjectBox(o.BoundingBox, a);
+						Projection prj1 = ProjectPolygon(o.BoundingBox, a);
 						Projection prj2 = ProjectLine(e.P1, e.P2, a);
 	
 						if (outputDebug)
@@ -357,153 +375,88 @@ namespace Engine
 		}
 		
 		/// <summary>
-		/// Test collision against a list of other collidable objects. 
+		/// Test one axis with SAT.
+		/// Returns null if no overlap was detected (and no overlap will occur within one frame).
 		/// </summary>
-		/// <param name="o1">
-		/// A <see cref="ICollidable"/>
-		/// </param>
-		/// <param name="objects">
-		/// A <see cref="List"/>
-		/// </param>
+		private static CollisionResult testAxis(BoundingPolygon p1, BoundingPolygon p2, Vector relativeVelocity, double frameTime, Vector axis)
+		{
+			//Calculate velocity component in direction of axis
+			double velAxis = axis.DotProduct(relativeVelocity), distance = 0;
+			Projection prj1 = ProjectPolygon(p1, axis);
+			Projection prj2 = ProjectPolygon(p2, axis);
+			
+			//Cut-off value for velocity
+			if (Math.Abs(velAxis) < 1e-12)
+				velAxis = 0;
+			
+			//Positive distance means we don't have an overlap. Negative means we have an overlap.
+			distance = prj1.GetDistance(prj2);
+			/*if (prj1.Max > prj2.Min)
+				distance *= -1;*/
+			
+			//Calculate the time it takes to travel the distance to the other object on this axis.
+			double t = (distance < 1e-12 ? 0 : (Math.Abs(velAxis) > 0 ? distance / velAxis : double.MaxValue));
+			//If it takes more than the remaining frame time (or less than 0, which means the objects are moving apart) to collide, it won't happen
+			if ((t > 1 || t < 0) && distance > 0)
+			{
+				return null;
+			}
+			else
+			{
+				CollisionResult r = new CollisionResult();
+				r.CollisionTime = t * frameTime;
+				return r;
+			}
+		}
+		
+		/// <summary>
+		/// Test collision between two objects. 
+		/// </summary>
 		public static void TestCollision(ICollidable o1, ICollidable o2, double frameTime)
 		{
+			Log.Write(o1.BoundingBox.ToString());
+			Log.Write(o2.BoundingBox.ToString());
 			//Calculate relative speed between o1 and o2
 			Vector relativeVelocity  = (o1.Velocity - o2.Velocity)*frameTime;
 			
-			//A point p in obj has the position p(t) = p(0) + v*t at any time, where v is the relative velocity
-			//We want to check each axis for a collision, for all corner points.
-			/*
-			 * The math behind the idea:
-			 * Given rectangles r1 and r2, and a relative velocity v with components x and y.
-			 * r1.right(t) = r1.right(0)+v.x*t = r2.left => t = (r2.left - r1.right(0)) / v.x
-			 * r1.left(t) = r1.left(0)+v.x*t = r2.right => t = (r2.right - r1.left(0)) / v.x
-			 * And similar for left vs left and right vs right, and for the vertical axis
-			 * If v.x == 0, then one of the object's vertical edges NEED to be within the bounds of the target rectangle to begin with. Same with v.y.
-			 * */
-			//double t_top_min = -1, t_bottom_min = -1, t_top_max = -1, t_bottom_max = -1;
-			double timeX = -1, timeY = -1;
-			Vector normal = new Vector(0,0);
-		
-			if (relativeVelocity.X != 0)
-			{
-				//Find the time of the intersection of the right edge of o1 vs the left edge of o2
-				double t_right_min = (o2.BoundingBox.Left - o1.BoundingBox.Right) / relativeVelocity.X;
-				//And left edge of o1 vs right edge of o2
-				double t_left_min = (o2.BoundingBox.Right - o1.BoundingBox.Left) / relativeVelocity.X;
-				//And same for right/left edge vs right/left edge (for when the collision is over)
-				double t_right_max;// = (o2.BoundingBox.Right - o1.BoundingBox.Right) / relativeVelocity.X;
-				double t_left_max;// = (o2.BoundingBox.Right - o1.BoundingBox.Right) / relativeVelocity.X;
-				
-				//We need to calculate the exit time differently, depending on what X-direction we're moving in
-				if (relativeVelocity.X < 0)
-				{
-					t_left_max = (o2.BoundingBox.Left - o1.BoundingBox.Left) / relativeVelocity.X;
-					t_right_max = (o2.BoundingBox.Left - o1.BoundingBox.Right) / relativeVelocity.X;
-				}
-				else
-				{
-					t_left_max = (o2.BoundingBox.Right - o1.BoundingBox.Left) / relativeVelocity.X;
-					t_right_max = (o2.BoundingBox.Right - o1.BoundingBox.Right) / relativeVelocity.X;
-				}
+			CollisionResult bestResult = null;
+			Vector bestNormal = null;
+			bool separating = false;
+			
+			List<Vector>[] polygons = {o1.BoundingBox.Vertices, o2.BoundingBox.Vertices};
 
-				//Check the case where they're actually inside the boundaries already
-				if (o1.BoundingBox.Left < o2.BoundingBox.Right && o1.BoundingBox.Left > o2.BoundingBox.Left)
-					t_left_min = 0;
-				
-				if (o1.BoundingBox.Right > o2.BoundingBox.Left && o1.BoundingBox.Right < o2.BoundingBox.Right)
-					t_right_min = 0;
-				
-				//Now, check what time frames actually overlap (that is, check that t_min < t_max, and of course check if t_min > 0)
-				if (t_right_min >= 0 && t_right_min < t_right_max)
-				{
-					timeX = t_right_min;
-					normal.X = -1;
-				}
-				else if (t_left_min >= 0 && t_left_min < t_left_max)
-				{
-					timeX = t_left_min;
-					normal.X = 1;
-				}
-			}
-			else
+			// Find each edge normal in the bounding polygons, which is used as axes.
+			foreach (var verts in polygons)
 			{
-				//Check the case where they're actually inside the boundaries already
-				if (o1.BoundingBox.Left <= o2.BoundingBox.Right && o1.BoundingBox.Left >= o2.BoundingBox.Left)
-					timeX = 0;
-				
-				if (o1.BoundingBox.Right >= o2.BoundingBox.Left && o1.BoundingBox.Right <= o2.BoundingBox.Right)
-					timeX = 0;
-			}
-			
-			if (relativeVelocity.Y != 0)
-			{
-				//And finally the same for the y axis
-				double t_top_min = (o2.BoundingBox.Bottom - o1.BoundingBox.Top) / relativeVelocity.Y;
-				double t_bottom_min = (o2.BoundingBox.Top - o1.BoundingBox.Bottom) / relativeVelocity.Y;
-				double t_top_max;
-				double t_bottom_max;
+				// If the result is ever null, we have a separating axis, and we can cancel the search.
+				for (int i = 0; i < verts.Count && !separating; i++)
+				{
+					Vector edge = verts[i == verts.Count - 1 ? 0 : i+1] - verts[i];
+					Vector axis = new Vector(-edge.Y, edge.X);
+					
+					//Test for collision on one axis
+					CollisionResult result = testAxis(o1.BoundingBox, o2.BoundingBox, relativeVelocity, frameTime, axis);
+					if (result == null)
+					{
+						separating = true;
+						//Log.Write("Test failed - failing axis: " + axis);
+					}
+					else if (bestResult == null || result.CollisionTime > bestResult.CollisionTime) 
+					{
+						bestResult = result;
+						bestNormal = axis;
+					}
+				}
+			}			
 
-				if (o1.BoundingBox.Top >= o2.BoundingBox.Bottom && o1.BoundingBox.Top <= o2.BoundingBox.Top)
-					t_top_min = 0;
-				
-				if (o1.BoundingBox.Bottom <= o2.BoundingBox.Top && o1.BoundingBox.Bottom >= o2.BoundingBox.Bottom)
-					t_bottom_min = 0;
-
-				//We need to calculate the exit time differently, depending on what Y-direction we're moving in
-				if (relativeVelocity.Y < 0)
-				{
-					t_top_max = (o2.BoundingBox.Bottom - o1.BoundingBox.Top) / relativeVelocity.Y;
-					t_bottom_max = (o2.BoundingBox.Bottom - o1.BoundingBox.Bottom) / relativeVelocity.Y;
-				}
-				else
-				{
-					t_top_max = (o2.BoundingBox.Top - o1.BoundingBox.Top) / relativeVelocity.Y;
-					t_bottom_max = (o2.BoundingBox.Top - o1.BoundingBox.Bottom) / relativeVelocity.Y;
-				}
-				
-				if (t_bottom_min >= 0 && t_bottom_min < t_bottom_max)
-				{
-					normal.Y = 1;
-					timeY = t_bottom_min;
-				}
-				else if (t_top_min >= 0 && t_top_min < t_top_max)
-				{
-					normal.Y = -1;
-					timeY = t_top_min;
-				}
-			}
-			else
+			if (!separating)
 			{
-				if (o1.BoundingBox.Top >= o2.BoundingBox.Bottom && o1.BoundingBox.Top <= o2.BoundingBox.Top)
-					timeY = 0;
-				
-				if (o1.BoundingBox.Bottom <= o2.BoundingBox.Top && o1.BoundingBox.Bottom >= o2.BoundingBox.Bottom)
-					timeY = 0;
-			}
-			
-			//Calculate the collision time.
-			double collisionTime;
-			if (timeX > timeY)
-			{
-				collisionTime = timeX;
-				normal.Y = 0;
-			}
-			else
-			{
-				collisionTime = timeY;
-				normal.X = 0;
-			}
-			
-			//If the collision happens at time 0, o1 is inside o2, and the normal vector is undefined.
-			//if (collisionTime == 0) normal = null;
-			
-			if (timeX >= 0 && timeY >= 0 && collisionTime < 1)
-			{
-				CollisionResult cr = new CollisionResult();
-				cr.CollisionTime = collisionTime*frameTime;
-			
-				collisionEvents.Add(new CollisionEvent(o1, o2, normal, cr));
-				collisionEvents.Add(new CollisionEvent(o2, o1, -normal, cr));
+				Log.Write("Collision. Normal: " + bestNormal + " Time: " + bestResult.CollisionTime);
+				bestResult.WillIntersect = true;
+				bestResult.FrameTime = frameTime;
+									
+				collisionEvents.Add(new CollisionEvent(o1, o2, bestNormal, bestResult));
+				collisionEvents.Add(new CollisionEvent(o2, o1, -bestNormal, bestResult));
 			}
 		}
 	}

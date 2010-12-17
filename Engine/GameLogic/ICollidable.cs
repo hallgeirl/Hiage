@@ -6,68 +6,96 @@ namespace Engine
 {
 	public class BoundingPolygon : ICloneable
 	{
-		public BoundingPolygon() {}
+		public BoundingPolygon() 
+		{
+			Vertices = new List<Vector>();
+		}
 		
+		public BoundingPolygon(List<Vector> vertices)
+		{
+			Vertices = new List<Vector>();
+			foreach (var v in vertices)
+			{
+				Vertices.Add((Vector)v.Clone());
+			}
+			
+		}
+		
+		public object Clone()
+		{
+			return new BoundingPolygon(Vertices);
+		}
+
 		/// <summary>
-		/// Vertices of polygon. Edges are implicit between consecutive vertices.
+		/// Vertices of polygon. 
+		/// Edges are implicit between consecutive vertices in a cyclic manner, 
+		/// so that there is an edge between the last and first vertex.
 		/// </summary>
 		public List<Vector> Vertices
 		{
 			get;
 			private set;
 		}
+		
+		public BoundingPolygon Translate(Vector v)
+		{
+			foreach (var vert in Vertices)
+			{
+				vert.X += v.X;
+				vert.Y += v.Y;
+			}
+			
+			return this;
+		}
+		
+		public override string ToString()
+		{
+			String result = "BoundingPolygon(vertices=";
+			bool first = true;
+			foreach (var v in Vertices)
+			{
+				if (!first)
+					result += ",";
+				
+				first = false;
+				result += v;
+			}
+			result += ")";
+			return result;
+		}
 	}
 	
 	/// <summary>
 	/// Bounding box class
 	/// </summary>
-	public class BoundingBox : ICloneable, BoundingPolygon
+	public class BoundingBox : BoundingPolygon
 	{
 		public BoundingBox(double left, double top, double right, double bottom) : base()
 		{
-			Left = left;
-			Right = right;
-			Top = top;
-			Bottom = bottom;
-		}
-		
-		public BoundingBox Translate(Vector v)
-		{
-			Left += v.X;
-			Right += v.X;
-			Top += v.Y;
-			Bottom += v.Y;
-			
-			return this;
-		}
-		
-		public object Clone()
-		{
-			return new BoundingBox(Left, Top, Right, Bottom);
+			Vertices.Add(new Vector(left, top));
+			Vertices.Add(new Vector(right, top));
+			Vertices.Add(new Vector(right, bottom));
+			Vertices.Add(new Vector(left, bottom));
 		}
 		
 		public double Left 
 		{ 
-			get; 
-			set; 
+			get { return Vertices[0].X; } 
 		}
 		
 		public double Right
 		{ 
-			get; 
-			set; 
+			get { return Vertices[1].X; }
 		}
 		
 		public double Top
 		{ 
-			get; 
-			set; 
+			get { return Vertices[0].Y; }
 		}
 		
 		public double Bottom
 		{ 
-			get; 
-			set; 
+			get { return Vertices[2].Y; }
 		}
 		
 		public double Width
@@ -80,10 +108,10 @@ namespace Engine
 			get { return Top - Bottom; }
 		}
 		
-		public override string ToString()
+		/*public override string ToString()
 		{
 			return "BoundingBox(left=" + Left + ",top=" + Top + ",right=" + Right + ",bottom=" + Bottom + ")";
-		}
+		}*/
 	}
 	/// <summary>
 	/// Interface for all objects that may collide.

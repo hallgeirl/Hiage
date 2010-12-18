@@ -15,11 +15,14 @@ namespace Engine
 		/// <summary>
 		/// Construct a bounding polygon from a list of vertices
 		/// </summary>
-		public BoundingPolygon(List<Vector> vertices)
+		public BoundingPolygon(List<Vector> verts)
 		{
 			vertices = new List<Vector>();
-			foreach (var v in vertices)
+			edgeNormals = new List<Vector>();
+			
+			foreach (var v in verts)
 			{
+				edgeNormals.Add(new Vector());
 				vertices.Add((Vector)v.Clone());
 			}
 			buildNormals(0);
@@ -33,9 +36,19 @@ namespace Engine
 		{
 			for (int i = start; i < vertices.Count; i++)
 			{
-				Vector edge = vertices[i == vertices.Count - 1 ? 0 : i+1] - vertices[i];
-				Vector normal = new Vector(-edge.Y, edge.X);
-				normal.Normalize();
+				Vector edge, normal;
+				
+				// For a polygon with only two vertices, only make "one" edge (or really, two identical ones)
+				if (i == 1 && vertices.Count <= 2) 
+				{
+					normal = edgeNormals[0];
+				}
+				else
+				{
+					edge = vertices[i == vertices.Count - 1 ? 0 : i+1] - vertices[i];
+					normal = new Vector(-edge.Y, edge.X);
+					normal.Normalize();
+				}
 				edgeNormals[i] = normal;
 				
 				//Update outer boundaries

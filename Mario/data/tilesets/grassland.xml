@@ -70,8 +70,8 @@ Tileset setup:
   </tile>
   <tile texture="grassland/grass-outercorner-topright.png" id="111">
     <edge>
-        <point x="15" y="0" />
         <point x="15" y="15" />
+        <point x="15" y="0" />
         <normal x="1" y="0" />
     </edge>
     <edge>

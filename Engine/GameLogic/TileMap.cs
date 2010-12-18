@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Engine
 {
-	public class Edge : ICloneable
+	public class Edge : BoundingPolygon, ICloneable
 	{
 		/// <summary>
 		/// Create a new edge.
@@ -17,25 +17,25 @@ namespace Engine
 		/// <param name="normal">
 		/// The edge normal vector. If this parameter is null, a vector perpendicular to the one defined by the two points p1 and p2 will be calculated.
 		/// </param>
-		public Edge(Vector p1, Vector p2, Vector normal)
+		public Edge(Vector p1, Vector p2, Vector normal) : base()
 		{
-			this.P1 = p1;
-			this.P2 = p2;
-			//this.PositionsAreAbsolute = false;
+			//this.P1 = p1;
+			//this.P2 = p2;
+			AddVertex(p1); AddVertex(p2);
 			
-			if (normal == null)
+			/*if (normal == null)
 			{
 				Vector v = p2 - p1;
 				Normal = new Vector(v.Y, -v.X).Normalize();
 			}
 			else
-				Normal = normal.Normalize();
+				Normal = normal.Normalize();*/
 		}
 		
 		public object Clone()
 		{
 			return new Edge((Vector)P1.Clone(), (Vector)P2.Clone(), (Vector)Normal.Clone());
-		}
+		} 
 		
 		public Edge Copy()
 		{
@@ -59,20 +59,17 @@ namespace Engine
 		/// </value>
 		public Vector Normal
 		{
-			get;
-			private set;
+			get { return EdgeNormals[0]; }
 		}
 		
 		public Vector P1
 		{
-			get;
-			private set;
+			get { return Vertices[0]; }
 		}
 
 		public Vector P2
 		{
-			get;
-			private set;
+			get { return Vertices[1]; }
 		}
 		
 		//Return the edge in vector form

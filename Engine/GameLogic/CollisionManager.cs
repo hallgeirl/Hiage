@@ -111,12 +111,6 @@ namespace Engine
 				Max += Math.Abs(a);*/
 			}
 			
-			/*public Vector Axis
-			{
-				get;
-				private set;
-			}*/
-			
 			public double Length
 			{
 				get { return Max - Min; }
@@ -217,8 +211,9 @@ namespace Engine
 			//Applying Separating Axis theorem
 			//First find all the axis
 			List<Vector> axis = new List<Vector>();
-			axis.Add(new Vector(1,0)); // Bounding box axis 1
-			axis.Add(new Vector(0,1)); // Bounding box axis 2
+			//axis.Add(new Vector(1,0)); // Bounding box axis 1
+			//axis.Add(new Vector(0,1)); // Bounding box axis 2
+			axis.AddRange(o.BoundingBox.EdgeNormals);
 			axis.Add(new Vector());    //Line segment axis 1
 			axis.Add(new Vector());	   //Line segment axis 2
 			

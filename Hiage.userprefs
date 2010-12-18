@@ -1,14 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workbench ActiveDocument="Engine/GameLogic/CollisionManager.cs" ctype="Workbench">
     <Files>
-      <File FileName="Mario/Objects/BasicGroundEnemy.cs" Line="1" Column="1" />
-      <File FileName="Engine/GameLogic/CollisionManager.cs" Line="440" Column="9" />
-      <File FileName="Engine/GameLogic/ICollidable.cs" Line="62" Column="32" />
-      <File FileName="Mario/Objects/GameObject.cs" Line="98" Column="4" />
-      <File FileName="Mario/Objects/Character.cs" Line="1" Column="1" />
-      <File FileName="Mario/LevelState.cs" Line="99" Column="4" />
-      <File FileName="Mario/Main.cs" Line="16" Column="53" />
-      <File FileName="Engine/Resources/MapLoader.cs" Line="69" Column="4" />
+      <File FileName="Engine/GameLogic/CollisionManager.cs" Line="1" Column="3" />
+      <File FileName="Engine/GameLogic/IGameState.cs" Line="1" Column="1" />
+      <File FileName="Engine/GameLogic/ICollidable.cs" Line="39" Column="29" />
+      <File FileName="Mario/Objects/GameObject.cs" Line="81" Column="18" />
+      <File FileName="Engine/Common/Vector.cs" Line="134" Column="1" />
+      <File FileName="Mario/Objects/Player.cs" Line="115" Column="23" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

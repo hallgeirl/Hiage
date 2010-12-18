@@ -109,9 +109,12 @@ namespace Mario
 		{
 			if (edgeNormal.Y == 1 && o is BasicGroundEnemy && ((BasicGroundEnemy)o).Stompable && !((BasicGroundEnemy)o).Dying)
 			{
-				BasicGroundEnemy enemy = (BasicGroundEnemy)o;
-				Velocity.Y = 200;
-				enemy.Kill();
+				if (collisionResult.WillIntersect)
+				{
+					BasicGroundEnemy enemy = (BasicGroundEnemy)o;
+					Velocity.Y = 200;
+					enemy.Kill();
+				}
 			}
 		}
 		

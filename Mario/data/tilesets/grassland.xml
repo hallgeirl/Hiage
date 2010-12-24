@@ -108,12 +108,14 @@ Tileset setup:
     <bounds>
         <point x="0" y="15" />
         <point x="15" y="0" />
+        <point x="0" y="0" />
     </bounds>
   </tile>
   <tile texture="grassland/rock-hill-left.png" id="222">
     <bounds>
         <point x="0" y="0" />
         <point x="15" y="15" />
+        <point x="15" y="0" />
     </bounds>
   </tile>
 <!-- Decoration -->

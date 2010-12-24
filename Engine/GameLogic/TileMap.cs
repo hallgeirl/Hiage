@@ -283,7 +283,7 @@ namespace Engine
 		}
 		
 		/// <summary>
-		/// Calculate absolute edge positions for all edges in a specified tile in tilemapso that these don't have to be calculated every time they're needed.
+		/// Calculate absolute edge positions for all edges in a specified tile in tilemap so that these don't have to be calculated every time they're needed.
 		/// </summary>
 		private void CalculateEdgePositions(int x, int y, int z)
 		{
@@ -293,7 +293,7 @@ namespace Engine
 			if (bp == null) return;
 			
 			bp.Scale(Tilesize/(t.Width-1), Tilesize/(t.Height-1));
-			bp.Translate(new Vector(x*Tilesize + OffsetX, y*Tilesize + OffsetY));
+			bp.Translate(x*Tilesize + OffsetX, y*Tilesize + OffsetY);
 			/*e.P1.X = e.P1.X*(Tilesize/(t.Width-1))+x*Tilesize + OffsetX;
 			e.P1.Y = e.P1.Y*(Tilesize/(t.Height-1))+y*Tilesize + OffsetY;
 			e.P2.X = e.P2.X*(Tilesize/(t.Width-1))+x*Tilesize + OffsetX;

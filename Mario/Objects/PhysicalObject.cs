@@ -78,15 +78,6 @@ namespace Mario
 		//Handle collisions against edges
 		public override void Collide(BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
-			if (collisionResult.WillIntersect && (Right <= p.Left || Left >= p.Right) && p.Vertices.Count == 2 && Math.Abs(p.Vertices[0].Y - p.Vertices[1].Y) < Constants.MinDouble)
-			{
-				Log.Write("FOO");
-				return;
-			}
-			//if (collisionNormal.DotProduct(Velocity) > Constants.MinDouble) return;
-			// Ignore "collisions" where the only edge faces in the movement direction.
-			//if (p.Vertices.Count == 2 && p.EdgeNormals[0].DotProduct(Velocity) > Constants.MinDouble) return;
-			
 			base.Collide(p, collisionNormal, collisionResult);
 			
 			// If intersecting, push back
@@ -108,7 +99,7 @@ namespace Mario
 				if (Math.Abs(collisionNormal.X) > 0.8)
 					OnCollidedWithWall();
 				
-				if (collisionNormal.Y > 0.8)
+				if (collisionNormal.Y > 0.5)
 				{
 					if (!OnGround)
 					{

@@ -86,7 +86,6 @@ namespace Mario
 			get
 			{
 				return (BoundingBox) boundingPolygon;
-				//return new BoundingBox(Position.X - Width/2, Position.Y + Height / 2, Position.X + Width / 2, Position.Y - Height / 2);
 			}
 		}
 		

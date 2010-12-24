@@ -72,7 +72,6 @@ namespace Engine
 				if (vertices[i].Y < Bottom) bottom = i;
 				if (vertices[i].Y > Top) top = i;
 			}
-			Console.WriteLine("Built " + edgeNormals.Count + " normals at " + DateTime.Now);
 		}
 		
 		/// <summary>
@@ -120,12 +119,26 @@ namespace Engine
 		/// <summary>
 		/// Translate the whole polygon by a translation vector.
 		/// </summary>
-		public BoundingPolygon Translate(Vector v)
+		public BoundingPolygon Translate(double x, double y)
 		{
 			foreach (var vert in Vertices)
 			{
-				vert.X += v.X;
-				vert.Y += v.Y;
+				vert.X += x;
+				vert.Y += y;
+			}
+			
+			return this;
+		}
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		public BoundingPolygon MoveTo(double x, double y)
+		{
+			foreach (var vert in Vertices)
+			{
+				vert.X = x;
+				vert.Y = y;
 			}
 			
 			return this;

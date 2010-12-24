@@ -107,10 +107,11 @@ namespace Mario
 		
 		public override void Collide (ICollidable o, Vector edgeNormal, CollisionResult collisionResult)
 		{
-			if (edgeNormal.Y == 1 && o is BasicGroundEnemy && ((BasicGroundEnemy)o).Stompable && !((BasicGroundEnemy)o).Dying)
+			if (BoundingBox.Bottom >= o.BoundingBox.Top && o is BasicGroundEnemy && ((BasicGroundEnemy)o).Stompable && !((BasicGroundEnemy)o).Dying)
 			{
 				if (collisionResult.WillIntersect)
 				{
+					Log.Write("Coll normal " + edgeNormal);
 					BasicGroundEnemy enemy = (BasicGroundEnemy)o;
 					Velocity.Y = 200;
 					enemy.Kill();
@@ -118,10 +119,10 @@ namespace Mario
 			}
 		}
 		
-		public override void Collide (Edge e, CollisionResult collisionResult)
+		public override void Collide (BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
-			base.Collide (e, collisionResult);
-			if (e.Normal.Y > 0.8 && sliding)
+			base.Collide (p, collisionNormal, collisionResult);
+			if (collisionResult.HitNormal.X > 0.8 && sliding)
 			{
 				sliding = false;
 				objectPhysics.Friction = oldFriction;

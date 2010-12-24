@@ -13,6 +13,7 @@ namespace Engine
 		public const int ERROR = 1;
 		public const int WARNING = 2;
 		public const int INFO = 3;
+		public const int DEBUG = 4;
 		
 		/// <summary>
 		/// Write an "OK" log entry
@@ -32,7 +33,7 @@ namespace Engine
 			switch (type)
 			{
 			case OK:
-				output = "[OK]\t";
+				output = "[OK]";
 				break;
 			case ERROR:
 				output = "[ERROR]";
@@ -41,10 +42,13 @@ namespace Engine
 				output = "[WARNING]";
 				break;
 			case INFO:
-				output = "[INFO]\t";
+				output = "[INFO]";
+				break;
+			case DEBUG:
+				output = "[DEBUG]";
 				break;
 			default:
-				output = "[UNKNOWN]";
+				output = "[CODE " + type + "]";
 				break;
 			}
 			

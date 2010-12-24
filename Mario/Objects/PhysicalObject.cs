@@ -12,7 +12,7 @@ namespace Mario
 		private   Timer 		inAirTimer = new Timer();
 		
 		public PhysicalObject (Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, 
-		                       WorldPhysics worldPhysics, ObjectPhysics objectPhysics, int width, int height) : base(position, velocity, sprite, renderer, controller) 
+		                       WorldPhysics worldPhysics, ObjectPhysics objectPhysics, int width, int height) : base(position, velocity, sprite, renderer, controller, width, height) 
 		{
 			this.worldPhysics = worldPhysics;
 			this.objectPhysics = objectPhysics;
@@ -54,7 +54,7 @@ namespace Mario
 		{
 			base.Update(frameTime);
 			
-			//Apply physics
+			//Apply gravity
 			Accellerate(new Vector(0, -worldPhysics.Gravity));
 			
 			//Pre-calculate the actual friction (based on world- and object physics attributes)
@@ -76,32 +76,39 @@ namespace Mario
 		}
 		
 		//Handle collisions against edges
-		public override void Collide(Edge e, CollisionResult collisionResult)
+		public override void Collide(BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
-			base.Collide(e, collisionResult);
-			if (collisionResult.WillIntersect)
+			if (collisionResult.WillIntersect && (Right <= p.Left || Left >= p.Right) && p.Vertices.Count == 2 && Math.Abs(p.Vertices[0].Y - p.Vertices[1].Y) < Constants.MinDouble)
+			{
+				Log.Write("FOO");
+				return;
+			}
+			//if (collisionNormal.DotProduct(Velocity) > Constants.MinDouble) return;
+			// Ignore "collisions" where the only edge faces in the movement direction.
+			//if (p.Vertices.Count == 2 && p.EdgeNormals[0].DotProduct(Velocity) > Constants.MinDouble) return;
+			
+			base.Collide(p, collisionNormal, collisionResult);
+			
+			// If intersecting, push back
+			/*if (collisionResult.IsIntersecting)
+			{
+				Position += collisionResult.MinimumTranslationVector;
+			}
+			else */if (collisionResult.WillIntersect)
 			{
 				remainingFrameTime -= collisionResult.CollisionTime;
 
-				Position += collisionResult.MinimumTranslationVector;
-				Velocity = Velocity - ((1.0+objectPhysics.Elasticity)*Velocity.DotProduct(e.Normal))*e.Normal;
-				
-				//Cut off the velocity if it gets too low
-				if (Velocity.Length < 1e-10 && Velocity.Length != 0)
-				{
-					Velocity.X = 0;
-					Velocity.Y = 0;
-				}
-				
-				/*
+				Position += collisionResult.CollisionTime * Velocity * frameTime;
+
+				Velocity = Velocity - ((1.0+objectPhysics.Elasticity)*Velocity.DotProduct(collisionNormal))*collisionNormal;
+
+   				/*
 				 * Run the event handlers
 				 */
-				if (Math.Abs(e.Normal.X) > 0.8)
+				if (Math.Abs(collisionNormal.X) > 0.8)
 					OnCollidedWithWall();
 				
-				//Log.Write("elapsed: " + inAirTimer.Elapsed + ", frametime: " + collisionResult.FrameTime);
-				
-				if (e.Normal.Y > 0.5)
+				if (collisionNormal.Y > 0.8)
 				{
 					if (!OnGround)
 					{
@@ -110,7 +117,6 @@ namespace Mario
 					}
 					inAirTimer.Restart();
 				}
-				//Log.Write("Velocity after handler: " + Velocity + " Minimum translation: " + collisionResult.MinimumTranslationVector);
 			}
 		}
 		
@@ -122,7 +128,7 @@ namespace Mario
 		}
 		#endregion
 		
-		public override int Width
+		/*public override int Width
 		{
 			get;
 			protected set;
@@ -132,7 +138,7 @@ namespace Mario
 		{
 			get;
 			protected set;
-		}
+		}*/
 
 	}
 }

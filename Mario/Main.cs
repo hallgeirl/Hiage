@@ -13,7 +13,8 @@ namespace Mario
 			game.Display.Zoom = 150;
 
 			//For testing
-			game.PushState(new LevelState(null, game, "level1"));
+			game.PushState(new LevelState(null, game, "level1_test"));
+			//game.PushState(new LevelState(null, game, "minimap"));
 			//game.PushState(new LevelState(null, game, "test_multi"));
 			
 			while (!game.Done)

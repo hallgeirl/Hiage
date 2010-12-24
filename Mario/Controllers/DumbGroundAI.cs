@@ -23,13 +23,13 @@ namespace Mario
 				obj.LeftAction();
 		}
 		
-		public void HandleCollision(GameObject obj, Edge e, CollisionResult collisionResult)
+		public void HandleCollision(GameObject obj, BoundingPolygon p, CollisionResult collisionResult)
 		{
-			if (e.Normal.X > 0.8)
+			if (collisionResult.HitNormal.X > 0.8)
 			{
 				direction = 1;
 			}
-			else if (e.Normal.X < -0.8)
+			else if (collisionResult.HitNormal.X < -0.8)
 			{
 				direction = -1;
 			}

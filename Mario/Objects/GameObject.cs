@@ -9,6 +9,7 @@ namespace Mario
 	{
 		Renderer renderer;
 		IController controller;
+		BoundingPolygon boundingPolygon;
 		protected Vector accelVector = new Vector(0, 0);
 		protected double remainingFrameTime = 1;
 		protected double animationSpeedFactor = 1;
@@ -23,13 +24,17 @@ namespace Mario
 		protected int currentState = -1;
 		
 		//Construct a game object. Set controller to null if the object should be static.
-		public GameObject(Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller)
+		public GameObject(Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, int width, int height)
 		{
 			Sprite = sprite;
 			Velocity = velocity;
 			Position = position;
 			this.renderer = renderer;
 			this.controller = controller;
+			Width = width;
+			Height = height;
+
+			boundingPolygon = new BoundingBox(Position.X - Width/2, Position.Y + Height / 2, Position.X + Width / 2, Position.Y - Height / 2);
 			
 			SetupStates();
 		}
@@ -59,8 +64,6 @@ namespace Mario
 		public virtual void Update(double frameTime)
 		{
 			Position += Velocity*frameTime*remainingFrameTime;
-
-
 			Velocity += accelVector*frameTime;
 						
 			accelVector.X = 0;
@@ -82,25 +85,29 @@ namespace Mario
 		{
 			get
 			{
-				return new BoundingBox(Position.X - Width/2, Position.Y + Height / 2, Position.X + Width / 2, Position.Y - Height / 2);
+				return (BoundingBox) boundingPolygon;
+				//return new BoundingBox(Position.X - Width/2, Position.Y + Height / 2, Position.X + Width / 2, Position.Y - Height / 2);
 			}
 		}
 		
 		//Returns a bounding box covering all the potential area where collisions may occur
-		public BoundingBox GetCollisionCheckArea(double frameTime)
+		Box collisionCheckArea;
+		public Box GetCollisionCheckArea(double frameTime)
 		{
 			double dx = Math.Abs(Velocity.X)*frameTime;
 			double dy = Math.Abs(Velocity.Y)*frameTime;
-			return new BoundingBox(BoundingBox.Left-dx,
-			                   	   BoundingBox.Top+dy, 
-			                       BoundingBox.Right+dx, 
-			                       BoundingBox.Bottom-dy);
+			collisionCheckArea.Left = BoundingBox.Left-dx;
+			collisionCheckArea.Right = BoundingBox.Right+dx;
+			collisionCheckArea.Top = BoundingBox.Top+dy;
+			collisionCheckArea.Bottom = BoundingBox.Bottom-dy;
+			
+			return collisionCheckArea;
 		}
 
-		public virtual void Collide(Edge e, CollisionResult collisionResult)
+		public virtual void Collide(BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
 			if (controller != null)
-				controller.HandleCollision(this, e, collisionResult);
+				controller.HandleCollision(this, p, collisionResult);
 		}
 		
 		public virtual void Collide(ICollidable o, Vector edgeNormal, CollisionResult collisionResult)
@@ -125,8 +132,8 @@ namespace Mario
 			Sprite.Y = Position.Y;
 			Sprite.Update(frameTime*animationSpeedFactor);
 			
-			//Debug
-			/*BoundingBox ca = GetCollisionCheckArea(frameTime);
+			//Debug (Draw a square for the collision boundaries).
+			/*Box ca = GetCollisionCheckArea(frameTime);
 			renderer.SetDrawingColor(1,0,0,1);
 			renderer.DrawSquare(ca.Left, ca.Top, ca.Right, ca.Bottom);
 			renderer.SetDrawingColor(1,1,1,1);*/
@@ -151,18 +158,27 @@ namespace Mario
 		//Current position
 		public Vector Position
 		{
-			get;
-			protected set;
+			get
+			{
+				return position;
+			}
+			protected set
+			{
+				position = value;
+				if (boundingPolygon != null)
+					((BoundingBox)boundingPolygon).Set(position.X - Width/2, position.Y + Height / 2, position.X + Width / 2, position.Y - Height / 2);
+			}
 		}
+		Vector position = new Vector();
 
 		//Dimensions
-		public abstract int Width
+		public virtual int Width
 		{ 
 			get;
 			protected set;
 		}
 		
-		public abstract int Height
+		public virtual int Height
 		{ 
 			get;
 			protected set;

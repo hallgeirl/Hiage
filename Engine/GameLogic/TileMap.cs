@@ -107,34 +107,20 @@ namespace Engine
 		/// <summary>
 		/// Create a new tile
 		/// </summary>
-		/// <param name="id">
-		/// A <see cref="System.Int32"/>
-		/// </param>
-		/// <param name="texture">
-		/// A <see cref="Texture"/>
-		/// </param>
-		/// <param name="edges">
-		/// A <see cref="List"/>
-		/// </param>
-		public Tile(int id, Texture texture, List<Edge> edges)
+		public Tile(int id, Texture texture, BoundingPolygon boundingPolygon)
 		{
 			this.Id = id;
-			this.Edges = edges;
+			this.BoundingPolygon = boundingPolygon;
 			this.Texture = texture;
 			
 		}
 		
 		public object Clone()
 		{
-			//Copy all edges
-			List<Edge> edges = new List<Edge>();
-
-			foreach (Edge e in Edges)
-			{
-				edges.Add((Edge)e.Clone());
-			}
-			
-			return new Tile(Id, Texture, edges);
+			//Copy bounding polygon
+			BoundingPolygon polygon = BoundingPolygon != null ? (BoundingPolygon)BoundingPolygon.Clone() : null;
+						
+			return new Tile(Id, Texture, polygon);
 		}
 		
 		public Tile Copy()
@@ -159,7 +145,7 @@ namespace Engine
 			private set;
 		}
 		
-		public List<Edge> Edges
+		public BoundingPolygon BoundingPolygon
 		{
 			get;
 			private set;			
@@ -303,13 +289,15 @@ namespace Engine
 		{
 			Texture t = map[x,y,z].Texture;
 			
-			foreach (Edge e in map[x,y,z].Edges)
-			{
-				e.P1.X = e.P1.X*(Tilesize/(t.Width-1))+x*Tilesize + OffsetX;
-				e.P1.Y = e.P1.Y*(Tilesize/(t.Height-1))+y*Tilesize + OffsetY;
-				e.P2.X = e.P2.X*(Tilesize/(t.Width-1))+x*Tilesize + OffsetX;
-				e.P2.Y = e.P2.Y*(Tilesize/(t.Height-1))+y*Tilesize + OffsetY;
-			}
+			BoundingPolygon bp = map[x,y,z].BoundingPolygon;
+			if (bp == null) return;
+			
+			bp.Scale(Tilesize/(t.Width-1), Tilesize/(t.Height-1));
+			bp.Translate(new Vector(x*Tilesize + OffsetX, y*Tilesize + OffsetY));
+			/*e.P1.X = e.P1.X*(Tilesize/(t.Width-1))+x*Tilesize + OffsetX;
+			e.P1.Y = e.P1.Y*(Tilesize/(t.Height-1))+y*Tilesize + OffsetY;
+			e.P2.X = e.P2.X*(Tilesize/(t.Width-1))+x*Tilesize + OffsetX;
+			e.P2.Y = e.P2.Y*(Tilesize/(t.Height-1))+y*Tilesize + OffsetY;*/
 		}
 			
 		
@@ -376,9 +364,12 @@ namespace Engine
 			return map[x, y, layer];
 		}
 		
-		public List<Edge> GetEdgesInRegion(BoundingBox boundingBox, int layer)
+		/// <summary>
+		/// Return all tiles' bounding polygons in a specified region.
+		/// </summary>
+		public List<BoundingPolygon> GetBoundingPolygonsInRegion(Box boundingBox, int layer)
 		{
-			List<Edge> edges = new List<Edge>();
+			List<BoundingPolygon> polygons = new List<BoundingPolygon>();
 				
 			int minTileX = (int)Math.Max((boundingBox.Left - OffsetX) / Tilesize, 0.0);
 			int maxTileX = (int)Math.Min((boundingBox.Right - OffsetX) / Tilesize, Width-1);
@@ -389,11 +380,13 @@ namespace Engine
 			{
 				for (int yTile = minTileY; yTile <= maxTileY; yTile++)
 				{
-					edges.AddRange(map[xTile, yTile, layer].Edges);
+					BoundingPolygon p = map[xTile, yTile, layer].BoundingPolygon;
+					if (p != null && p.Vertices.Count > 1)
+						polygons.Add(p);
 				}
 			}
 			
-			return edges;
+			return polygons;
 		}
 		
 		#region Properties
@@ -460,7 +453,7 @@ namespace Engine
 		}
 		
 		//For testing only
-		public List<Edge> AllEdges
+		/*public List<Edge> AllEdges
 		{
 			get
 			{
@@ -480,7 +473,7 @@ namespace Engine
 				}
 				return edges;
 			}
-		}
+		}*/
 		
 		#endregion
 	}

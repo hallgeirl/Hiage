@@ -99,9 +99,10 @@ namespace Mario
 			
 			foreach (var o in objects)
 			{
-				CollisionManager.TestCollision(o, tileMap.GetEdgesInRegion(o.GetCollisionCheckArea(frameTime), 0), frameTime);
+				//Log.Write(""+o.GetCollisionCheckArea(frameTime));
+				CollisionManager.TestCollision(o, tileMap.GetBoundingPolygonsInRegion(o.GetCollisionCheckArea(frameTime), 0), frameTime);
 			}
-			CollisionManager.PerformCollisionEvents();
+			//CollisionManager.PerformCollisionEvents();
 			
 			SortObjects(frameTime);
 			
@@ -118,10 +119,8 @@ namespace Mario
 			}
 			
 			CollisionManager.PerformCollisionEvents();
-			
-			
-		}
-		
+ 		}
+
 		public void Update(double frameTime)
 		{
 			for (int i = 0; i < objects.Count; i++)
@@ -162,13 +161,13 @@ namespace Mario
 				background.Render();
 			
 			tileMap.Render(0);
-			tileMap.Render(1);
+			//tileMap.Render(1);
 
 			foreach (GameObject o in objects)
 			{
 				o.Render(frameTime);
 			}
-			tileMap.Render(2);
+			//tileMap.Render(2);
 			
 			game.Display.Renderer.DrawText("FPS: " + game.FPS.ToString("N2"), display.RenderedCameraX - display.ViewportWidth/2, display.RenderedCameraY - display.ViewportHeight/2);
 		}

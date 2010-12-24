@@ -41,8 +41,8 @@ namespace MapEditor
 			switch (v)
 			{
 			case EditorModel.VariableName.Background:
-				Log.Write("ting");
-				Schedule(delegate {background = new ParallaxBackground(model.ResourceManager.GetTexture((string)newValue), 1, 0.5, model.Display); });
+				if (!string.IsNullOrEmpty((string)newValue))
+					Schedule(delegate {background = new ParallaxBackground(model.ResourceManager.GetTexture((string)newValue), 1, 0.5, model.Display); });
 				break;
 			}
 		}

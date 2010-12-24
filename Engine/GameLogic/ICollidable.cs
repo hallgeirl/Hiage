@@ -22,34 +22,41 @@ namespace Engine
 			
 			foreach (var v in verts)
 			{
-				edgeNormals.Add(new Vector());
 				vertices.Add((Vector)v.Clone());
 			}
-			buildNormals(0);
+			BuildNormals();
 		}
 		
 		/// <summary>
 		/// Build the edge normals, and updates the boundaries (Left,Right,...).
 		/// Assumes that all vertices are in the vertices list, and that some arbitrary items has been added to the edgeNormals list.
 		/// </summary>
-		private void buildNormals(int start)
+		protected void BuildNormals()
 		{
-			for (int i = start; i < vertices.Count; i++)
+			edgeNormals.Clear();
+			edgeNormals = new List<Vector>(vertices.Count - (vertices.Count <= 2 ? 1 : 0));
+			left = 0; bottom = 0;
+			right = 0; top = 0;
+			
+			for (int i = 0; i < edgeNormals.Capacity; i++)
 			{
 				Vector edge, normal;
 				
-				// For a polygon with only two vertices, only make "one" edge (or really, two identical ones)
-				if (i == 1 && vertices.Count <= 2) 
+				edge = vertices[i == vertices.Count - 1 ? 0 : i+1] - vertices[i];
+				normal = new Vector(-edge.Y, edge.X);
+				normal.Normalize();
+				
+				/*bool parallel = false;
+				
+				//Check if we already have a normal that is parallel to this normal. 
+				//If so, don't add it as it's not relevant.
+				foreach (Vector n in edgeNormals)
 				{
-					normal = edgeNormals[0];
+					if (Math.Abs(1-n.DotProduct(normal)) < Constants.MinDouble) 
+						parallel = true;
 				}
-				else
-				{
-					edge = vertices[i == vertices.Count - 1 ? 0 : i+1] - vertices[i];
-					normal = new Vector(-edge.Y, edge.X);
-					normal.Normalize();
-				}
-				edgeNormals[i] = normal;
+				if (!parallel)*/
+				edgeNormals.Add(normal);
 				
 				//Update outer boundaries
 				if (vertices[i].X < Left) left = i;
@@ -57,6 +64,15 @@ namespace Engine
 				if (vertices[i].Y < Bottom) bottom = i;
 				if (vertices[i].Y > Top) top = i;
 			}
+			for (int i = edgeNormals.Count; i < vertices.Count; i++)
+			{
+				//Update outer boundaries
+				if (vertices[i].X < Left) left = i;
+				if (vertices[i].X > Right) right = i;
+				if (vertices[i].Y < Bottom) bottom = i;
+				if (vertices[i].Y > Top) top = i;
+			}
+			Console.WriteLine("Built " + edgeNormals.Count + " normals at " + DateTime.Now);
 		}
 		
 		/// <summary>
@@ -65,10 +81,9 @@ namespace Engine
 		public void AddVertex(Vector vertex)
 		{
 			vertices.Add(vertex);
-			edgeNormals.Add(new Vector());
 			
 			//Calculate the last two edge normals as they have changed.
-			buildNormals(Math.Max(0, vertices.Count - 2));
+			BuildNormals();
 		}
 		
 		/// <summary>
@@ -78,13 +93,8 @@ namespace Engine
 		{
 			vertices.AddRange(verts);
 			
-			for (int i = 0; i < verts.Count; i++)
-			{
-				edgeNormals.Add(new Vector());
-			}
-			
 			//Build the last normals
-			buildNormals(Math.Max(vertices.Count - 1 - verts.Count, 0));
+			BuildNormals();
 		}
 		
 		/// <summary>
@@ -94,7 +104,7 @@ namespace Engine
 		{
 			get { return edgeNormals; }
 		}
-		private List<Vector> edgeNormals;
+		protected List<Vector> edgeNormals;
 
 		/// <summary>
 		/// Vertices of polygon. 
@@ -105,7 +115,7 @@ namespace Engine
 		{
 			get { return vertices; }
 		}
-		private List<Vector> vertices;
+		protected List<Vector> vertices;
 		
 		/// <summary>
 		/// Translate the whole polygon by a translation vector.
@@ -120,6 +130,32 @@ namespace Engine
 			
 			return this;
 		}
+		
+		/// <summary>
+		/// Scale the whole polygon by a scalar.
+		/// </summary>
+		public BoundingPolygon Scale(double s)
+		{
+			Scale(s, s);
+			
+			return this;
+		}
+		
+		/// <summary>
+		/// Scale the whole polygon by a scalar.
+		/// </summary>
+		public BoundingPolygon Scale(double sX, double sY)
+		{
+			foreach (var vert in Vertices)
+			{
+				vert.X *= sX;
+				vert.Y *= sY;
+			}
+			
+			return this;
+		}
+		
+		
 		/// <summary>
 		/// X-position of leftmost vertex
 		/// </summary>
@@ -186,6 +222,15 @@ namespace Engine
 	/// </summary>
 	public class BoundingBox : BoundingPolygon
 	{
+		public BoundingBox() : base()
+		{
+			List<Vector> verts = new List<Vector>();
+			verts.Add(new Vector());
+			verts.Add(new Vector());
+			verts.Add(new Vector());
+			verts.Add(new Vector());
+			AddVertices(verts);
+		}
 		public BoundingBox(double left, double top, double right, double bottom) : base()
 		{
 			List<Vector> verts = new List<Vector>();
@@ -206,18 +251,22 @@ namespace Engine
 			get { return Top - Bottom; }
 		}
 		
-		/*public override string ToString()
+		public void Set(double left, double top, double right, double bottom)
 		{
-			return "BoundingBox(left=" + Left + ",top=" + Top + ",right=" + Right + ",bottom=" + Bottom + ")";
-		}*/
+			vertices[0].X = left; vertices[0].Y = top; 
+			vertices[1].X = right; vertices[1].Y = top; 
+			vertices[2].X = right; vertices[2].Y = bottom; 
+			vertices[3].X = left; vertices[3].Y = bottom; 
+		}
+		
 	}
 	/// <summary>
 	/// Interface for all objects that may collide.
 	/// </summary>
 	public interface ICollidable
 	{
-		//Collision handler for collision vs edge
-		void Collide(Edge e, CollisionResult collisionResult);
+		//Collision handler for collision vs. a bounding polygon not tied to an object, e.g. a tile.
+		void Collide(BoundingPolygon polygon, Vector collisionNormal, CollisionResult collisionResult);
 		
 		//Collision handler for collision vs another collidable object
 		//edgeNormal is the normal vector for the edge of o that this object collided with.

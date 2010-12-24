@@ -44,7 +44,7 @@ namespace Engine
 						{
 							int tileID = -1;
 							string textureFileName = "";
-							List<Edge> edges = new List<Edge>();
+							BoundingPolygon boundingPolygon = null;
 							
 							//Extract tile attributes
 							foreach (XmlAttribute a in tileNode.Attributes)
@@ -63,25 +63,18 @@ namespace Engine
 								}
 							}
 							
-							//And edges
-							foreach (XmlNode edgeNode in tileNode.ChildNodes)
+							//And bounding polygon
+							foreach (XmlNode boundsNode in tileNode.ChildNodes)
 							{
-								if (edgeNode.Name == "edge")
+								if (boundsNode.Name == "bounds")
 								{
 									List<Vector> points = new List<Vector>();
-									Vector normal = null;
 									
-									
-									foreach (XmlNode edgeProps in edgeNode.ChildNodes)
+									foreach (XmlNode edgeProps in boundsNode.ChildNodes)
 									{
 										switch (edgeProps.Name)
 										{
 										case "point":
-											if (points.Count >= 2)
-											{
-												Log.Write("Found more than two points in tile edge. Point ignored.", Log.WARNING);
-												continue;
-											}
 											points.Add(new Vector());
 											
 											foreach (XmlAttribute a in edgeProps.Attributes)
@@ -91,37 +84,19 @@ namespace Engine
 												else if (a.Name == "y")
 													points[points.Count - 1].Y = int.Parse(a.Value);
 												else
-													Log.Write("Unknown attribute in tile edge: " + a.Name, Log.WARNING);
-											}
-											break;
-										case "normal":
-											if (normal != null)
-											{
-												Log.Write("Found more than one edge normal in tile edge for tile " + tileID + ". Point ignored.", Log.WARNING);
-												continue;
-											}
-											normal = new Vector();
-											
-											foreach (XmlAttribute a in edgeProps.Attributes)
-											{
-												if (a.Name == "x")
-													normal.X = int.Parse(a.Value);
-												else if (a.Name == "y")
-													normal.Y = int.Parse(a.Value);
-												else
-													Log.Write("Unknown attribute in tile edge: " + a.Name, Log.WARNING);
+													Log.Write("Unknown attribute in tile polygon point: " + a.Name, Log.WARNING);
 											}
 											break;
 										}
 									}
-									if (points.Count == 2)
-										edges.Add(new Edge(points[0], points[1], normal));
+									if (points.Count > 1)
+										boundingPolygon = new BoundingPolygon(points);
 									else
-										Log.Write("Only one point was found in tile edge for tile with id " + tileID + ". Ignored.", Log.WARNING);
+										Log.Write("Only one or zero points was found in tile bounding polygon definition for tile with id " + tileID + ". Ignored.", Log.WARNING);
 								}
 								else
 								{
-									Log.Write("Unknown child node of tile in XML: " + edgeNode.Name, Log.WARNING);
+									Log.Write("Unknown child node of tile in XML: " + boundsNode.Name, Log.WARNING);
 								}
 							}
 								
@@ -130,7 +105,7 @@ namespace Engine
 								throw new XmlException("Could not load tileset " + filename + ": TileID is < 0, or empty tile texture filename. TileID: " + tileID + ", filename: " + filename);
 							
 							//Add the tile to the tileset
-							tileset.AddTile(new Tile(tileID, textureLoader.LoadResource(textureFileName, ""), edges), textureFileName);
+							tileset.AddTile(new Tile(tileID, textureLoader.LoadResource(textureFileName, ""), boundingPolygon), textureFileName);
 						}
 					}
 				}

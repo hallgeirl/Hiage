@@ -35,7 +35,7 @@ namespace Mario
 		 *  These are left empty since a player controller is fully controlled by the player, and thus don't need to respond to collisions automatically.
 		 */
 		#region Empty collision handlers
-		public void HandleCollision(GameObject obj, BoundingPolygon p, CollisionResult collisionResult)
+		public void HandleCollision(GameObject obj, BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
 		}
 			

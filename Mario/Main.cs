@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Engine;
 
 namespace Mario
@@ -11,9 +12,10 @@ namespace Mario
 			game.Initialize(800, 600, false, "Hiage Mario");
 			game.MaxFPS = 60;
 			game.Display.Zoom = 150;
+			//Log.OutputStreamWriter = new StreamWriter("log.txt");
 
-			//For testing
-			game.PushState(new LevelState(null, game, "level1_test"));
+			PlayerState initialState = new PlayerState();
+			game.PushState(new LevelState(initialState, game, "level1"));
 			//game.PushState(new LevelState(null, game, "minimap"));
 			//game.PushState(new LevelState(null, game, "test_multi"));
 			

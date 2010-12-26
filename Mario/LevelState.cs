@@ -11,7 +11,8 @@ namespace Mario
 	{
 		Game 				game;											 //Reference to the main game object				
 		Display 			display;
-		InputManager		input;
+		PlayerState 		playerInfo;
+		List<Sprite>		icons;
 		
 		ParallaxBackground	background = null;								 //Background used on this map
 		TileMap 			tileMap;										 //The tiles used on this map
@@ -22,12 +23,12 @@ namespace Mario
 		Timer 				fullscreenTimer = new Timer();	//Used to prevent a lot of fullscreen on/offs when holding down alt+enter more than one frame
 		
 		//Construct a levelstate object
-		public LevelState (PlayerInfo player, Game game, string mapName)
+		public LevelState (PlayerState player, Game game, string mapName)
 		{
+			playerInfo = player;
+			
 			this.game = game;
 			this.display = game.Display;
-			this.input = game.Input;
-			
 			game.Display.CameraX = 50;
 			game.Display.CameraY = 100;
 			
@@ -61,7 +62,8 @@ namespace Mario
 		
 		public void Initialize(Game game)
 		{
-			game.Display.Renderer.SetFont("arial", 12);
+			game.Display.Renderer.SetFont("verdana", 8);
+			//icons.Add(new Sprite(game.Resources.GetSpriteDescriptor(
 		}
 		
 		//Simple insertion sort to sort all objects according to their left boundary
@@ -94,15 +96,10 @@ namespace Mario
 		//Perform all collision tests
 		public void PerformCollisionTests(double frameTime)
 		{
-			
-			SortObjects(frameTime);
-			
 			foreach (var o in objects)
 			{
-				//Log.Write(""+o.GetCollisionCheckArea(frameTime));
 				CollisionManager.TestCollision(o, tileMap.GetBoundingPolygonsInRegion(o.GetCollisionCheckArea(frameTime), 0), frameTime);
 			}
-			//CollisionManager.PerformCollisionEvents();
 			
 			SortObjects(frameTime);
 			
@@ -112,10 +109,6 @@ namespace Mario
 				{
 					CollisionManager.TestCollision(objects[i], objects[j], frameTime);
 				}
-				/*for (int j = i-1; j >= 0 && objects[j].Right >= objects[i].Left; j--)
-				{
-					CollisionManager.TestCollision(objects[i], objects[j], frameTime);
-				}*/
 			}
 			
 			CollisionManager.PerformCollisionEvents();
@@ -137,8 +130,6 @@ namespace Mario
 			
 			game.Display.CameraX = player.Position.X;
 			game.Display.CameraY = player.Position.Y;
-			
-			
 		}
 		
 		public void HandleInput(double frameTime)
@@ -160,16 +151,19 @@ namespace Mario
 			if (background != null)
 				background.Render();
 			
-			tileMap.Render(0);
-			//tileMap.Render(1);
+			for (int i = 0; i < Math.Min(tileMap.Layers, 2); i++)
+				tileMap.Render(i);
 
 			foreach (GameObject o in objects)
-			{
 				o.Render(frameTime);
-			}
-			//tileMap.Render(2);
+			
+			for (int i = 2; i < tileMap.Layers; i++)
+				tileMap.Render(i);
 			
 			game.Display.Renderer.DrawText("FPS: " + game.FPS.ToString("N2"), display.RenderedCameraX - display.ViewportWidth/2, display.RenderedCameraY - display.ViewportHeight/2);
+			game.Display.Renderer.DrawText("Lives: " + playerInfo.Lives, display.RenderedCameraX - display.ViewportWidth/2 + 5, display.RenderedCameraY + display.ViewportHeight/2 - 16);
+			//game.Display.Renderer.DrawText("Coins: " + playerInfo.Coins, display.RenderedCameraX + display.ViewportWidth/2, display.RenderedCameraY - display.ViewportHeight/2 - 16);
+			game.Display.Renderer.DrawText("Coins: " + playerInfo.Coins, display.RenderedCameraX + display.ViewportWidth/2 - 55, display.RenderedCameraY + display.ViewportHeight/2 - 16);
 		}
 		
 		public void Run(double frameTime)

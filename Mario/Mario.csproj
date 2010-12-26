@@ -38,7 +38,6 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="LevelState.cs" />
-    <Compile Include="PlayerInfo.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Physics.cs" />
     <Compile Include="Controllers\DumbGroundAI.cs" />
@@ -49,6 +48,7 @@
     <Compile Include="Objects\Player.cs" />
     <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\BasicGroundEnemy.cs" />
+    <Compile Include="PlayerState.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

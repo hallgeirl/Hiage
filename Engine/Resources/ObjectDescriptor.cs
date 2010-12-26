@@ -12,11 +12,12 @@ namespace Engine
 	/// </summary>
 	public class ObjectDescriptor
 	{		
-		public ObjectDescriptor (string name, string type, string sprite, Dictionary<string, string> properties)
+		public ObjectDescriptor (string name, string type, string sprite, Dictionary<string, BoundingPolygon> boundingPolygons, Dictionary<string, string> properties)
 		{
 			Name = name;
 			Type = type;
 			ExtraProperties = properties;
+			BoundingPolygons = boundingPolygons;
 			this.Sprite = sprite;
 		}
 		
@@ -38,6 +39,12 @@ namespace Engine
 			private set;
 		}
 		
+		public Dictionary<string, BoundingPolygon> BoundingPolygons
+		{
+			get;
+			private set;
+		}
+		
 		public Dictionary<string, string> ExtraProperties
 		{
 			get;
@@ -48,18 +55,14 @@ namespace Engine
 		{
 			if (ExtraProperties.ContainsKey(propname))
 				return double.Parse(ExtraProperties[propname]);
-			else return 0.0;
+			else throw new KeyNotFoundException("No property with the name " + propname);
 		}
 		
 		public int GetIntProperty(string propname)
 		{
 			if (ExtraProperties.ContainsKey(propname))
 				return int.Parse(ExtraProperties[propname]);
-			else return 0;
+			else throw new KeyNotFoundException("No property with the name " + propname);
 		}
-/*		public string GetProperty(string propname)
-		{
-			return properties[propname];
-		}*/
 	}
 }

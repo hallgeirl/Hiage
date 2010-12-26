@@ -1,10 +1,14 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="Mario/Objects/GameObject.cs" ctype="Workbench">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Engine/GameLogic/CollisionManager.cs" ctype="Workbench">
     <Files>
-      <File FileName="Mario/Objects/PhysicalObject.cs" Line="102" Column="32" />
-      <File FileName="Mario/Main.cs" Line="12" Column="19" />
-      <File FileName="Engine/GameLogic/Game.cs" Line="1" Column="1" />
-      <File FileName="Mario/Objects/GameObject.cs" Line="93" Column="17" />
+      <File FileName="Mario/Objects/Player.cs" Line="139" Column="1" />
+      <File FileName="Mario/LevelState.cs" Line="186" Column="1" />
+      <File FileName="Engine/GameLogic/Game.cs" Line="131" Column="1" />
+      <File FileName="Mario/Main.cs" Line="3" Column="14" />
+      <File FileName="Engine/GameLogic/ICollidable.cs" Line="57" Column="1" />
+      <File FileName="Mario/Objects/PhysicalObject.cs" Line="92" Column="1" />
+      <File FileName="Engine/GameLogic/CollisionManager.cs" Line="4" Column="14" />
+      <File FileName="Engine/Common/Log.cs" Line="24" Column="27" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -12,16 +16,16 @@
           <Node name="Engine" expanded="True">
             <Node name="References" expanded="True" />
             <Node name="Common" expanded="True" />
-            <Node name="GameLogic" expanded="True" />
+            <Node name="GameLogic" expanded="True">
+              <Node name="CollisionManager.cs" selected="True" />
+            </Node>
             <Node name="Rendering" expanded="True" />
             <Node name="Resources" expanded="True" />
           </Node>
           <Node name="MapEditor" expanded="True" />
           <Node name="Mario" expanded="True">
             <Node name="Controllers" expanded="True" />
-            <Node name="Objects" expanded="True">
-              <Node name="GameObject.cs" selected="True" />
-            </Node>
+            <Node name="Objects" expanded="True" />
           </Node>
         </State>
       </Pad>
@@ -37,7 +41,7 @@
   <MonoDevelop.Ide.DebuggingService>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ctype="Workspace" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" ctype="Workspace" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

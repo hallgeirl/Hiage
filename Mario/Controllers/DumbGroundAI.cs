@@ -23,13 +23,13 @@ namespace Mario
 				obj.LeftAction();
 		}
 		
-		public void HandleCollision(GameObject obj, BoundingPolygon p, CollisionResult collisionResult)
+		public void HandleCollision(GameObject obj, BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
-			if (collisionResult.HitNormal.X > 0.8)
+			if (collisionNormal.X > 0.8)
 			{
 				direction = 1;
 			}
-			else if (collisionResult.HitNormal.X < -0.8)
+			else if (collisionNormal.X < -0.8)
 			{
 				direction = -1;
 			}
@@ -46,7 +46,6 @@ namespace Mario
 		public void HandleCollision(GameObject obj1, GameObject obj2, CollisionResult collisionResult)
 		{
 			if (!(obj2 is Player) && collisionResult.CollisionTime > 1e-10)
-			//if (collisionResult.CollisionTime > 1e-10)
 			{
 				direction *= -1;
 				obj1.Velocity.X *= -1;

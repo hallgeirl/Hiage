@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object>
+    <type>coin</type>
+    <sprite>coin</sprite>
+    <elasticity>0</elasticity>
+    <!--<friction>100</friction>
+    <run-speed>150</run-speed>
+    <max-speed>200</max-speed>-->
+    
+    <bounding-polygons>
+        <polygon id="small-standing">
+            <vertex x="-6" y="8" />
+            <vertex x="6" y="8" />
+            <vertex x="6" y="-8" />
+            <vertex x="-6" y="-8" />
+        </polygon>
+    </bounding-polygons>
+</object>

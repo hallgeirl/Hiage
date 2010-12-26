@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Engine;
 
 namespace Mario
@@ -18,39 +19,38 @@ namespace Mario
 			Sprite sprite = (string.IsNullOrEmpty(obj.Sprite) ? null : new Sprite(game.Resources.GetSpriteDescriptor(obj.Sprite), game.Resources));
 			ObjectPhysics objectPhysics = ObjectPhysics.DefaultObjectPhysics;
 			double runSpeed = double.PositiveInfinity, maxSpeed = double.PositiveInfinity;
-			int width, height;
 			
 			//Get any physical attributes for this object
-			//delegate double GetDouble(string propname);
-			
-			
 			objectPhysics.Elasticity = obj.GetDoubleProperty("elasticity");
 			objectPhysics.Friction = obj.GetDoubleProperty("friction");
 			runSpeed = obj.GetDoubleProperty("run-speed");
 			maxSpeed = obj.GetDoubleProperty("max-speed");
-			width = obj.GetIntProperty("width");
-			height = obj.GetIntProperty("height");
 			
+			//Clone the bounding polygon dictionary
+			Dictionary<string, BoundingPolygon> boundingPolygons = new Dictionary<string, BoundingPolygon>();
+			foreach (var key in obj.BoundingPolygons.Keys)
+			{
+				boundingPolygons[key] = (BoundingPolygon)obj.BoundingPolygons[key].Clone();
+			}
 			
 			switch (obj.Type)
 			{
 			case "player":
-				return new Player(position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, runSpeed, maxSpeed);
+				return new Player(position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed);
 			case "enemy":
 				switch (obj.Name)
 				{
 				case "goomba":
-					return new BasicGroundEnemy(position, velocity, sprite, game.Display.Renderer, new DumbGroundAI(), worldPhysics, objectPhysics, width, height, runSpeed, maxSpeed);
+					return new BasicGroundEnemy(position, velocity, sprite, game.Display.Renderer, new DumbGroundAI(), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed);
 				default:
-					Log.Write("Unknown enemy object name: " + obj.Name);
+					Log.Write("Unknown enemy object name: " + obj.Name, Log.WARNING);
 					break;
 				}
 				break;
 			default:
-				Log.Write("Unknown object type: " + obj.Type);
+				Log.Write("Unknown object type: " + obj.Type, Log.WARNING);
 				break;
 			}
-			
 			
 			return null;
 		}

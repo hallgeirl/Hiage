@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using Engine;
 
 namespace Mario
@@ -25,9 +26,9 @@ namespace Mario
 		
 		
 		public Player (Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, //GameObject attributes
-		               WorldPhysics worldPhysics, ObjectPhysics objectPhysics, //PhysicalObject attributes
+		               WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons, //PhysicalObject attributes
 		               double runSpeed, double maxSpeed) 	//Character attributes
-			: base(position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, 0, 0, runSpeed, maxSpeed) 
+			: base(position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
 		{
 			health = Player.HealthStatus.Small;
 			oldFriction = objectPhysics.Friction;
@@ -43,6 +44,15 @@ namespace Mario
 				
 				Sprite.PlayAnimation("crouch", false);
 			});
+		}
+		
+		public override BoundingPolygon BoundingBox
+		{
+			get
+			{ 
+				if (boundingPolygons == null) return null;
+				else return boundingPolygons["small-standing"];
+			}
 		}
 		
 		public override void Update(double frameTime)
@@ -111,7 +121,6 @@ namespace Mario
 			{
 				if (collisionResult.WillIntersect)
 				{
-					Log.Write("Coll normal " + edgeNormal);
 					BasicGroundEnemy enemy = (BasicGroundEnemy)o;
 					Velocity.Y = 200;
 					enemy.Kill();
@@ -128,44 +137,13 @@ namespace Mario
 				objectPhysics.Friction = oldFriction;
 			}
 		}
-
-
+		
 		public void Slide()
 		{
 			sliding = true;
 			objectPhysics.Friction = 0;
 		}
-		
-		public override int Width
-		{
-			get 
-			{ 
-				switch (health)
-				{
-				case HealthStatus.Small:
-					return 14; 
-				default:
-					return 16;
-				}
-			}
-		}
-		public override int Height
-		{
-			get 
-			{
-				switch(health)
-				{
-				case HealthStatus.Small:
-					if (crouching)
-						return 14;
-					else
-						return 18; 
-				default:
-					return 24;
-				}
-			}
-		}
-		
+				
 		public override void UpAction()
 		{
 			if (OnGround)

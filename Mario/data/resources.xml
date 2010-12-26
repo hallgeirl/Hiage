@@ -7,6 +7,7 @@
 
     <!-- Fonts -->
     <resource type="font" name="arial" path="fonts/arial.ttf" />
+    <resource type="font" name="verdana" path="fonts/verdana.ttf" />
 
     <!-- Tilesets -->
     <resource type="tileset" name="grassland" path="tilesets/grassland.xml" />

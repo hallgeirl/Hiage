@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using Engine;
 
 namespace Mario
@@ -14,9 +15,9 @@ namespace Mario
 		
 		//Just pass on the constructor stuff to base
 		public Character(Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, 
-		                 WorldPhysics worldPhysics, ObjectPhysics objectPhysics, int width, int height,
+		                 WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons,
 		                 double runSpeed, double maxSpeed) 
-			: base(position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, width, height) 
+			: base(position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons) 
 		{
 			Sprite.PlayAnimation("stand", true);
 			MaxSpeed = maxSpeed;

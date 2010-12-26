@@ -6,6 +6,11 @@
     <resource type="texture" name="background-green-mountains" path="bg_mountains_green.png" />
 
     <!-- Sprites -->
+    <resource type="texture" name="block-inactive" path="sprites/block-inactive.png" />
+    <resource type="texture" name="block-question" path="sprites/block-question.png" />
+    <resource type="texture" name="coin" path="sprites/coin.png" />
+    <resource type="texture" name="extralife" path="sprites/extralife.png" />
+
     <resource type="texture" name="goomba" path="sprites/goomba.png" />
     <resource type="texture" name="mario-small" path="sprites/mario_small.png" />
     <resource type="texture" name="mario-big" path="sprites/mario_big.png" />

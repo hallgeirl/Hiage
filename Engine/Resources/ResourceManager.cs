@@ -191,6 +191,7 @@ namespace Engine
 		}
 		
 		#region Resource retrieval
+		
 		/// <summary>
 		/// Retrieve a texture. Load it if neccesary.
 		/// </summary>

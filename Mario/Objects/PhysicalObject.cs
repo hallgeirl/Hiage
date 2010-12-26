@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using Engine;
 
 namespace Mario
@@ -12,13 +13,11 @@ namespace Mario
 		private   Timer 		inAirTimer = new Timer();
 		
 		public PhysicalObject (Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, 
-		                       WorldPhysics worldPhysics, ObjectPhysics objectPhysics, int width, int height) : base(position, velocity, sprite, renderer, controller, width, height) 
+		                       WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons) : base(position, velocity, sprite, renderer, controller, boundingPolygons) 
 		{
 			this.worldPhysics = worldPhysics;
 			this.objectPhysics = objectPhysics;
 			inAirTimer.Start();
-			Width = width;
-			Height = height;
 		}
 
 		#region Event handlers for physical objects
@@ -85,7 +84,8 @@ namespace Mario
 			{
 				Position += collisionResult.MinimumTranslationVector;
 			}
-			else */if (collisionResult.WillIntersect)
+			else */
+			if (collisionResult.WillIntersect)
 			{
 				remainingFrameTime -= collisionResult.CollisionTime;
 
@@ -118,18 +118,5 @@ namespace Mario
 			private set;
 		}
 		#endregion
-		
-		/*public override int Width
-		{
-			get;
-			protected set;
-		}
-		
-		public override int Height 
-		{
-			get;
-			protected set;
-		}*/
-
 	}
 }

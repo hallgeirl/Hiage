@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 
@@ -6,25 +5,25 @@ namespace Engine
 {
 	public class BoundingPolygon : ICloneable
 	{
+		//Untranslated vertices. That is, centered around (0, 0).
+		protected List<Vector> vertices;
+		//Translated vertices, centered around some coordinate (x,y).
+		protected List<Vector> verticesTranslated;
+		protected Vector center = new Vector(0,0);
+		
 		public BoundingPolygon() 
 		{
 			vertices = new List<Vector>();
+			verticesTranslated = new List<Vector>();
 			edgeNormals = new List<Vector>();
 		}
 		
 		/// <summary>
 		/// Construct a bounding polygon from a list of vertices
 		/// </summary>
-		public BoundingPolygon(List<Vector> verts)
+		public BoundingPolygon(List<Vector> verts) : this()
 		{
-			vertices = new List<Vector>();
-			edgeNormals = new List<Vector>();
-			
-			foreach (var v in verts)
-			{
-				vertices.Add((Vector)v.Clone());
-			}
-			BuildNormals();
+			AddVertices(verts);
 		}
 		
 		/// <summary>
@@ -34,6 +33,7 @@ namespace Engine
 		protected void BuildNormals()
 		{
 			edgeNormals.Clear();
+			MoveTo(center.X, center.Y);
 			edgeNormals = new List<Vector>(vertices.Count - (vertices.Count <= 2 ? 1 : 0));
 			left = 0; bottom = 0;
 			right = 0; top = 0;
@@ -46,16 +46,6 @@ namespace Engine
 				normal = new Vector(-edge.Y, edge.X);
 				normal.Normalize();
 				
-				/*bool parallel = false;
-				
-				//Check if we already have a normal that is parallel to this normal. 
-				//If so, don't add it as it's not relevant.
-				foreach (Vector n in edgeNormals)
-				{
-					if (Math.Abs(1-n.DotProduct(normal)) < Constants.MinDouble) 
-						parallel = true;
-				}
-				if (!parallel)*/
 				edgeNormals.Add(normal);
 				
 				//Update outer boundaries
@@ -79,10 +69,12 @@ namespace Engine
 		/// </summary>
 		public void AddVertex(Vector vertex)
 		{
-			vertices.Add(vertex);
+			vertices.Add((Vector)vertex.Clone());
+			verticesTranslated.Add(new Vector());
 			
-			//Calculate the last two edge normals as they have changed.
+			//Recalculate the normals
 			BuildNormals();
+			MoveTo(center.X, center.Y);
 		}
 		
 		/// <summary>
@@ -90,10 +82,15 @@ namespace Engine
 		/// </summary>
 		public void AddVertices(List<Vector> verts)
 		{
-			vertices.AddRange(verts);
+			foreach (var v in verts)
+			{
+				vertices.Add((Vector)v.Clone());
+				verticesTranslated.Add(new Vector());
+			}
 			
-			//Build the last normals
+			//Build the normals
 			BuildNormals();
+			MoveTo(center.X, center.Y);
 		}
 		
 		/// <summary>
@@ -103,44 +100,48 @@ namespace Engine
 		{
 			get { return edgeNormals; }
 		}
+		
 		protected List<Vector> edgeNormals;
 
 		/// <summary>
 		/// Vertices of polygon. 
-		/// Edges are implicit between consecutive vertices in a cyclic manner, 
-		/// so that there is an edge between the last and first vertex.
+		/// Edges are implicit between consecutive vertices in a clockwise cyclic manner, 
+		/// so that there is an edge between the last and first vertex, and edge normals point out to the left.
 		/// </summary>
 		public List<Vector> Vertices
 		{
-			get { return vertices; }
+			get { return verticesTranslated; }
 		}
-		protected List<Vector> vertices;
+		
 		
 		/// <summary>
-		/// Translate the whole polygon by a translation vector.
+		/// Translate the whole polygon by a translation vector (x,y).
 		/// </summary>
 		public BoundingPolygon Translate(double x, double y)
 		{
-			foreach (var vert in Vertices)
+			foreach (var vert in verticesTranslated)
 			{
 				vert.X += x;
 				vert.Y += y;
 			}
-			
+			center.X += x;
+			center.Y += y;
 			return this;
 		}
 		
 		/// <summary>
-		/// 
+		/// Center the polygon around a point (x,y). Same as translating from origin.
 		/// </summary>
 		public BoundingPolygon MoveTo(double x, double y)
 		{
-			foreach (var vert in Vertices)
+			for (int i = 0; i  < vertices.Count; i++)
 			{
-				vert.X = x;
-				vert.Y = y;
+				verticesTranslated[i].X = vertices[i].X + x;
+				verticesTranslated[i].Y = vertices[i].Y + y;
 			}
 			
+			center.X = x;
+			center.Y = y;
 			return this;
 		}
 		
@@ -159,7 +160,7 @@ namespace Engine
 		/// </summary>
 		public BoundingPolygon Scale(double sX, double sY)
 		{
-			foreach (var vert in Vertices)
+			foreach (var vert in verticesTranslated)
 			{
 				vert.X *= sX;
 				vert.Y *= sY;
@@ -174,7 +175,7 @@ namespace Engine
 		/// </summary>
 		public double Left
 		{
-			get { return vertices[left].X; }
+			get { return verticesTranslated[left].X; }
 		}
 		int left;
 		
@@ -183,7 +184,7 @@ namespace Engine
 		/// </summary>
 		public double Top
 		{
-			get { return vertices[top].Y; }
+			get { return verticesTranslated[top].Y; }
 		}
 		int top;
 		
@@ -192,7 +193,7 @@ namespace Engine
 		/// </summary>
 		public double Right
 		{
-			get { return vertices[right].X; }
+			get { return verticesTranslated[right].X; }
 		}
 		int right;
 		
@@ -201,7 +202,7 @@ namespace Engine
 		/// </summary>
 		public double Bottom
 		{
-			get { return vertices[bottom].Y; }
+			get { return verticesTranslated[bottom].Y; }
 		}
 		int bottom;
 		
@@ -210,7 +211,9 @@ namespace Engine
 		/// </summary>
 		public object Clone()
 		{
-			return new BoundingPolygon(Vertices);
+			BoundingPolygon p = new BoundingPolygon(vertices);
+			p.MoveTo(center.X, center.Y);
+			return new BoundingPolygon(vertices);
 		}
 		
 		public override string ToString()
@@ -266,10 +269,11 @@ namespace Engine
 		
 		public void Set(double left, double top, double right, double bottom)
 		{
-			vertices[0].X = left; vertices[0].Y = top; 
-			vertices[1].X = right; vertices[1].Y = top; 
-			vertices[2].X = right; vertices[2].Y = bottom; 
-			vertices[3].X = left; vertices[3].Y = bottom; 
+			verticesTranslated[0].X = left; verticesTranslated[0].Y = top; 
+			verticesTranslated[1].X = right; verticesTranslated[1].Y = top; 
+			verticesTranslated[2].X = right; verticesTranslated[2].Y = bottom; 
+			verticesTranslated[3].X = left; verticesTranslated[3].Y = bottom;
+			
 		}
 		
 	}
@@ -286,7 +290,7 @@ namespace Engine
 		void Collide(ICollidable o, Vector edgeNormal, CollisionResult collisionResult);
 		
 		// Bounding box for the collidable object before updating
-		BoundingBox BoundingBox
+		BoundingPolygon BoundingBox
 		{
 			get;
 		}

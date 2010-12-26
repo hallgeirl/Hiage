@@ -15,6 +15,7 @@ namespace Engine
 			doc.Load(filename);
 
 			string type = "", sprite = "";
+			Dictionary<string, BoundingPolygon> polygons = new Dictionary<string, BoundingPolygon>();
 			
 			//Second node is object node (or at least it should be)
 			foreach (XmlNode rootLevel in doc.ChildNodes)
@@ -23,6 +24,8 @@ namespace Engine
 				{
 					foreach (XmlNode c in rootLevel.ChildNodes)
 					{
+						if (c.NodeType == XmlNodeType.Comment) continue;
+						
 						switch (c.Name)
 						{
 						case "type":
@@ -30,6 +33,22 @@ namespace Engine
 							break;
 						case "sprite":
 							sprite = c.InnerText;
+							break;
+						case "bounding-polygons":
+							foreach (XmlNode p in c.ChildNodes)
+							{
+								if (p.Name == "polygon")
+								{
+									string id = p.Attributes["id"].Value;
+									List<Vector> vertices = new List<Vector>();
+									foreach (XmlNode v in p.ChildNodes)
+									{
+										if (v.Name == "vertex")
+											vertices.Add(new Vector(double.Parse(v.Attributes["x"].Value), double.Parse(v.Attributes["y"].Value)));
+									}
+									polygons.Add(id, new BoundingPolygon(vertices));
+								}
+							}
 							break;
 						default:
 							additionalProperties[c.Name] = c.InnerText;
@@ -41,7 +60,7 @@ namespace Engine
 					throw new XmlException("Not an object file!");
 			}
 			
-			result = new ObjectDescriptor(name, type, sprite, additionalProperties);
+			result = new ObjectDescriptor(name, type, sprite, polygons, additionalProperties);
 			
 			return result;
 		}

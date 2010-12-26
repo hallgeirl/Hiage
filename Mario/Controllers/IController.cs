@@ -13,7 +13,7 @@ namespace Mario
 		void Control(GameObject obj);
 		
 		//Collision response
-		void HandleCollision(GameObject obj, BoundingPolygon p, CollisionResult collisionResult);
+		void HandleCollision(GameObject obj, BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult);
 		void HandleCollision(GameObject obj1, GameObject obj2, CollisionResult collisionResult);
 	}
 }

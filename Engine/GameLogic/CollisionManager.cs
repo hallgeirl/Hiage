@@ -215,7 +215,7 @@ namespace Engine
 					#endif
 
 					//Ignore this test if the axis faces the wrong way
-					if (axis.DotProduct(relativeVelocity) * (axisOwner == 0 ? -1 : 1) > 0) 
+					if (axis.DotProduct(relativeVelocity) * (axisOwner == 0 ? -1 : 1) > Constants.MinDouble) 
 					{
 						#if DEBUG_COLLISION_OBJECT_POLYGON || DEBUG_COLLISION_OBJECT_OBJECT
 						Log.Write("\tIgnoring test because the edge faces the wrong way. Dot: " + axis.DotProduct(relativeVelocity) * (axisOwner == 0 ? -1 : 1) + "Owner: " + axisOwner);
@@ -382,7 +382,7 @@ namespace Engine
 
 					remainingFrameTime -= minimumCollisionTime;
 					//Subtract a small amount to behave correctly when we have small rounding errors.
-					finalResult.CollisionTime = minimumCollisionTime - Constants.MinDouble;
+					finalResult.CollisionTime = minimumCollisionTime - 1e-6;//Constants.MinDouble;
 
 					o.Collide(firstCollisionPolygon, finalNormalOwner == 1 ? finalResult.HitNormal : -finalResult.HitNormal, finalResult);
 					#if DEBUG_COLLISION_OBJECT_POLYGON

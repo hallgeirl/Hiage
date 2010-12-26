@@ -85,12 +85,91 @@ namespace Engine
 		}
 		
 		/// <summary>
+		/// Recursively load all resources under the given path
+		/// </summary>
+		public void LoadResources(string path)
+		{
+			DirectoryInfo root = new DirectoryInfo(path);
+			
+			DirectoryInfo[] dirs = root.GetDirectories();
+			
+			FileInfo[] files = root.GetFiles("*.xml");
+			
+			foreach (var f in files)
+			{
+				//Check what kind of resource this is
+				XmlDocument doc = new XmlDocument();
+				doc.Load(f.FullName);
+				
+				foreach (XmlNode c in doc.ChildNodes)
+				{
+					if (c.NodeType == XmlNodeType.Element)
+					{
+						string name = "";
+						try
+						{
+							name = c.Attributes["id"].Value;
+						}
+						catch (Exception)
+						{
+							if (c.Name != "resources")
+							{
+								Log.Write("Could not find id of resource in " + f.FullName, Log.WARNING);
+								break;
+							}
+						}
+						
+						
+						switch (c.Name)
+						{
+							case "sprite":
+								if (sprites.ContainsKey(name))
+									Log.Write("Sprite with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
+								else
+									sprites.Add(name, new Resource<SpriteDescriptor>(f.FullName, name));
+								break;
+								
+							case "resources":
+								LoadResourceXML(f.FullName);
+								break;
+								
+							case "tileset":
+							 	if (tilesets.ContainsKey(name))
+									Log.Write("Tileset with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
+								else
+									tilesets.Add(name, new Resource<Tileset>(f.FullName, name));
+								break;
+			
+							case "map":
+							 	if (tilemaps.ContainsKey(name))
+									Log.Write("Map with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
+								else
+									tilemaps.Add(name, new Resource<MapDescriptor>(f.FullName, name));
+								break;
+							case "object":
+							 	if (objects.ContainsKey(name))
+									Log.Write("Object with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
+								else
+									objects.Add(name, new Resource<ObjectDescriptor>(f.FullName, name));
+								break;					
+							default:
+								Log.Write("Unknown resource type: \"" + c.Name + "\". Resource ignored.", Log.WARNING);
+								break;						}
+					}
+				}
+			}
+			
+			//Load sub directories
+			foreach (var dir in dirs)
+			{
+				LoadResources(Path.Combine(path, dir.Name));
+			}
+		}
+		
+		/// <summary>
 		/// Load resources from a resource XML file.
 		/// </summary>
-		/// <param name="resourceXML">
-		/// A <see cref="System.String"/>
-		/// </param>
-		public void LoadResources(string resourceXML)
+		public void LoadResourceXML(string resourceXML)
 		{
 			XmlTextReader reader = new XmlTextReader(resourceXML);
 			string directory = Path.GetDirectoryName(resourceXML);
@@ -143,45 +222,15 @@ namespace Engine
 						textures.Add(name, new Resource<Texture>(file, name));
 					break;
 					
-				case "sprite":
-					if (sprites.ContainsKey(name))
-						Log.Write("Sprite with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
-					else
-						sprites.Add(name, new Resource<SpriteDescriptor>(file, name));
-					break;
-					
 				case "font":
 					if (fonts.ContainsKey(name))
 						Log.Write("Sprite with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
 					else
 						fonts.Add(name, new Resource<ISE.FTFont>(file, name));
 					break;
-					
-				case "resourcefile":
-					LoadResources(file);
-					break;
-					
-				case "tileset":
-				 	if (tilesets.ContainsKey(name))
-						Log.Write("Tileset with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
-					else
-						tilesets.Add(name, new Resource<Tileset>(file, name));
-					break;
 
-				case "map":
-				 	if (tilemaps.ContainsKey(name))
-						Log.Write("Map with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
-					else
-						tilemaps.Add(name, new Resource<MapDescriptor>(file, name));
-					break;
-				case "object":
-				 	if (objects.ContainsKey(name))
-						Log.Write("Object with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
-					else
-						objects.Add(name, new Resource<ObjectDescriptor>(file, name));
-					break;					
 				default:
-					Log.Write("Unknown resource type: \"" + type + "\". Resource ignored.", Log.WARNING);
+					Log.Write("Invalid resource type for resource library file: \"" + type + "\". Resource ignored.", Log.WARNING);
 					break;
 				}
 				

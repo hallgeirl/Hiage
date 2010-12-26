@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<map>
+<map id="level1">
 	<geometry>
 		<width>100</width>
 		<height>20</height>
@@ -187,6 +187,96 @@
 			<name>goomba</name>
 			<x-pos>1549.7391406250001</x-pos>
 			<y-pos>135.859375</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>150.0234375</x-pos>
+			<y-pos>148.9855072463767</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>167.3671875</x-pos>
+			<y-pos>148.11594202898539</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>186.4453125</x-pos>
+			<y-pos>146.66666666666657</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>319.4140625</x-pos>
+			<y-pos>225.2173913043477</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>901.875</x-pos>
+			<y-pos>107.5362318840579</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>914.59375</x-pos>
+			<y-pos>106.95652173913037</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>927.3125</x-pos>
+			<y-pos>106.6666666666666</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>942.6328125</x-pos>
+			<y-pos>106.95652173913037</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>955.9296875</x-pos>
+			<y-pos>106.08695652173907</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>968.0703125</x-pos>
+			<y-pos>106.08695652173905</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>981.65625</x-pos>
+			<y-pos>105.50724637681152</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>853.6015625</x-pos>
+			<y-pos>137.9710144927536</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>870.65625</x-pos>
+			<y-pos>137.97101449275357</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>823.5390625</x-pos>
+			<y-pos>171.88405797101441</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>807.640625</x-pos>
+			<y-pos>171.59420289855063</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>791.453125</x-pos>
+			<y-pos>171.59420289855063</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>710.09806249999951</x-pos>
+			<y-pos>219.42028985507244</y-pos>
+		</object>
+		<object>
+			<name>coin</name>
+			<x-pos>726.9921875</x-pos>
+			<y-pos>219.71014492753619</y-pos>
 		</object>
 	</objects>
 

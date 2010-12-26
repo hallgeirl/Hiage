@@ -13,6 +13,21 @@ namespace Mario
 			this.game = game;
 		}
 		
+		private double TryGetDoubleProperty(ObjectDescriptor obj, string prop)
+		{
+			double val = 0;
+			try
+			{
+				val = obj.GetDoubleProperty(prop);
+			}
+			catch (KeyNotFoundException)
+			{
+				val = 0;
+			}
+			
+			return val;
+		}
+		
 		public GameObject Spawn(string objectName, Vector position, Vector velocity, WorldPhysics worldPhysics)
 		{
 			ObjectDescriptor obj = game.Resources.GetObjectDescriptor(objectName);
@@ -21,10 +36,11 @@ namespace Mario
 			double runSpeed = double.PositiveInfinity, maxSpeed = double.PositiveInfinity;
 			
 			//Get any physical attributes for this object
-			objectPhysics.Elasticity = obj.GetDoubleProperty("elasticity");
-			objectPhysics.Friction = obj.GetDoubleProperty("friction");
-			runSpeed = obj.GetDoubleProperty("run-speed");
-			maxSpeed = obj.GetDoubleProperty("max-speed");
+			objectPhysics.Elasticity = TryGetDoubleProperty(obj, "elasticity");
+			objectPhysics.Friction = TryGetDoubleProperty(obj, "friction");
+							
+			runSpeed = TryGetDoubleProperty(obj, "run-speed");
+			maxSpeed = TryGetDoubleProperty(obj, "max-speed");
 			
 			//Clone the bounding polygon dictionary
 			Dictionary<string, BoundingPolygon> boundingPolygons = new Dictionary<string, BoundingPolygon>();
@@ -47,6 +63,8 @@ namespace Mario
 					break;
 				}
 				break;
+			case "coin":
+				return new Coin(position, sprite, game.Display.Renderer, boundingPolygons);
 			default:
 				Log.Write("Unknown object type: " + obj.Type, Log.WARNING);
 				break;

@@ -1,14 +1,16 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="Engine/GameLogic/CollisionManager.cs" ctype="Workbench">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Mario/Objects/Player.cs" ctype="Workbench">
     <Files>
-      <File FileName="Mario/Objects/Player.cs" Line="139" Column="1" />
-      <File FileName="Mario/LevelState.cs" Line="186" Column="1" />
-      <File FileName="Engine/GameLogic/Game.cs" Line="131" Column="1" />
-      <File FileName="Mario/Main.cs" Line="3" Column="14" />
-      <File FileName="Engine/GameLogic/ICollidable.cs" Line="57" Column="1" />
-      <File FileName="Mario/Objects/PhysicalObject.cs" Line="92" Column="1" />
-      <File FileName="Engine/GameLogic/CollisionManager.cs" Line="4" Column="14" />
-      <File FileName="Engine/Common/Log.cs" Line="24" Column="27" />
+      <File FileName="Mario/LevelState.cs" Line="172" Column="1" />
+      <File FileName="Engine/Rendering/Display.cs" Line="1" Column="1" />
+      <File FileName="Engine/Rendering/Renderer.cs" Line="1" Column="1" />
+      <File FileName="Mario/ObjectFactory.cs" Line="67" Column="1" />
+      <File FileName="Engine/GameLogic/Game.cs" Line="98" Column="5" />
+      <File FileName="Engine/Resources/ResourceManager.cs" Line="323" Column="4" />
+      <File FileName="Engine/Resources/ObjectDescriptor.cs" Line="58" Column="44" />
+      <File FileName="Mario/Objects/Coin.cs" Line="12" Column="41" />
+      <File FileName="Mario/Objects/Character.cs" Line="1" Column="1" />
+      <File FileName="Mario/Objects/Player.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -16,16 +18,16 @@
           <Node name="Engine" expanded="True">
             <Node name="References" expanded="True" />
             <Node name="Common" expanded="True" />
-            <Node name="GameLogic" expanded="True">
-              <Node name="CollisionManager.cs" selected="True" />
-            </Node>
+            <Node name="GameLogic" expanded="True" />
             <Node name="Rendering" expanded="True" />
             <Node name="Resources" expanded="True" />
           </Node>
           <Node name="MapEditor" expanded="True" />
           <Node name="Mario" expanded="True">
             <Node name="Controllers" expanded="True" />
-            <Node name="Objects" expanded="True" />
+            <Node name="Objects" expanded="True">
+              <Node name="Player.cs" selected="True" />
+            </Node>
           </Node>
         </State>
       </Pad>

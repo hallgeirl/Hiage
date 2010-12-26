@@ -18,6 +18,11 @@
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeExecute" command="bash ${ProjectDir}/copy_data" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -25,6 +30,11 @@
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeExecute" command="bash ${ProjectDir}/copy_data" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj">
@@ -49,6 +59,7 @@
     <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\BasicGroundEnemy.cs" />
     <Compile Include="PlayerState.cs" />
+    <Compile Include="Objects\Coin.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

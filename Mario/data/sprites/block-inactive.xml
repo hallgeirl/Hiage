@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<sprite name="block-inactive">
+<sprite id="block-inactive">
   <texture name="block-inactive" />
 
   <defaults>

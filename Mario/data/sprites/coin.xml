@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<sprite name="coin" framewidth="12" frameheight="16">
-  <texture name="coin" />
+<sprite id="coin" framewidth="12" frameheight="16">
+  <texture>coin</texture>
   
   <defaults>
     <frame-width>12</frame-width>
     <frame-height>16</frame-height>
   </defaults>
 	
-  <animation name="stand">
+  <animation>
+    <name>normal</name>
     <frame x="0" y="0" delay="0.1" next="1" />
     <frame x="13" y="0" delay="0.1" next="2" />
     <frame x="25" y="0" delay="0.1" next="3" />

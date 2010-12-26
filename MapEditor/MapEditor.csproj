@@ -19,6 +19,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <additionalargs>-unsafe</additionalargs>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeExecute" command="bash ${ProjectDir}/copy_data" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -28,6 +33,11 @@
     <WarningLevel>4</WarningLevel>
     <GenerateDocumentation>true</GenerateDocumentation>
     <additionalargs>-unsafe</additionalargs>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeExecute" command="bash ${ProjectDir}/copy_data" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'WindowsRelease|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -87,11 +97,6 @@
       <Project>{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}</Project>
       <Name>Engine</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="resources.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

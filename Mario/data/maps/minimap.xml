@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<map>
+<map id="minimap">
 	<geometry>
 		<width>10</width>
 		<height>10</height>

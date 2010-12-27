@@ -7,10 +7,12 @@ namespace Mario
 	public class ObjectFactory
 	{
 		private Game game;
+		private MarioGameState state;
 		
-		public ObjectFactory (Game game)
+		public ObjectFactory (Game game, MarioGameState state)
 		{
 			this.game = game;
+			this.state = state;
 		}
 		
 		private double TryGetDoubleProperty(ObjectDescriptor obj, string prop)
@@ -52,7 +54,7 @@ namespace Mario
 			switch (obj.Type)
 			{
 			case "player":
-				return new Player(position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed);
+				return new Player(position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed, state.PlayerState);
 			case "enemy":
 				switch (obj.Name)
 				{

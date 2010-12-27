@@ -7,10 +7,11 @@ namespace Mario
 	/*
 	 *  Game state which handles the "playing" part of the game (tilemap, objects etc.)
 	 */
-	public class LevelState : IGameState
+	public class LevelState : MarioGameState
 	{
 		Game 				game;											 //Reference to the main game object				
 		Display 			display;
+		Camera 				camera;
 		PlayerState 		playerInfo;
 		List<Sprite>		icons;
 		
@@ -23,18 +24,18 @@ namespace Mario
 		Timer 				fullscreenTimer = new Timer();	//Used to prevent a lot of fullscreen on/offs when holding down alt+enter more than one frame
 		
 		//Construct a levelstate object
-		public LevelState (PlayerState player, Game game, string mapName)
+		public LevelState (PlayerState player, Game game, string mapName) : base(player)
 		{
 			playerInfo = player;
 			
 			this.game = game;
 			this.display = game.Display;
-			game.Display.CameraX = 50;
-			game.Display.CameraY = 100;
+//			game.Display.CameraX = 50;
+			//game.Display.CameraY = 100;
 			
 			//Load map
 			MapDescriptor map = game.Resources.GetMapDescriptor(mapName);
-			objectFactory = new ObjectFactory(game);
+			objectFactory = new ObjectFactory(game, this);
 			
 			tileMap = new TileMap(game.Display, game.Resources, map);
 			
@@ -58,9 +59,11 @@ namespace Mario
 			//Set the map background
 			if (!string.IsNullOrEmpty(map.Background))
 			    background = new ParallaxBackground(game.Resources.GetTexture(map.Background), 0.5, 0.2, game.Display);
+			
+			camera = new Camera(display, 0, map.Width * map.TileSize, 0, map.Height * map.TileSize);
 		}
 		
-		public void Initialize(Game game)
+		public override void Initialize(Game game)
 		{
 			game.Display.Renderer.SetFont("verdana", 8);
 			//icons.Add(new Sprite(game.Resources.GetSpriteDescriptor(
@@ -128,8 +131,8 @@ namespace Mario
 				
 			}
 			
-			game.Display.CameraX = player.Position.X;
-			game.Display.CameraY = player.Position.Y;
+			camera.X = player.Position.X;
+			camera.Y = player.Position.Y;
 		}
 		
 		public void HandleInput(double frameTime)
@@ -162,11 +165,10 @@ namespace Mario
 			
 			game.Display.Renderer.DrawText("FPS: " + game.FPS.ToString("N2"), display.RenderedCameraX - display.ViewportWidth/2, display.RenderedCameraY - display.ViewportHeight/2);
 			game.Display.Renderer.DrawText("Lives: " + playerInfo.Lives, display.RenderedCameraX - display.ViewportWidth/2 + 5, display.RenderedCameraY + display.ViewportHeight/2 - 16);
-			//game.Display.Renderer.DrawText("Coins: " + playerInfo.Coins, display.RenderedCameraX + display.ViewportWidth/2, display.RenderedCameraY - display.ViewportHeight/2 - 16);
 			game.Display.Renderer.DrawText("Coins: " + playerInfo.Coins, display.RenderedCameraX + display.ViewportWidth/2 - 55, display.RenderedCameraY + display.ViewportHeight/2 - 16);
 		}
 		
-		public void Run(double frameTime)
+		public override void Run(double frameTime)
 		{
 			foreach (var o in objects)
 				o.Prepare(frameTime);

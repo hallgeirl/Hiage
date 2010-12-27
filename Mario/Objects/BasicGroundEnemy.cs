@@ -9,9 +9,6 @@ namespace Mario
 
 	public class BasicGroundEnemy : Character
 	{
-		protected int dieState;
-		protected Timer dieTimer = new Timer();
-		
 		public BasicGroundEnemy (Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, //GameObject attributes
 		               WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons,	//PhysicalObject attributes
 		               double runSpeed, double maxSpeed) 	//Character attributes
@@ -70,18 +67,6 @@ namespace Mario
 			private set;
 		}
 		
-		public void Kill()
-		{
-			currentState = dieState;
-			dieTimer.Start();
-			
-			Dying = true;
-		}
-		
-		public bool Dying
-		{
-			get;
-			private set;
-		}
+
 	}
 }

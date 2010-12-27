@@ -27,11 +27,13 @@ namespace Mario
 		
 		public Player (Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, //GameObject attributes
 		               WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons, //PhysicalObject attributes
-		               double runSpeed, double maxSpeed) 	//Character attributes
+		               double runSpeed, double maxSpeed, 	//Character attributes
+		               PlayerState state)
 			: base(position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
 		{
 			health = Player.HealthStatus.Small;
 			oldFriction = objectPhysics.Friction;
+			PlayerState = state;
 		}
 		
 		protected override void SetupStates ()
@@ -117,6 +119,17 @@ namespace Mario
 		
 		public override void Collide (ICollidable o, Vector edgeNormal, CollisionResult collisionResult)
 		{
+			if (o is Coin)
+			{
+				PlayerState.Coins++;
+				if (PlayerState.Coins >= 100)
+				{
+					PlayerState.Lives += PlayerState.Coins / 100;
+					PlayerState.Coins = PlayerState.Coins % 100;
+				}
+				((Coin)o).Delete = true;
+			}
+			
 			if (BoundingBox.Bottom >= o.BoundingBox.Top && o is BasicGroundEnemy && ((BasicGroundEnemy)o).Stompable && !((BasicGroundEnemy)o).Dying)
 			{
 				if (collisionResult.WillIntersect)
@@ -184,6 +197,11 @@ namespace Mario
 			}
 			else 
 				Accellerate(new Vector(200, 0));
+		}
+		
+		public PlayerState PlayerState
+		{
+			get; private set;
 		}
 	}
 }

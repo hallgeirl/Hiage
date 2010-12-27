@@ -51,18 +51,36 @@ namespace Engine
 			private set;
 		}
 		
-		public double GetDoubleProperty(string propname)
+		public double GetDoubleProperty(string propname, double defaultValue)
 		{
 			if (ExtraProperties.ContainsKey(propname))
 				return double.Parse(ExtraProperties[propname]);
-			else throw new KeyNotFoundException("No property with the name " + propname);
+			else 
+				return defaultValue;
+		}
+		
+		public int GetIntProperty(string propname, int defaultValue)
+		{
+			if (ExtraProperties.ContainsKey(propname))
+				return int.Parse(ExtraProperties[propname]);
+			else 
+				return defaultValue;
+		}
+		
+		public double GetDoubleProperty(string propname)
+		{
+		if (ExtraProperties.ContainsKey(propname))
+				return double.Parse(ExtraProperties[propname]);
+			else 
+				throw new KeyNotFoundException("No property with the name " + propname);
 		}
 		
 		public int GetIntProperty(string propname)
 		{
 			if (ExtraProperties.ContainsKey(propname))
 				return int.Parse(ExtraProperties[propname]);
-			else throw new KeyNotFoundException("No property with the name " + propname);
+			else 
+				throw new KeyNotFoundException("No property with the name " + propname);
 		}
 	}
 }

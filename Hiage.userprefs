@@ -10,11 +10,11 @@
       <File FileName="Engine/Resources/ObjectDescriptor.cs" Line="58" Column="44" />
       <File FileName="Mario/Objects/Coin.cs" Line="12" Column="41" />
       <File FileName="Mario/Objects/Character.cs" Line="1" Column="1" />
-      <File FileName="Mario/Objects/Player.cs" Line="1" Column="1" />
+      <File FileName="Mario/Objects/Player.cs" Line="11" Column="31" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
+        <State expanded="True" selected="True">
           <Node name="Engine" expanded="True">
             <Node name="References" expanded="True" />
             <Node name="Common" expanded="True" />
@@ -25,9 +25,7 @@
           <Node name="MapEditor" expanded="True" />
           <Node name="Mario" expanded="True">
             <Node name="Controllers" expanded="True" />
-            <Node name="Objects" expanded="True">
-              <Node name="Player.cs" selected="True" />
-            </Node>
+            <Node name="Objects" expanded="True" />
           </Node>
         </State>
       </Pad>

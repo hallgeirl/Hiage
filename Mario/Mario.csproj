@@ -60,6 +60,8 @@
     <Compile Include="Objects\BasicGroundEnemy.cs" />
     <Compile Include="PlayerState.cs" />
     <Compile Include="Objects\Coin.cs" />
+    <Compile Include="MarioGameState.cs" />
+    <Compile Include="Camera.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

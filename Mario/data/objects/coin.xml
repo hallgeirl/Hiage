@@ -3,9 +3,6 @@
     <type>coin</type>
     <sprite>coin</sprite>
     <elasticity>0</elasticity>
-    <!--<friction>100</friction>
-    <run-speed>150</run-speed>
-    <max-speed>200</max-speed>-->
     
     <bounding-polygons>
         <polygon id="normal">

@@ -1,17 +1,5 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="Mario/Objects/Player.cs" ctype="Workbench">
-    <Files>
-      <File FileName="Mario/LevelState.cs" Line="172" Column="1" />
-      <File FileName="Engine/Rendering/Display.cs" Line="1" Column="1" />
-      <File FileName="Engine/Rendering/Renderer.cs" Line="1" Column="1" />
-      <File FileName="Mario/ObjectFactory.cs" Line="67" Column="1" />
-      <File FileName="Engine/GameLogic/Game.cs" Line="98" Column="5" />
-      <File FileName="Engine/Resources/ResourceManager.cs" Line="323" Column="4" />
-      <File FileName="Engine/Resources/ObjectDescriptor.cs" Line="58" Column="44" />
-      <File FileName="Mario/Objects/Coin.cs" Line="12" Column="41" />
-      <File FileName="Mario/Objects/Character.cs" Line="1" Column="1" />
-      <File FileName="Mario/Objects/Player.cs" Line="11" Column="31" />
-    </Files>
+  <MonoDevelop.Ide.Workbench ctype="Workbench">
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True" selected="True">

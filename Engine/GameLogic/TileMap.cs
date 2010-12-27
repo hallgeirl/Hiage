@@ -3,141 +3,26 @@ using System.Collections.Generic;
 
 namespace Engine
 {
-	public class Edge : ICloneable
-	{
-		/// <summary>
-		/// Create a new edge.
-		/// </summary>
-		/// <param name="p1">
-		/// Defines the first point of the edge
-		/// </param>
-		/// <param name="p2">
-		/// Defines the second point of the edge
-		/// </param>
-		/// <param name="normal">
-		/// The edge normal vector. If this parameter is null, a vector perpendicular to the one defined by the two points p1 and p2 will be calculated.
-		/// </param>
-		public Edge(Vector p1, Vector p2, Vector normal)
-		{
-			this.P1 = p1;
-			this.P2 = p2;
-			//this.PositionsAreAbsolute = false;
-			
-			if (normal == null)
-			{
-				Vector v = p2 - p1;
-				Normal = new Vector(v.Y, -v.X).Normalize();
-			}
-			else
-				Normal = normal.Normalize();
-		}
-		
-		public object Clone()
-		{
-			return new Edge((Vector)P1.Clone(), (Vector)P2.Clone(), (Vector)Normal.Clone());
-		}
-		
-		public Edge Copy()
-		{
-			return (Edge)Clone();
-		}
-		/*
-		public void CalculateAbsolutePositions(int offsetX, int offsetY)
-		{
-			if (!PositionsAreAbsolute)
-			{
-				PositionsAreAbsolute = true;
-				P1.X += offsetX;
-				P1.Y += offsetY;
-				P2.X += offsetX;
-				P2.Y += offsetY;
-			}
-		}*/
-		
-		/// <value>
-		/// The edge normal
-		/// </value>
-		public Vector Normal
-		{
-			get;
-			private set;
-		}
-		
-		public Vector P1
-		{
-			get;
-			private set;
-		}
-
-		public Vector P2
-		{
-			get;
-			private set;
-		}
-		
-		//Return the edge in vector form
-		public Vector AsVector
-		{
-			get
-			{
-				return P2-P1;
-			}
-		}
-		
-		public double Length
-		{
-			get { return new Vector(P2.X-P1.X, P2.Y-P1.Y).Length; }
-		}
-		
-		/*
-		public bool PositionsAreAbsolute
-		{
-			get;
-			private set;
-		}*/
-		
-		public override string ToString ()
-		{
-			return "[Edge: P1=" + P1 + ", P2=" + P2 + ",Normal=" + Normal + "]";
-		}
-
-
-	}
-	
 	//Class representing a tile with edges and texture
 	public class Tile
 	{
 		/// <summary>
 		/// Create a new tile
 		/// </summary>
-		/// <param name="id">
-		/// A <see cref="System.Int32"/>
-		/// </param>
-		/// <param name="texture">
-		/// A <see cref="Texture"/>
-		/// </param>
-		/// <param name="edges">
-		/// A <see cref="List"/>
-		/// </param>
-		public Tile(int id, Texture texture, List<Edge> edges)
+		public Tile(int id, Texture texture, BoundingPolygon boundingPolygon)
 		{
 			this.Id = id;
-			this.Edges = edges;
+			this.BoundingPolygon = boundingPolygon;
 			this.Texture = texture;
 			
 		}
 		
 		public object Clone()
 		{
-			//Copy all edges
-			List<Edge> edges = new List<Edge>();
-
-			foreach (Edge e in Edges)
-			{
-				edges.Add((Edge)e.Clone());
-			}
-			
-			return new Tile(Id, Texture, edges);
+			//Copy bounding polygon
+			BoundingPolygon polygon = BoundingPolygon != null ? (BoundingPolygon)BoundingPolygon.Clone() : null;
+						
+			return new Tile(Id, Texture, polygon);
 		}
 		
 		public Tile Copy()
@@ -162,7 +47,7 @@ namespace Engine
 			private set;
 		}
 		
-		public List<Edge> Edges
+		public BoundingPolygon BoundingPolygon
 		{
 			get;
 			private set;			
@@ -208,9 +93,6 @@ namespace Engine
 			
 			return fileNames[id];
 		}
-		
-
-		
 		#endregion
 		
 		#region Properties
@@ -300,19 +182,22 @@ namespace Engine
 		}
 		
 		/// <summary>
-		/// Calculate absolute edge positions for all edges in a specified tile in tilemapso that these don't have to be calculated every time they're needed.
+		/// Calculate absolute edge positions for all edges in a specified tile in tilemap so that these don't have to be calculated every time they're needed.
 		/// </summary>
 		private void CalculateEdgePositions(int x, int y, int z)
 		{
 			Texture t = map[x,y,z].Texture;
 			
-			foreach (Edge e in map[x,y,z].Edges)
-			{
-				e.P1.X = e.P1.X*(Tilesize/(t.Width-1))+x*Tilesize + OffsetX;
-				e.P1.Y = e.P1.Y*(Tilesize/(t.Height-1))+y*Tilesize + OffsetY;
-				e.P2.X = e.P2.X*(Tilesize/(t.Width-1))+x*Tilesize + OffsetX;
-				e.P2.Y = e.P2.Y*(Tilesize/(t.Height-1))+y*Tilesize + OffsetY;
-			}
+			BoundingPolygon bp = map[x,y,z].BoundingPolygon;
+			if (bp == null) return;
+			
+			bp.Scale(Tilesize/(t.Width-1), Tilesize/(t.Height-1));
+			bp.Translate(x*Tilesize + OffsetX, y*Tilesize + OffsetY);
+
+			/*e.P1.X = e.P1.X*(Tilesize/(t.Width-1))+x*Tilesize + OffsetX;
+			e.P1.Y = e.P1.Y*(Tilesize/(t.Height-1))+y*Tilesize + OffsetY;
+			e.P2.X = e.P2.X*(Tilesize/(t.Width-1))+x*Tilesize + OffsetX;
+			e.P2.Y = e.P2.Y*(Tilesize/(t.Height-1))+y*Tilesize + OffsetY;*/
 		}
 			
 		
@@ -340,19 +225,22 @@ namespace Engine
 					
 					renderer.Render(xTile*Tilesize + OffsetX, yTile*Tilesize + OffsetY,(xTile+1)*Tilesize + OffsetX, (yTile+1)*Tilesize + OffsetY, t.Texture);
 					
-					/*foreach (Edge e in map[xTile, yTile, 0].Edges)
+					#if DEBUG
+					if (map[xTile, yTile, 0].BoundingPolygon != null)
 					{
-						Vector p1 = e.P1, p2 = e.P2;
-						
-						renderer.DrawLine(e.P1.X, e.P1.Y, e.P2.X, e.P2.Y);
-						
-						//Draw normal
-						renderer.DrawLine(p1.X + (p2.X-p1.X)/2, p1.Y + (p2.Y-p1.Y)/2, p1.X + (p2.X-p1.X)/2+e.Normal.X*Tilesize/4, p1.Y + (p2.Y-p1.Y)/2+e.Normal.Y*Tilesize/4);
-					}*/
-					
-					
-					
-					//renderer.DrawText("(" + xTile + ", " + yTile + ")", xTile*tileSize,yTile*tileSize);
+						List<Vector> bp = map[xTile, yTile, 0].BoundingPolygon.Vertices;
+						for (int i = 0; i < bp.Count; i++)
+						{
+							Vector p1 = bp[i], p2 = bp[i == bp.Count-1 ? 0 : i+1];
+							
+							//Draw edge
+							renderer.DrawLine(p1.X, p1.Y, p2.X, p2.Y);
+							
+							//Draw normal
+							//renderer.DrawLine(p1.X + (p2.X-p1.X)/2, p1.Y + (p2.Y-p1.Y)/2, p1.X + (p2.X-p1.X)/2+e.Normal.X*Tilesize/4, p1.Y + (p2.Y-p1.Y)/2+e.Normal.Y*Tilesize/4);
+						}
+					}
+					#endif
 				}
 			}
 		}
@@ -379,9 +267,12 @@ namespace Engine
 			return map[x, y, layer];
 		}
 		
-		public List<Edge> GetEdgesInRegion(BoundingBox boundingBox, int layer)
+		/// <summary>
+		/// Return all tiles' bounding polygons in a specified region.
+		/// </summary>
+		public List<BoundingPolygon> GetBoundingPolygonsInRegion(Box boundingBox, int layer)
 		{
-			List<Edge> edges = new List<Edge>();
+			List<BoundingPolygon> polygons = new List<BoundingPolygon>();
 				
 			int minTileX = (int)Math.Max((boundingBox.Left - OffsetX) / Tilesize, 0.0);
 			int maxTileX = (int)Math.Min((boundingBox.Right - OffsetX) / Tilesize, Width-1);
@@ -392,11 +283,13 @@ namespace Engine
 			{
 				for (int yTile = minTileY; yTile <= maxTileY; yTile++)
 				{
-					edges.AddRange(map[xTile, yTile, layer].Edges);
+					BoundingPolygon p = map[xTile, yTile, layer].BoundingPolygon;
+					if (p != null && p.Vertices.Count > 1)
+						polygons.Add(p);
 				}
 			}
 			
-			return edges;
+			return polygons;
 		}
 		
 		#region Properties
@@ -463,7 +356,7 @@ namespace Engine
 		}
 		
 		//For testing only
-		public List<Edge> AllEdges
+		/*public List<Edge> AllEdges
 		{
 			get
 			{
@@ -483,7 +376,7 @@ namespace Engine
 				}
 				return edges;
 			}
-		}
+		}*/
 		
 		#endregion
 	}

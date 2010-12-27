@@ -1,3 +1,4 @@
+//#undef DEBUG
 using System;
 using System.Collections.Generic;
 using Engine;
@@ -9,6 +10,8 @@ namespace Mario
 	{
 		Renderer renderer;
 		IController controller;
+
+		protected Dictionary<string, BoundingPolygon> boundingPolygons;
 		protected Vector accelVector = new Vector(0, 0);
 		protected double remainingFrameTime = 1;
 		protected double animationSpeedFactor = 1;
@@ -23,13 +26,15 @@ namespace Mario
 		protected int currentState = -1;
 		
 		//Construct a game object. Set controller to null if the object should be static.
-		public GameObject(Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller)
+		public GameObject(Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, Dictionary<string, BoundingPolygon> boundingPolygons)
 		{
+			this.boundingPolygons = boundingPolygons;
 			Sprite = sprite;
 			Velocity = velocity;
 			Position = position;
 			this.renderer = renderer;
 			this.controller = controller;
+			//boundingPolygon.MoveTo(Position.X, Position.Y);
 			
 			SetupStates();
 		}
@@ -59,8 +64,6 @@ namespace Mario
 		public virtual void Update(double frameTime)
 		{
 			Position += Velocity*frameTime*remainingFrameTime;
-
-
 			Velocity += accelVector*frameTime;
 						
 			accelVector.X = 0;
@@ -78,29 +81,29 @@ namespace Mario
 		
 		#region ICollidable specifics
 		//Bounding box before update
-		public BoundingBox BoundingBox
+		public abstract BoundingPolygon BoundingBox
 		{
-			get
-			{
-				return new BoundingBox(Position.X - Width/2, Position.Y + Height / 2, Position.X + Width / 2, Position.Y - Height / 2);
-			}
+			get;
 		}
 		
 		//Returns a bounding box covering all the potential area where collisions may occur
-		public BoundingBox GetCollisionCheckArea(double frameTime)
+		Box collisionCheckArea;
+		public Box GetCollisionCheckArea(double frameTime)
 		{
 			double dx = Math.Abs(Velocity.X)*frameTime;
 			double dy = Math.Abs(Velocity.Y)*frameTime;
-			return new BoundingBox(BoundingBox.Left-dx,
-			                   	   BoundingBox.Top+dy, 
-			                       BoundingBox.Right+dx, 
-			                       BoundingBox.Bottom-dy);
+			collisionCheckArea.Left = BoundingBox.Left-dx;
+			collisionCheckArea.Right = BoundingBox.Right+dx;
+			collisionCheckArea.Top = BoundingBox.Top+dy;
+			collisionCheckArea.Bottom = BoundingBox.Bottom-dy;
+			
+			return collisionCheckArea;
 		}
 
-		public virtual void Collide(Edge e, CollisionResult collisionResult)
+		public virtual void Collide(BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
 			if (controller != null)
-				controller.HandleCollision(this, e, collisionResult);
+				controller.HandleCollision(this, p, collisionNormal, collisionResult);
 		}
 		
 		public virtual void Collide(ICollidable o, Vector edgeNormal, CollisionResult collisionResult)
@@ -125,11 +128,26 @@ namespace Mario
 			Sprite.Y = Position.Y;
 			Sprite.Update(frameTime*animationSpeedFactor);
 			
-			//Debug
-			/*BoundingBox ca = GetCollisionCheckArea(frameTime);
+			#if DEBUG
+			//Debug (Draw a square for the collision boundaries).
+			Box ca = GetCollisionCheckArea(frameTime);
 			renderer.SetDrawingColor(1,0,0,1);
 			renderer.DrawSquare(ca.Left, ca.Top, ca.Right, ca.Bottom);
-			renderer.SetDrawingColor(1,1,1,1);*/
+			renderer.SetDrawingColor(1,1,1,1);
+			
+			//Draw edges
+			List<Vector> bp = BoundingBox.Vertices;
+			for (int i = 0; i < bp.Count; i++)
+			{
+				Vector p1 = bp[i], p2 = bp[i == bp.Count-1 ? 0 : i+1];
+				
+				//Draw edge
+				renderer.DrawLine(p1.X, p1.Y, p2.X, p2.Y);
+				
+				//Draw normal
+				//renderer.DrawLine(p1.X + (p2.X-p1.X)/2, p1.Y + (p2.Y-p1.Y)/2, p1.X + (p2.X-p1.X)/2+e.Normal.X*Tilesize/4, p1.Y + (p2.Y-p1.Y)/2+e.Normal.Y*Tilesize/4);
+			}
+			#endif
 			
 			//renderer.DrawSquare(Position.X-Width/2, Position.Y-Height/2, Position.X+Width/2, Position.Y+Height/2);
 			
@@ -151,30 +169,26 @@ namespace Mario
 		//Current position
 		public Vector Position
 		{
-			get;
-			protected set;
+			get
+			{
+				return position;
+			}
+			protected set
+			{
+				position = value;
+				if (BoundingBox != null)
+					BoundingBox.MoveTo(position.X, position.Y);
+			}
 		}
+		Vector position = new Vector();
 
-		//Dimensions
-		public abstract int Width
-		{ 
-			get;
-			protected set;
-		}
-		
-		public abstract int Height
-		{ 
-			get;
-			protected set;
-		}
-		
 		public double Left
 		{
 			get 
 			{ 
 				if (!cachedLeft)
 				{
-					left = Math.Min(Position.X - Width/2, Position.X - Width / 2 + Velocity.X*frameTime); 
+					left = Math.Min(BoundingBox.Left, BoundingBox.Left + Velocity.X*frameTime); 
 					cachedLeft = true;
 				}
 				
@@ -188,7 +202,7 @@ namespace Mario
 			{ 
 				if (!cachedRight)
 				{
-					right = Math.Max(Position.X + Width/2, Position.X + Width / 2 + Velocity.X*frameTime); 
+					right = Math.Max(BoundingBox.Right, BoundingBox.Right + Velocity.X*frameTime); 
 					cachedRight = true;
 				}
 				

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<map id="minimap_sloped">
+	<geometry>
+		<width>10</width>
+		<height>10</height>
+		<layers>1</layers>
+		<tilesize>16</tilesize>
+		<xoffset>0</xoffset>
+		<yoffset>0</yoffset>
+	</geometry>
+
+	<tileset>grassland</tileset>
+	<background>goomba</background>
+
+	<properties>
+		<gravity>500</gravity>
+		<ground-friction-factor>1</ground-friction-factor>
+	</properties>
+
+	<objects>
+		<object>
+			<name>mario</name>
+			<x-pos>41.1328125</x-pos>
+			<y-pos>139.855072463768</y-pos>
+		</object>
+	</objects>
+
+	<tiledata encoding="base64">
+		AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADdAAAA
+		AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADdAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADdAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+		AAAAAAAAAABlAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+		AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+		AAAAAAAAAAAAAAAAAAAAAA==
+	</tiledata>
+</map>

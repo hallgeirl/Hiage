@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using Engine;
 
 namespace Mario
@@ -9,14 +10,15 @@ namespace Mario
 	/// </summary>
 	public abstract class Character : PhysicalObject
 	{
-		protected int standState, walkState, runState, inAirState;
-		
+		protected int standState, walkState, runState, inAirState, dieState;
+		protected Timer dieTimer = new Timer();
+
 		
 		//Just pass on the constructor stuff to base
 		public Character(Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, 
-		                 WorldPhysics worldPhysics, ObjectPhysics objectPhysics, int width, int height,
+		                 WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons,
 		                 double runSpeed, double maxSpeed) 
-			: base(position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, width, height) 
+			: base(position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons) 
 		{
 			Sprite.PlayAnimation("stand", true);
 			MaxSpeed = maxSpeed;
@@ -100,11 +102,6 @@ namespace Mario
 			
 		}
 		
-/*		public override void Collide (Edge e, CollisionResult collisionResult)
-		{
-			base.Collide (e, collisionResult);
-		}*/
-
 		public double RunSpeed
 		{
 			get;
@@ -112,6 +109,20 @@ namespace Mario
 		}
 		
 		public double MaxSpeed
+		{
+			get;
+			private set;
+		}
+		
+		public void Kill()
+		{
+			currentState = dieState;
+			dieTimer.Start();
+			
+			Dying = true;
+		}
+		
+		public bool Dying
 		{
 			get;
 			private set;

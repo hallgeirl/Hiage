@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<object>
+<object id="mario">
     <type>player</type>
     <sprite>mario-small</sprite>
     <elasticity>0</elasticity>
     <friction>100</friction>
     <run-speed>150</run-speed>
     <max-speed>200</max-speed>
+    
+    <bounding-polygons>
+        <polygon id="small-standing">
+            <vertex x="-7" y="9" />
+            <vertex x="7" y="9" />
+            <vertex x="7" y="-9" />
+            <vertex x="-7" y="-9" />
+
+            <!--<vertex x="-7" y="8" />
+            <vertex x="0" y="9" />
+            <vertex x="7" y="8" />
+            <vertex x="7" y="-8" />
+            <vertex x="0" y="-9" />
+            <vertex x="-7" y="-8" />-->
+        </polygon>
+        <!--<polygon id="small-crouching">
+            <vertex x="-7" y="9" />
+            <vertex x="7" y="9" />
+            <vertex x="7" y="-9" />
+            <vertex x="-7" y="-9" />
+        </polygon>-->
+    </bounding-polygons>
 </object>

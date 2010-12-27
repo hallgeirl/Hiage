@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tileset name="grassland">
+<tileset id="grassland">
 
 <!-- 
 Tileset setup:
@@ -8,7 +8,7 @@ Tileset setup:
     1-100: background tiles (dirt etc.)
 
   101-200: Normal ground/wall tiles
-  201-300: "Special" ground/wall tiles (like the one-way flat edge tiles)
+  201-300: "Special" ground/wall tiles (like the one-way flat bounds tiles)
   301-400: Decoration tiles (for instance, bushes and such)
   401-500: Pipes and such
 
@@ -18,92 +18,67 @@ Tileset setup:
   <tile texture="grassland/empty.png" id="0" />
   <tile texture="grassland/dirt.png" id="1" />
   
-<!-- Dirt edge tiles -->
+<!-- Dirt bounds tiles -->
   <tile texture="grassland/dirt-leftedge.png" id="10" />
   <tile texture="grassland/dirt-rightedge.png" id="11" />
 
 <!-- grass tiles -->
 <!-- flat grass tiles -->
   <tile texture="grassland/grass-flat-bottom.png" id="101">
-    <edge>
+    <bounds>
         <point x="0" y="15" />
         <point x="15" y="15" />
-        <normal x="0" y="1" />
-    </edge>
+    </bounds>
   </tile>
   <tile texture="grassland/grass-flat-top.png" id="102">
-    <edge>
-        <point x="0" y="0" />
+    <bounds>
         <point x="15" y="0" />
-        <normal x="0" y="-1" />
-    </edge>
+        <point x="0" y="0" />
+    </bounds>
   </tile>
 
   <tile texture="grassland/grass-flat-right.png" id="103">
-    <edge>
+    <bounds>
         <point x="0" y="0" />
         <point x="0" y="15" />
-        <normal x="-1" y="0" />
-    </edge>
+    </bounds>
   </tile>
   <tile texture="grassland/grass-flat-left.png" id="104">
-    <edge>
-        <point x="15" y="0" />
+    <bounds>
         <point x="15" y="15" />
-        <normal x="1" y="0" />
-    </edge>
+        <point x="15" y="0" />
+    </bounds>
   </tile>
 
 <!-- outer corner tiles -->
   <tile texture="grassland/grass-outercorner-topleft.png" id="110">
-    <edge>
+    <bounds>
         <point x="0" y="0" />
         <point x="0" y="15" />
-        <normal x="-1" y="0" />
-    </edge>
-    <edge>
-        <point x="0" y="15" />
         <point x="15" y="15" />
-        <normal x="0" y="1" />
-    </edge>
-
+    </bounds>
   </tile>
   <tile texture="grassland/grass-outercorner-topright.png" id="111">
-    <edge>
-        <point x="15" y="0" />
-        <point x="15" y="15" />
-        <normal x="1" y="0" />
-    </edge>
-    <edge>
+    <bounds>
         <point x="0" y="15" />
         <point x="15" y="15" />
-        <normal x="0" y="1" />
-    </edge>
+        <point x="15" y="0" />
+    </bounds>
   </tile>
 
   <tile texture="grassland/grass-outercorner-bottomleft.png" id="112">
-    <edge>
+    <bounds>
+        <point x="15" y="0" />
         <point x="0" y="0" />
         <point x="0" y="15" />
-        <normal x="-1" y="0" />
-    </edge>
-    <edge>
-        <point x="0" y="0" />
-        <point x="15" y="0" />
-        <normal x="0" y="-1" />
-    </edge>
+    </bounds>
   </tile>
   <tile texture="grassland/grass-outercorner-bottomright.png" id="113">
-    <edge>
-        <point x="15" y="0" />
+    <bounds>
         <point x="15" y="15" />
-        <normal x="1" y="0" />
-    </edge>
-    <edge>
-        <point x="0" y="0" />
         <point x="15" y="0" />
-        <normal x="0" y="-1" />
-    </edge>
+        <point x="0" y="0" />
+    </bounds>
   </tile>
 
 <!-- inner corner tiles -->
@@ -115,35 +90,33 @@ Tileset setup:
 
 <!-- non-standard ground tiles -->
   <tile texture="grassland/grass-flat-leftcorner.png" id="201">
-    <edge>
+    <bounds>
         <point x="0" y="15" />
         <point x="15" y="15" />
-        <normal x="0" y="1" />
-    </edge>
+    </bounds>
   </tile>
   <tile texture="grassland/grass-flat-rightcorner.png" id="202">
-    <edge>
+    <bounds>
         <point x="0" y="15" />
         <point x="15" y="15" />
-        <normal x="0" y="1" />
-    </edge>
+    </bounds>
   </tile>
   
 <!-- Rocks -->
   <tile texture="grassland/rock-gray.png" id="220" />
   <tile texture="grassland/rock-hill-right.png" id="221">
-    <edge>
+    <bounds>
         <point x="0" y="15" />
         <point x="15" y="0" />
-        <normal x="1" y="1" />
-    </edge>
+        <point x="0" y="0" />
+    </bounds>
   </tile>
   <tile texture="grassland/rock-hill-left.png" id="222">
-    <edge>
+    <bounds>
         <point x="0" y="0" />
         <point x="15" y="15" />
-        <normal x="-1" y="1" />
-    </edge>
+        <point x="15" y="0" />
+    </bounds>
   </tile>
 <!-- Decoration -->
 <!-- some background grass -->

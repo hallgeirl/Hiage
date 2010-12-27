@@ -37,11 +37,13 @@ namespace Engine
 		/// </param>
 		public void Initialize(int width, int height, bool fullscreen, string windowTitle)
 		{
+			Log.Write("Engine initializing at " + DateTime.Now);
 			gameStates = new List<IGameState>();
 
 			//Create resource manager and load resources from the main resource file
 			resourceManager = new ResourceManager();
-			resourceManager.LoadResources(ResourceManager.MainResourceFile);
+			resourceManager.LoadResources("data");
+			resourceManager.LoadResourceXML(ResourceManager.MainResourceFile);
 
 			
 			//Create the opengl display

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<object>
+<object id="goomba">
     <type>enemy</type>
     <sprite>goomba</sprite>
 
@@ -9,9 +9,14 @@
     <run-speed>40</run-speed>
     <max-speed>50</max-speed>
 
-    <width>16</width>
-    <height>16</height>
-    
+    <bounding-polygons>
+        <polygon id="normal">
+            <vertex x="-8" y="8" />
+            <vertex x="8" y="8" />
+            <vertex x="8" y="-8" />
+            <vertex x="-8" y="-8" />
+        </polygon>
+    </bounding-polygons>
     <!-- Can be killed by being jumped on -->
     <stompable>true</stompable>
 </object>

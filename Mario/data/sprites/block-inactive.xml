@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sprite id="block-inactive">
+  <texture name="block-inactive" />
+
+  <defaults>
+    <frame-width>16</frame-width>
+    <frame-height>16</frame-height>
+  </defaults>
+
+  <animation>
+    <name>default</name>
+    <frame x="0" y="0" delay="1" next="0" />
+  </animation>
+</sprite>

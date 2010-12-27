@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sprite id="block-question">
+  <texture name="block-question" />
+
+  <defaults>
+    <frame-width>16</frame-width>
+    <frame-height>16</frame-height>
+  </defaults>
+
+  <animation name="active">
+    <frame x="0" y="0" delay="0.5" next="1" />
+    <frame x="16" y="0" delay="0.5" next="2" />
+    <frame x="32" y="0" delay="0.5" next="0" />
+  </animation>
+</sprite>

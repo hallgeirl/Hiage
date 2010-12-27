@@ -94,6 +94,8 @@
     <Compile Include="Resources\ObjectDescriptor.cs" />
     <Compile Include="Resources\SpriteDescriptor.cs" />
     <Compile Include="Resources\MapDescriptor.cs" />
+    <Compile Include="Common\Constants.cs" />
+    <Compile Include="Common\Box.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

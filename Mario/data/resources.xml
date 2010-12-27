@@ -7,17 +7,5 @@
 
     <!-- Fonts -->
     <resource type="font" name="arial" path="fonts/arial.ttf" />
-
-    <!-- Tilesets -->
-    <resource type="tileset" name="grassland" path="tilesets/grassland.xml" />
-
-    <!-- Textures -->
-    <resource type="resourcefile" path="textures/textures.xml" />
-    <!-- Sprites -->
-    <resource type="resourcefile" path="sprites/sprites.xml" />
-    <!-- Objects -->
-    <resource type="resourcefile" path="objects/objects.xml" />
-    <!-- Maps -->
-    <resource type="resourcefile" path="maps/maps.xml" />
-    
+    <resource type="font" name="verdana" path="fonts/verdana.ttf" />
 </resources>

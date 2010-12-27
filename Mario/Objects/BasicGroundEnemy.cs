@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using Engine;
 
 namespace Mario
@@ -8,13 +9,10 @@ namespace Mario
 
 	public class BasicGroundEnemy : Character
 	{
-		protected int dieState;
-		protected Timer dieTimer = new Timer();
-		
 		public BasicGroundEnemy (Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, //GameObject attributes
-		               WorldPhysics worldPhysics, ObjectPhysics objectPhysics, int width, int height,	//PhysicalObject attributes
+		               WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons,	//PhysicalObject attributes
 		               double runSpeed, double maxSpeed) 	//Character attributes
-			: base(position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, width, height, runSpeed, maxSpeed) 
+			: base(position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
 		{
 			Stompable = true;
 		}
@@ -55,24 +53,20 @@ namespace Mario
 				Accellerate(new Vector(-300, 0));
 		}
 		
+		public override BoundingPolygon BoundingBox 
+		{
+			get 
+			{
+				return boundingPolygons["normal"];
+			}
+		}
+		
 		public bool Stompable
 		{
 			get;
 			private set;
 		}
 		
-		public void Kill()
-		{
-			currentState = dieState;
-			dieTimer.Start();
-			
-			Dying = true;
-		}
-		
-		public bool Dying
-		{
-			get;
-			private set;
-		}
+
 	}
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object id="coin">
+    <type>coin</type>
+    <sprite>coin</sprite>
+    <elasticity>0</elasticity>
+    
+    <bounding-polygons>
+        <polygon id="normal">
+            <vertex x="-6" y="8" />
+            <vertex x="6" y="8" />
+            <vertex x="6" y="-8" />
+            <vertex x="-6" y="-8" />
+        </polygon>
+    </bounding-polygons>
+</object>

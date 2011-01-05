@@ -28,6 +28,8 @@ Tileset setup:
     <bounds>
         <point x="0" y="15" />
         <point x="15" y="15" />
+        <point x="15" y="14" />
+        <point x="0" y="14" />
     </bounds>
   </tile>
   <tile texture="grassland/grass-flat-top.png" id="102">

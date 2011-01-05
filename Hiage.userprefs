@@ -1,12 +1,21 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ctype="Workbench">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Engine/GameLogic/CollisionManager.cs" ctype="Workbench">
+    <Files>
+      <File FileName="Engine/GameLogic/CollisionManager.cs" Line="366" Column="8" />
+      <File FileName="Mario/Objects/PhysicalObject.cs" Line="93" Column="56" />
+      <File FileName="Mario/Objects/BasicGroundEnemy.cs" Line="31" Column="27" />
+      <File FileName="Mario/Controllers/DumbGroundAI.cs" Line="35" Column="1" />
+      <File FileName="Mario/Objects/GameObject.cs" Line="109" Column="3" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" selected="True">
+        <State expanded="True">
           <Node name="Engine" expanded="True">
             <Node name="References" expanded="True" />
             <Node name="Common" expanded="True" />
-            <Node name="GameLogic" expanded="True" />
+            <Node name="GameLogic" expanded="True">
+              <Node name="CollisionManager.cs" selected="True" />
+            </Node>
             <Node name="Rendering" expanded="True" />
             <Node name="Resources" expanded="True" />
           </Node>

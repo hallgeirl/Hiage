@@ -226,7 +226,7 @@ namespace Engine
 					else
 					{
 						t = distance / Math.Abs(velAxis);
-						//if (t < remainingFrameFraction && axis.DotProduct(relativeVelocity) * (axisOwner == 0 ? -1 : 1) > 0)
+						
 						if (t < remainingFrameFraction)
 							willIntersect = true;
 						
@@ -309,13 +309,13 @@ namespace Engine
 				//Check each edge
 				foreach (BoundingPolygon p in polygons)
 				{
-					if (p.Vertices.Count == 2 && p.EdgeNormals[0].DotProduct(o.Velocity) > 0)
+					/*if (p.Vertices.Count == 2 && p.EdgeNormals[0].DotProduct(o.Velocity) > 0)
 					{
 						#if DEBUG_COLLISION_OBJECT_POLYGON
 						Log.Write("Polygon has only one edge, which faces the same way as the movement direction. Ignoring.", Log.DEBUG);
 						#endif
 						continue;
-					}
+					}*/
 					
 					#if DEBUG_COLLISION_OBJECT_POLYGON
 					Log.Write("Object bounding polygon: " + o.BoundingBox, Log.DEBUG);
@@ -326,11 +326,9 @@ namespace Engine
 					CollisionResult result = new CollisionResult();
 					edges[1] = p.EdgeNormals;
 
-					//TODO: Ignore edges facing the same way as we move?
 					bool separating = false;
 					int normalOwner = -1;
 					
-					//foreach (List<Vector> poly in edges)
 					for (int i = 0; i < edges.Length; i++)
 					{
 						var poly = edges[i];
@@ -378,11 +376,12 @@ namespace Engine
 				if (firstCollisionPolygon != null)
 				{
 					if (finalResult.IsIntersecting)
-						finalResult.MinimumTranslationVector = finalResult.distance * finalResult.HitNormal; //o.Velocity * finalResult.distance * frameTime;
+						finalResult.MinimumTranslationVector = (finalNormalOwner == 0 ? -1 : 1) * Math.Abs(finalResult.distance) * finalResult.HitNormal; //o.Velocity * finalResult.distance * frameTime;
 
 					remainingFrameTime -= minimumCollisionTime;
+					
 					//Subtract a small amount to behave correctly when we have small rounding errors.
-					finalResult.CollisionTime = minimumCollisionTime - 1e-6;//Constants.MinDouble;
+					finalResult.CollisionTime = minimumCollisionTime; // - 1e-6;//Constants.MinDouble;
 
 					o.Collide(firstCollisionPolygon, finalNormalOwner == 1 ? finalResult.HitNormal : -finalResult.HitNormal, finalResult);
 					#if DEBUG_COLLISION_OBJECT_POLYGON

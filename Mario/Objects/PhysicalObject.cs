@@ -77,6 +77,8 @@ namespace Mario
 		//Handle collisions against edges
 		public override void Collide(BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
+			if (collisionResult.IsIntersecting) return;
+			
 			base.Collide(p, collisionNormal, collisionResult);
 			
 			// If intersecting, push back
@@ -85,11 +87,12 @@ namespace Mario
 				Position += collisionResult.MinimumTranslationVector;
 			}
 			else */
-			if (collisionResult.WillIntersect)
-			{
 				remainingFrameTime -= collisionResult.CollisionTime;
 
-				Position += collisionResult.CollisionTime * Velocity * frameTime;
+				if (collisionResult.WillIntersect)
+					Position += (collisionResult.CollisionTime - 1e-6) * Velocity * frameTime;
+				else
+					Position += collisionResult.MinimumTranslationVector;
 
 				Velocity = Velocity - ((1.0+objectPhysics.Elasticity)*Velocity.DotProduct(collisionNormal))*collisionNormal;
 
@@ -108,7 +111,7 @@ namespace Mario
 					}
 					inAirTimer.Restart();
 				}
-			}
+		//	}
 		}
 		
 		#region Properties

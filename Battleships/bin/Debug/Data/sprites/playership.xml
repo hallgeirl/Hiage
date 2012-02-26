@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<sprite>
-  <texture name="playership" />
-
-  <animation name="active">
-    <frame x="0" y="0" delay="0" next="0" w="16" h="16" />
-  </animation>
-</sprite>

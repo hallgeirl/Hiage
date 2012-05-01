@@ -32,14 +32,14 @@ ASSEMBLY=$(RELEASE)/Mario.exe
 
 # Compilers and compiler options
 CSC=mono-csc
-CSFLAGS=-o+
+CSFLAGS=/o+ -debug
 
 SHELL=/bin/bash
 
 all: hiage $(ASSEMBLY)
 	@mkdir -p $(RELEASE)
-	@rm -f $(RELEASE)/data
-	@ln -s data $(RELEASE)/data
+	rm -f $(RELEASE)/data
+	ln -s ../data $(RELEASE)/data
 	@echo "All done! Execute $(ASSEMBLY) or type 'make run' to run Mario!"
 
 run:all
@@ -53,7 +53,7 @@ run:all
 $(ASSEMBLY): $(SOURCES) ../Engine/release/last_build_tag
 	@mkdir -p $(RELEASE)
 	@echo "Building $@..."
-	@$(CSC) $(SOURCES) $(ASSEMBLIES) $(PACKAGES) /target:exe /out:$@ 
+	$(CSC) $(CSFLAGS) $(SOURCES) $(ASSEMBLIES) $(PACKAGES) /target:exe /out:$@ 
 
 clean:
 	rm -rf $(BIN) *.pidb $(RELEASE)

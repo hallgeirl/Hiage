@@ -16,24 +16,24 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{504E013F-FBCE-4FE8-A3B2-50501076761C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{504E013F-FBCE-4FE8-A3B2-50501076761C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{504E013F-FBCE-4FE8-A3B2-50501076761C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{504E013F-FBCE-4FE8-A3B2-50501076761C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{504E013F-FBCE-4FE8-A3B2-50501076761C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{504E013F-FBCE-4FE8-A3B2-50501076761C}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{504E013F-FBCE-4FE8-A3B2-50501076761C}.WindowsRelease|Any CPU.ActiveCfg = Debug|Any CPU
 		{504E013F-FBCE-4FE8-A3B2-50501076761C}.WindowsRelease|Any CPU.Build.0 = Debug|Any CPU
 		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{BD44EADC-A057-49A5-83A5-570E93F20F15}.WindowsRelease|Any CPU.ActiveCfg = WindowsRelease|Any CPU
 		{BD44EADC-A057-49A5-83A5-570E93F20F15}.WindowsRelease|Any CPU.Build.0 = WindowsRelease|Any CPU
 		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.WindowsRelease|Any CPU.ActiveCfg = WindowsRelease|Any CPU
 		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.WindowsRelease|Any CPU.Build.0 = WindowsRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = MapEditor\MapEditor.csproj
+		StartupItem = Mario\Mario.csproj
 	EndGlobalSection
 EndGlobal

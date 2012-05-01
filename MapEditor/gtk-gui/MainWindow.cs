@@ -288,6 +288,7 @@ public partial class MainWindow
 		this.radioDrawTiles = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Draw tiles"));
 		this.radioDrawTiles.CanFocus = true;
 		this.radioDrawTiles.Name = "radioDrawTiles";
+		this.radioDrawTiles.Active = true;
 		this.radioDrawTiles.DrawIndicator = true;
 		this.radioDrawTiles.UseUnderline = true;
 		this.radioDrawTiles.Group = new global::GLib.SList (global::System.IntPtr.Zero);

@@ -30,12 +30,12 @@
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
-        <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="true" RelativeMakefileName="Makefile" ExecuteTargetName="run" SyncReferences="true" RelativeConfigureInPath="..">
+        <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="true" RelativeMakefileName="Makefile" SyncReferences="true" RelativeConfigureInPath="..">
           <BuildFilesVar Sync="true" Name="SOURCES" />
           <DeployFilesVar />
           <ResourcesVar />
           <OthersVar />
-          <GacRefVar Sync="true" Name="PACKAGES" Prefix="/r:" />
+          <GacRefVar Sync="true" Name="PACKAGES" />
           <AsmRefVar Sync="true" Name="ASSEMBLIES" Prefix="/r:" />
           <ProjectRefVar Sync="true" Name="PROJECTS" />
         </MonoDevelop.Autotools.MakefileInfo>
@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Hiage">
-      <HintPath>lib\Hiage.dll</HintPath>
+      <HintPath>release\Hiage.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

@@ -44,7 +44,7 @@ CSFLAGS=-o+
 all: hiage $(ASSEMBLY)
 	@mkdir -p $(RELEASE)
 	@rm -f $(RELEASE)/data
-	@ln -s ../Mario/data $(RELEASE)/data
+	@ln -s ../../Mario/data $(RELEASE)/data
 	@echo "All done! Execute $(ASSEMBLY) or type 'make run' to run the map editor!"
 
 run:all

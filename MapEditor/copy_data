@@ -1,6 +1,0 @@
-#!/bin/bash
-
-rm -R bin/Debug/data
-rm -R bin/Release/data
-cp -R ../Mario/data bin/Debug
-cp -R ../Mario/data bin/Release

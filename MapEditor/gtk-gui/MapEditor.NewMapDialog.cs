@@ -5,39 +5,23 @@ namespace MapEditor
 	public partial class NewMapDialog
 	{
 		private global::Gtk.Table table1;
-
 		private global::Gtk.ComboBox comboTileset;
-
 		private global::Gtk.Label label1;
-
 		private global::Gtk.Label label2;
-
 		private global::Gtk.Label label3;
-
 		private global::Gtk.Label label4;
-
 		private global::Gtk.Label label5;
-
 		private global::Gtk.Label label6;
-
 		private global::Gtk.Label label7;
-
 		private global::Gtk.SpinButton spinHeight;
-
 		private global::Gtk.SpinButton spinLayers;
-
 		private global::Gtk.SpinButton spinTilesize;
-
 		private global::Gtk.SpinButton spinWidth;
-
 		private global::Gtk.SpinButton spinXOffset;
-
 		private global::Gtk.SpinButton spinYOffset;
-
 		private global::Gtk.Button buttonCancel;
-
 		private global::Gtk.Button buttonOk;
-
+		
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);
@@ -59,7 +43,7 @@ namespace MapEditor
 			this.comboTileset = global::Gtk.ComboBox.NewText ();
 			this.comboTileset.Name = "comboTileset";
 			this.table1.Add (this.comboTileset);
-			global::Gtk.Table.TableChild w2 = ((global::Gtk.Table.TableChild)(this.table1[this.comboTileset]));
+			global::Gtk.Table.TableChild w2 = ((global::Gtk.Table.TableChild)(this.table1 [this.comboTileset]));
 			w2.TopAttach = ((uint)(4));
 			w2.BottomAttach = ((uint)(5));
 			w2.LeftAttach = ((uint)(1));
@@ -69,19 +53,19 @@ namespace MapEditor
 			// Container child table1.Gtk.Table+TableChild
 			this.label1 = new global::Gtk.Label ();
 			this.label1.Name = "label1";
-			this.label1.Xalign = 0f;
+			this.label1.Xalign = 0F;
 			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString ("Width");
 			this.table1.Add (this.label1);
-			global::Gtk.Table.TableChild w3 = ((global::Gtk.Table.TableChild)(this.table1[this.label1]));
+			global::Gtk.Table.TableChild w3 = ((global::Gtk.Table.TableChild)(this.table1 [this.label1]));
 			w3.XOptions = ((global::Gtk.AttachOptions)(4));
 			w3.YOptions = ((global::Gtk.AttachOptions)(4));
 			// Container child table1.Gtk.Table+TableChild
 			this.label2 = new global::Gtk.Label ();
 			this.label2.Name = "label2";
-			this.label2.Xalign = 0f;
+			this.label2.Xalign = 0F;
 			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("Height");
 			this.table1.Add (this.label2);
-			global::Gtk.Table.TableChild w4 = ((global::Gtk.Table.TableChild)(this.table1[this.label2]));
+			global::Gtk.Table.TableChild w4 = ((global::Gtk.Table.TableChild)(this.table1 [this.label2]));
 			w4.TopAttach = ((uint)(1));
 			w4.BottomAttach = ((uint)(2));
 			w4.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -89,10 +73,10 @@ namespace MapEditor
 			// Container child table1.Gtk.Table+TableChild
 			this.label3 = new global::Gtk.Label ();
 			this.label3.Name = "label3";
-			this.label3.Xalign = 0f;
+			this.label3.Xalign = 0F;
 			this.label3.LabelProp = global::Mono.Unix.Catalog.GetString ("Layers");
 			this.table1.Add (this.label3);
-			global::Gtk.Table.TableChild w5 = ((global::Gtk.Table.TableChild)(this.table1[this.label3]));
+			global::Gtk.Table.TableChild w5 = ((global::Gtk.Table.TableChild)(this.table1 [this.label3]));
 			w5.TopAttach = ((uint)(2));
 			w5.BottomAttach = ((uint)(3));
 			w5.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -100,10 +84,10 @@ namespace MapEditor
 			// Container child table1.Gtk.Table+TableChild
 			this.label4 = new global::Gtk.Label ();
 			this.label4.Name = "label4";
-			this.label4.Xalign = 0f;
+			this.label4.Xalign = 0F;
 			this.label4.LabelProp = global::Mono.Unix.Catalog.GetString ("Tileset");
 			this.table1.Add (this.label4);
-			global::Gtk.Table.TableChild w6 = ((global::Gtk.Table.TableChild)(this.table1[this.label4]));
+			global::Gtk.Table.TableChild w6 = ((global::Gtk.Table.TableChild)(this.table1 [this.label4]));
 			w6.TopAttach = ((uint)(4));
 			w6.BottomAttach = ((uint)(5));
 			w6.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -111,10 +95,10 @@ namespace MapEditor
 			// Container child table1.Gtk.Table+TableChild
 			this.label5 = new global::Gtk.Label ();
 			this.label5.Name = "label5";
-			this.label5.Xalign = 0f;
+			this.label5.Xalign = 0F;
 			this.label5.LabelProp = global::Mono.Unix.Catalog.GetString ("Tile size");
 			this.table1.Add (this.label5);
-			global::Gtk.Table.TableChild w7 = ((global::Gtk.Table.TableChild)(this.table1[this.label5]));
+			global::Gtk.Table.TableChild w7 = ((global::Gtk.Table.TableChild)(this.table1 [this.label5]));
 			w7.TopAttach = ((uint)(3));
 			w7.BottomAttach = ((uint)(4));
 			w7.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -122,10 +106,10 @@ namespace MapEditor
 			// Container child table1.Gtk.Table+TableChild
 			this.label6 = new global::Gtk.Label ();
 			this.label6.Name = "label6";
-			this.label6.Xalign = 0f;
+			this.label6.Xalign = 0F;
 			this.label6.LabelProp = global::Mono.Unix.Catalog.GetString ("X offset");
 			this.table1.Add (this.label6);
-			global::Gtk.Table.TableChild w8 = ((global::Gtk.Table.TableChild)(this.table1[this.label6]));
+			global::Gtk.Table.TableChild w8 = ((global::Gtk.Table.TableChild)(this.table1 [this.label6]));
 			w8.LeftAttach = ((uint)(2));
 			w8.RightAttach = ((uint)(3));
 			w8.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -133,10 +117,10 @@ namespace MapEditor
 			// Container child table1.Gtk.Table+TableChild
 			this.label7 = new global::Gtk.Label ();
 			this.label7.Name = "label7";
-			this.label7.Xalign = 0f;
+			this.label7.Xalign = 0F;
 			this.label7.LabelProp = global::Mono.Unix.Catalog.GetString ("Y offset");
 			this.table1.Add (this.label7);
-			global::Gtk.Table.TableChild w9 = ((global::Gtk.Table.TableChild)(this.table1[this.label7]));
+			global::Gtk.Table.TableChild w9 = ((global::Gtk.Table.TableChild)(this.table1 [this.label7]));
 			w9.TopAttach = ((uint)(1));
 			w9.BottomAttach = ((uint)(2));
 			w9.LeftAttach = ((uint)(2));
@@ -152,7 +136,7 @@ namespace MapEditor
 			this.spinHeight.Numeric = true;
 			this.spinHeight.Value = 100;
 			this.table1.Add (this.spinHeight);
-			global::Gtk.Table.TableChild w10 = ((global::Gtk.Table.TableChild)(this.table1[this.spinHeight]));
+			global::Gtk.Table.TableChild w10 = ((global::Gtk.Table.TableChild)(this.table1 [this.spinHeight]));
 			w10.TopAttach = ((uint)(1));
 			w10.BottomAttach = ((uint)(2));
 			w10.LeftAttach = ((uint)(1));
@@ -168,7 +152,7 @@ namespace MapEditor
 			this.spinLayers.Numeric = true;
 			this.spinLayers.Value = 1;
 			this.table1.Add (this.spinLayers);
-			global::Gtk.Table.TableChild w11 = ((global::Gtk.Table.TableChild)(this.table1[this.spinLayers]));
+			global::Gtk.Table.TableChild w11 = ((global::Gtk.Table.TableChild)(this.table1 [this.spinLayers]));
 			w11.TopAttach = ((uint)(2));
 			w11.BottomAttach = ((uint)(3));
 			w11.LeftAttach = ((uint)(1));
@@ -184,7 +168,7 @@ namespace MapEditor
 			this.spinTilesize.Numeric = true;
 			this.spinTilesize.Value = 16;
 			this.table1.Add (this.spinTilesize);
-			global::Gtk.Table.TableChild w12 = ((global::Gtk.Table.TableChild)(this.table1[this.spinTilesize]));
+			global::Gtk.Table.TableChild w12 = ((global::Gtk.Table.TableChild)(this.table1 [this.spinTilesize]));
 			w12.TopAttach = ((uint)(3));
 			w12.BottomAttach = ((uint)(4));
 			w12.LeftAttach = ((uint)(1));
@@ -200,7 +184,7 @@ namespace MapEditor
 			this.spinWidth.Numeric = true;
 			this.spinWidth.Value = 100;
 			this.table1.Add (this.spinWidth);
-			global::Gtk.Table.TableChild w13 = ((global::Gtk.Table.TableChild)(this.table1[this.spinWidth]));
+			global::Gtk.Table.TableChild w13 = ((global::Gtk.Table.TableChild)(this.table1 [this.spinWidth]));
 			w13.LeftAttach = ((uint)(1));
 			w13.RightAttach = ((uint)(2));
 			w13.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -213,7 +197,7 @@ namespace MapEditor
 			this.spinXOffset.ClimbRate = 1;
 			this.spinXOffset.Numeric = true;
 			this.table1.Add (this.spinXOffset);
-			global::Gtk.Table.TableChild w14 = ((global::Gtk.Table.TableChild)(this.table1[this.spinXOffset]));
+			global::Gtk.Table.TableChild w14 = ((global::Gtk.Table.TableChild)(this.table1 [this.spinXOffset]));
 			w14.LeftAttach = ((uint)(3));
 			w14.RightAttach = ((uint)(4));
 			w14.XOptions = ((global::Gtk.AttachOptions)(4));
@@ -226,7 +210,7 @@ namespace MapEditor
 			this.spinYOffset.ClimbRate = 1;
 			this.spinYOffset.Numeric = true;
 			this.table1.Add (this.spinYOffset);
-			global::Gtk.Table.TableChild w15 = ((global::Gtk.Table.TableChild)(this.table1[this.spinYOffset]));
+			global::Gtk.Table.TableChild w15 = ((global::Gtk.Table.TableChild)(this.table1 [this.spinYOffset]));
 			w15.TopAttach = ((uint)(1));
 			w15.BottomAttach = ((uint)(2));
 			w15.LeftAttach = ((uint)(3));
@@ -234,7 +218,7 @@ namespace MapEditor
 			w15.XOptions = ((global::Gtk.AttachOptions)(4));
 			w15.YOptions = ((global::Gtk.AttachOptions)(4));
 			w1.Add (this.table1);
-			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(w1[this.table1]));
+			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(w1 [this.table1]));
 			w16.Position = 0;
 			w16.Expand = false;
 			w16.Fill = false;
@@ -253,7 +237,7 @@ namespace MapEditor
 			this.buttonCancel.UseUnderline = true;
 			this.buttonCancel.Label = "gtk-cancel";
 			this.AddActionWidget (this.buttonCancel, -6);
-			global::Gtk.ButtonBox.ButtonBoxChild w18 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w17[this.buttonCancel]));
+			global::Gtk.ButtonBox.ButtonBoxChild w18 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w17 [this.buttonCancel]));
 			w18.Expand = false;
 			w18.Fill = false;
 			// Container child dialog1_ActionArea.Gtk.ButtonBox+ButtonBoxChild
@@ -265,15 +249,15 @@ namespace MapEditor
 			this.buttonOk.UseUnderline = true;
 			this.buttonOk.Label = "gtk-ok";
 			this.AddActionWidget (this.buttonOk, -5);
-			global::Gtk.ButtonBox.ButtonBoxChild w19 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w17[this.buttonOk]));
+			global::Gtk.ButtonBox.ButtonBoxChild w19 = ((global::Gtk.ButtonBox.ButtonBoxChild)(w17 [this.buttonOk]));
 			w19.Position = 1;
 			w19.Expand = false;
 			w19.Fill = false;
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
-			this.DefaultWidth = 315;
-			this.DefaultHeight = 236;
+			this.DefaultWidth = 319;
+			this.DefaultHeight = 237;
 			this.Show ();
 		}
 	}

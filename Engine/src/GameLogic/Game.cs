@@ -43,7 +43,7 @@ namespace Engine
 			//Create resource manager and load resources from the main resource file
 			resourceManager = new ResourceManager();
 			resourceManager.LoadResources("data");
-			resourceManager.LoadResourceXML(ResourceManager.MainResourceFile);
+			//resourceManager.LoadResourceXML(ResourceManager.MainResourceFile);
 
 			
 			//Create the opengl display

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -14,68 +14,56 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
+    <OutputPath>release</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeExecute" command="bash ${ProjectDir}/copy_data" workingdir="${ProjectDir}" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeExecute" command="bash ${ProjectDir}/copy_data" workingdir="${ProjectDir}" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Engine\Engine.csproj">
-      <Project>{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}</Project>
-      <Name>Engine</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Main.cs" />
-    <Compile Include="LevelState.cs" />
-    <Compile Include="ObjectFactory.cs" />
-    <Compile Include="Physics.cs" />
-    <Compile Include="Controllers\DumbGroundAI.cs" />
-    <Compile Include="Controllers\IController.cs" />
-    <Compile Include="Controllers\PlayerController.cs" />
-    <Compile Include="Objects\GameObject.cs" />
-    <Compile Include="Objects\PhysicalObject.cs" />
-    <Compile Include="Objects\Player.cs" />
-    <Compile Include="Objects\Character.cs" />
-    <Compile Include="Objects\BasicGroundEnemy.cs" />
-    <Compile Include="PlayerState.cs" />
-    <Compile Include="Objects\Coin.cs" />
-    <Compile Include="MarioGameState.cs" />
-    <Compile Include="Camera.cs" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>
-      <Properties InternalTargetFrameworkVersion="3.5" />
+      <Properties>
+        <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="true" RelativeMakefileName="Makefile" ExecuteTargetName="run" SyncReferences="true" RelativeConfigureInPath="..">
+          <BuildFilesVar Sync="true" Name="SOURCES" />
+          <DeployFilesVar />
+          <ResourcesVar />
+          <OthersVar />
+          <GacRefVar Sync="true" Name="PACKAGES" Prefix="/r:" />
+          <AsmRefVar Sync="true" Name="ASSEMBLIES" Prefix="/r:" />
+          <ProjectRefVar Sync="true" Name="PROJECTS" />
+        </MonoDevelop.Autotools.MakefileInfo>
+      </Properties>
     </MonoDevelop>
   </ProjectExtensions>
   <ItemGroup>
-    <None Include="resources.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Compile Include="src\Camera.cs" />
+    <Compile Include="src\Controllers\DumbGroundAI.cs" />
+    <Compile Include="src\Controllers\IController.cs" />
+    <Compile Include="src\Controllers\PlayerController.cs" />
+    <Compile Include="src\LevelState.cs" />
+    <Compile Include="src\Main.cs" />
+    <Compile Include="src\MarioGameState.cs" />
+    <Compile Include="src\ObjectFactory.cs" />
+    <Compile Include="src\Objects\BasicGroundEnemy.cs" />
+    <Compile Include="src\Objects\Character.cs" />
+    <Compile Include="src\Objects\Coin.cs" />
+    <Compile Include="src\Objects\GameObject.cs" />
+    <Compile Include="src\Objects\PhysicalObject.cs" />
+    <Compile Include="src\Objects\Player.cs" />
+    <Compile Include="src\Physics.cs" />
+    <Compile Include="src\PlayerInfo.cs" />
+    <Compile Include="src\PlayerState.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Objects\" />
+    <Reference Include="Hiage">
+      <HintPath>lib\Hiage.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

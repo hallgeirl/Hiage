@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -7,14 +7,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Engine</AssemblyName>
+    <AssemblyName>Hiage</AssemblyName>
     <RootNamespace>Engine</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
+    <OutputPath>release</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -23,7 +23,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -32,83 +32,83 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'WindowsRelease|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\WindowsRelease</OutputPath>
+    <OutputPath>release</OutputPath>
     <WarningLevel>4</WarningLevel>
     <additionalargs>/platform:x86</additionalargs>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="Tao.DevIl, Version=1.6.8.3, Culture=neutral, PublicKeyToken=7ec4053013524957">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Tao.DevIl">
       <HintPath>lib\Tao.DevIl.dll</HintPath>
     </Reference>
-    <Reference Include="Tao.FreeType, Version=2.3.5.0, Culture=neutral, PublicKeyToken=e499629dc69cd531">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Tao.FreeType">
       <HintPath>lib\Tao.FreeType.dll</HintPath>
     </Reference>
-    <Reference Include="Tao.OpenGl, Version=2.1.0.12, Culture=neutral, PublicKeyToken=1ca010269a4501ef">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Tao.OpenGl">
       <HintPath>lib\Tao.OpenGl.dll</HintPath>
     </Reference>
-    <Reference Include="SdlDotNet, Version=6.1.0.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SdlDotNet">
       <HintPath>lib\SdlDotNet.dll</HintPath>
     </Reference>
-    <Reference Include="Tao.Sdl, Version=1.2.13.0, Culture=neutral, PublicKeyToken=9c7a200e36c0094e">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Tao.Sdl">
       <HintPath>lib\Tao.Sdl.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="InputManager.cs" />
-    <Compile Include="External libs\FTclass.cs" />
-    <Compile Include="Rendering\Display.cs" />
-    <Compile Include="Rendering\IRenderable.cs" />
-    <Compile Include="Rendering\Renderer.cs" />
-    <Compile Include="GameLogic\Game.cs" />
-    <Compile Include="GameLogic\IGameState.cs" />
-    <Compile Include="GameLogic\SpatialGrid.cs" />
-    <Compile Include="Common\Timer.cs" />
-    <Compile Include="Common\Vector.cs" />
-    <Compile Include="Common\RandomGenerator.cs" />
-    <Compile Include="Common\Log.cs" />
-    <Compile Include="Rendering\Texture.cs" />
-    <Compile Include="Common\Exceptions.cs" />
-    <Compile Include="GameLogic\TileMap.cs" />
-    <Compile Include="GameLogic\Sprite.cs" />
-    <Compile Include="GameLogic\ParticleEngine.cs" />
-    <Compile Include="GameLogic\ParallaxBackground.cs" />
-    <Compile Include="GameLogic\ICollidable.cs" />
-    <Compile Include="GameLogic\CollisionManager.cs" />
-    <Compile Include="Resources\SpriteLoader.cs" />
-    <Compile Include="Resources\TextureLoader.cs" />
-    <Compile Include="Resources\TilesetLoader.cs" />
-    <Compile Include="Resources\ResourceManager.cs" />
-    <Compile Include="Resources\IResourceLoader.cs" />
-    <Compile Include="Resources\FontLoader.cs" />
-    <Compile Include="Resources\ObjectLoader.cs" />
-    <Compile Include="Resources\MapLoader.cs" />
-    <Compile Include="Resources\ObjectDescriptor.cs" />
-    <Compile Include="Resources\SpriteDescriptor.cs" />
-    <Compile Include="Resources\MapDescriptor.cs" />
-    <Compile Include="Common\Constants.cs" />
-    <Compile Include="Common\Box.cs" />
+    <Compile Include="src\Resources\SpriteLoader.cs" />
+    <Compile Include="src\Resources\TextureLoader.cs" />
+    <Compile Include="src\Resources\TilesetLoader.cs" />
+    <Compile Include="src\Resources\ResourceManager.cs" />
+    <Compile Include="src\Resources\IResourceLoader.cs" />
+    <Compile Include="src\Resources\FontLoader.cs" />
+    <Compile Include="src\Resources\ObjectLoader.cs" />
+    <Compile Include="src\Resources\MapLoader.cs" />
+    <Compile Include="src\Resources\ObjectDescriptor.cs" />
+    <Compile Include="src\Resources\SpriteDescriptor.cs" />
+    <Compile Include="src\Resources\MapDescriptor.cs" />
+    <Compile Include="src\GameLogic\Game.cs" />
+    <Compile Include="src\GameLogic\IGameState.cs" />
+    <Compile Include="src\GameLogic\SpatialGrid.cs" />
+    <Compile Include="src\GameLogic\TileMap.cs" />
+    <Compile Include="src\GameLogic\Sprite.cs" />
+    <Compile Include="src\GameLogic\ParticleEngine.cs" />
+    <Compile Include="src\GameLogic\ParallaxBackground.cs" />
+    <Compile Include="src\GameLogic\ICollidable.cs" />
+    <Compile Include="src\GameLogic\CollisionManager.cs" />
+    <Compile Include="src\Common\Timer.cs" />
+    <Compile Include="src\Common\Vector.cs" />
+    <Compile Include="src\Common\RandomGenerator.cs" />
+    <Compile Include="src\Common\Log.cs" />
+    <Compile Include="src\Common\Exceptions.cs" />
+    <Compile Include="src\Common\Constants.cs" />
+    <Compile Include="src\Common\Box.cs" />
+    <Compile Include="src\Rendering\Display.cs" />
+    <Compile Include="src\Rendering\IRenderable.cs" />
+    <Compile Include="src\Rendering\Renderer.cs" />
+    <Compile Include="src\Rendering\Texture.cs" />
+    <Compile Include="src\InputManager.cs" />
+    <Compile Include="lib\FTclass.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="External libs\" />
-    <Folder Include="Rendering\" />
-    <Folder Include="Common\" />
-    <Folder Include="GameLogic\" />
-    <Folder Include="Resources\" />
     <Folder Include="lib\" />
+    <Folder Include="libs_src\" />
+    <Folder Include="src\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
-      <Properties InternalTargetFrameworkVersion="3.5" />
+      <Properties>
+        <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="true" RelativeMakefileName="Makefile" SyncReferences="true" RelativeConfigureInPath="..">
+          <BuildFilesVar Sync="true" Name="SOURCES" />
+          <DeployFilesVar />
+          <ResourcesVar />
+          <OthersVar />
+          <GacRefVar Sync="true" Name="PACKAGES" Prefix="/r:" />
+          <AsmRefVar Sync="true" Name="ASSEMBLIES" Prefix="/r:" />
+          <ProjectRefVar Sync="true" Name="PROJECTS" />
+        </MonoDevelop.Autotools.MakefileInfo>
+      </Properties>
     </MonoDevelop>
   </ProjectExtensions>
 </Project>

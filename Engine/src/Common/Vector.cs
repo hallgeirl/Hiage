@@ -186,7 +186,7 @@ namespace Engine
 		
 		public override bool Equals (object obj)
 		{
-			return this == obj;
+			return this == (Vector)obj;
 		}
 		
 		

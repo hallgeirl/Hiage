@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csproj", "{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditor", "MapEditor\MapEditor.csproj", "{BD44EADC-A057-49A5-83A5-570E93F20F15}"
@@ -34,6 +34,6 @@ Global
 		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.WindowsRelease|Any CPU.Build.0 = WindowsRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Mario\Mario.csproj
+		StartupItem = MapEditor\MapEditor.csproj
 	EndGlobalSection
 EndGlobal

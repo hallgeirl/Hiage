@@ -5,11 +5,9 @@ namespace MapEditor
 	public partial class TileChooser
 	{
 		private global::Gtk.ScrolledWindow scrolledwindow1;
-
 		private global::Gtk.Fixed fixed3;
-
 		private global::Gtk.Table tableTileGrid;
-
+		
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);

@@ -13,7 +13,7 @@ namespace Mario
 		Display 			display;
 		Camera 				camera;
 		PlayerState 		playerInfo;
-		List<Sprite>		icons;
+		//List<Sprite>		icons;
 		
 		ParallaxBackground	background = null;								 //Background used on this map
 		TileMap 			tileMap;										 //The tiles used on this map

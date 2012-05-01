@@ -5,9 +5,8 @@ namespace MapEditor
 	public partial class ObjectChooser
 	{
 		private global::Gtk.ScrolledWindow GtkScrolledWindow;
-
 		private global::Gtk.TreeView listObjects;
-
+		
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);

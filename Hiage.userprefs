@@ -1,28 +1,21 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="Engine/GameLogic/CollisionManager.cs" ctype="Workbench">
-    <Files>
-      <File FileName="Engine/GameLogic/CollisionManager.cs" Line="366" Column="8" />
-      <File FileName="Mario/Objects/PhysicalObject.cs" Line="93" Column="56" />
-      <File FileName="Mario/Objects/BasicGroundEnemy.cs" Line="31" Column="27" />
-      <File FileName="Mario/Controllers/DumbGroundAI.cs" Line="35" Column="1" />
-      <File FileName="Mario/Objects/GameObject.cs" Line="109" Column="3" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Engine" expanded="True">
-            <Node name="References" expanded="True" />
-            <Node name="Common" expanded="True" />
-            <Node name="GameLogic" expanded="True">
-              <Node name="CollisionManager.cs" selected="True" />
-            </Node>
-            <Node name="Rendering" expanded="True" />
-            <Node name="Resources" expanded="True" />
+            <Node name="src" expanded="True" />
           </Node>
-          <Node name="MapEditor" expanded="True" />
+          <Node name="MapEditor" expanded="True">
+            <Node name="References" expanded="True" />
+            <Node name="UserInterface" expanded="True" />
+            <Node name="src" expanded="True">
+              <Node name="NewMapDialog.cs" selected="True" />
+            </Node>
+          </Node>
           <Node name="Mario" expanded="True">
-            <Node name="Controllers" expanded="True" />
-            <Node name="Objects" expanded="True" />
+            <Node name="References" expanded="True" />
+            <Node name="src" expanded="True" />
           </Node>
         </State>
       </Pad>
@@ -38,9 +31,9 @@
   <MonoDevelop.Ide.DebuggingService>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" ctype="Workspace" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches ctype="PinnedWatchStore" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

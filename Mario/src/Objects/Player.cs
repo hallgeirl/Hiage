@@ -18,7 +18,7 @@ namespace Mario
 			Small
 		}
 		
-		HealthStatus health;
+		//HealthStatus health;
 		bool crouching = false;
 		bool sliding = false;
 		double oldFriction;
@@ -31,7 +31,7 @@ namespace Mario
 		               PlayerState state)
 			: base(position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
 		{
-			health = Player.HealthStatus.Small;
+			//health = Player.HealthStatus.Small;
 			oldFriction = objectPhysics.Friction;
 			PlayerState = state;
 		}

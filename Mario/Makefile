@@ -25,9 +25,8 @@ PACKAGES =
 
 PROJECTS = 
 
-BIN=bin
-ASSEMBLY=$(BIN)/Mario.exe
 RELEASE=release
+ASSEMBLY=$(RELEASE)/Mario.exe
 
 .PHONY: hiage
 
@@ -35,22 +34,24 @@ RELEASE=release
 CSC=mono-csc
 CSFLAGS=-o+
 
-all:$(ASSEMBLY)
+SHELL=/bin/bash
+
+all: hiage $(ASSEMBLY)
 	@mkdir -p $(RELEASE)
-	@cp $(ASSEMBLY) $(RELEASE) 
-	@cp -r data $(RELEASE)
+	@rm -f $(RELEASE)/data
+	@ln -s data $(RELEASE)/data
+	@echo "All done! Execute $(ASSEMBLY) or type 'make run' to run Mario!"
 
 run:all
 	./$(RELEASE)/Mario.exe
 
-hiage:
+../Engine/release/last_build_tag hiage:
 	@mkdir -p $(RELEASE)
-	$(MAKE) -C ../Engine
+	@$(MAKE) -C ../Engine
 	@cp ../Engine/release/* $(RELEASE)
 
-$(ASSEMBLY):
-	$(MAKE) hiage
-	@mkdir -p $(BIN)
+$(ASSEMBLY): $(SOURCES) ../Engine/release/last_build_tag
+	@mkdir -p $(RELEASE)
 	@echo "Building $@..."
 	@$(CSC) $(SOURCES) $(ASSEMBLIES) $(PACKAGES) /target:exe /out:$@ 
 

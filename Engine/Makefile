@@ -49,9 +49,8 @@ PROJECTS =
 
 # Output
 DLL=Hiage.dll
-BIN=bin
-ASSEMBLY=$(BIN)/$(DLL)
 RELEASE=release
+ASSEMBLY=$(RELEASE)/$(DLL)
 
 
 
@@ -60,16 +59,16 @@ RELEASE=release
 CSC=mono-csc
 CSFLAGS=-o+
 
-all:$(ASSEMBLY) $(RELEASE)
-	@echo "Copying $(ASSEMBLY) and dependencies to $(RELEASE)..."
-	@cp $(ASSEMBLY) lib/*.dll lib/*.config $(RELEASE)
+all:$(ASSEMBLY)
+	@mkdir -p $(RELEASE)
+	@cp lib/*.dll lib/*.config $(RELEASE)
+	@echo "Built $(ASSEMBLY)."
 
-$(ASSEMBLY): $(BIN)
+$(ASSEMBLY): $(SOURCES)
+	@mkdir -p $(RELEASE)
 	@echo "Building $@..."
 	@$(CSC) $(SOURCES) $(ASSEMBLIES) $(PACKAGES) /target:library /out:$@ 
-
-$(BIN) $(RELEASE):
-	mkdir -p $@
+	@touch $(RELEASE)/last_build_tag
 
 clean:
 	rm -fr $(BIN) *.pidb $(RELEASE)

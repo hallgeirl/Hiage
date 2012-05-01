@@ -32,9 +32,8 @@ PROJECTS =
 
 HIAGE = lib/Hiage.dll
 
-BIN=bin
-ASSEMBLY=$(BIN)/MapEditor.exe
 RELEASE=release
+ASSEMBLY=$(RELEASE)/MapEditor.exe
 
 .PHONY: hiage
 
@@ -42,22 +41,22 @@ RELEASE=release
 CSC=mono-csc
 CSFLAGS=-o+
 
-all:$(ASSEMBLY)
+all: hiage $(ASSEMBLY)
 	@mkdir -p $(RELEASE)
-	@cp $(ASSEMBLY) $(RELEASE) 
-	@cp -r ../Mario/data $(RELEASE)
+	@rm -f $(RELEASE)/data
+	@ln -s ../Mario/data $(RELEASE)/data
+	@echo "All done! Execute $(ASSEMBLY) or type 'make run' to run the map editor!"
 
 run:all
 	./$(RELEASE)/MapEditor.exe
 
-hiage:
-	mkdir -p $(RELEASE)
-	$(MAKE) -C ../Engine
+../Engine/release/last_build_tag hiage:
+	@mkdir -p $(RELEASE)
+	@$(MAKE) -C ../Engine
 	@cp ../Engine/release/* $(RELEASE)
 
-$(ASSEMBLY):
-	$(MAKE) hiage
-	@mkdir -p $(BIN)
+$(ASSEMBLY): $(SOURCES) ../Engine/release/last_build_tag
+	@mkdir -p $(RELEASE)
 	@echo "Building $@..."
 	@$(CSC) $(SOURCES) $(ASSEMBLIES) $(PACKAGES) /target:exe /unsafe /out:$@ 
 

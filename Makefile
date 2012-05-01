@@ -4,7 +4,7 @@ all:
 	$(MAKE) -C Mario
 	$(MAKE) -C MapEditor
 
-purge:
+clean:
 	$(MAKE) -C Engine clean
 	$(MAKE) -C Mario clean
 	$(MAKE) -C MapEditor clean

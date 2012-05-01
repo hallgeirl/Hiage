@@ -4,6 +4,7 @@ Hiage Game Engine
 This is my 2D game engine written in C#. It should run in both Linux (with Mono) and Windows. 
 
 Currently supported features:
+
 - OpenGL 2D rendering
 - Animated sprites
 - Tilemaps
@@ -17,11 +18,13 @@ Installation
 ------------
 
 Required libraries and software:
+
 - C# compiler (Mono or Visual C# should both work; tested on Mono on Linux)
 - Mono or .NET runtime (tested 3.5 and above)
 - libdevil-dev: Image loading and manipulation toolkit.
 
 Compiling:
+
     cd <hiage root>
     make
 
@@ -30,14 +33,17 @@ This builds all projects. To compile each project separately, simply "cd" into t
 Usage
 -----
 To run any of the projects using the Hiage engine, e.g. MapEditor or Mario:
+
     cd <project>
     make run
 
 Example:
+
     cd MapEditor
     make run
 
 Alternatively:
+
     cd MapEditor
     make && ./release/MapEditor
 

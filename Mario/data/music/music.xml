@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <resource type="music" name="beginning" path="beginning.ogg" />
+    <resource type="music" name="castle" path="castle.ogg" />
+    <resource type="music" name="cave" path="cave.ogg" />
+    <resource type="music" name="forestofillusion" path="forestofillusion.ogg" />
+    <resource type="music" name="overworld-intro" path="overworld_begin.ogg" />
+    <resource type="music" name="overworld" path="overworld.ogg" />
+    <resource type="music" name="sky" path="sky.ogg" />
+    <resource type="music" name="vanilladome" path="vanilladome.ogg" />
+    <resource type="music" name="underwater" path="underwater.ogg" />
+</resources>

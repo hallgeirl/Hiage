@@ -23,6 +23,7 @@ namespace Engine
 		Dictionary<string, Resource<ISE.FTFont>>  		fonts 	 = new Dictionary<string, Resource<ISE.FTFont>>();
 		Dictionary<string, Resource<Tileset>> 			tilesets = new Dictionary<string, Resource<Tileset>>();
 		Dictionary<string, Resource<Sound>> 		    sounds   = new Dictionary<string, Resource<Sound>>();
+		Dictionary<string, Resource<Music>> 		    music    = new Dictionary<string, Resource<Music>>();
 		Dictionary<string, Resource<MapDescriptor>> 	tilemaps = new Dictionary<string, Resource<MapDescriptor>>();
 		Dictionary<string, Resource<ObjectDescriptor>> 	objects  = new Dictionary<string, Resource<ObjectDescriptor>>();
 		
@@ -228,6 +229,13 @@ namespace Engine
 							sounds.Add(name, new Resource<Sound>(file, name));
 						break;
 					
+					case "music":
+						if (music.ContainsKey(name))
+							Log.Write("Music with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
+						else
+							music.Add(name, new Resource<Music>(file, name));
+						break;
+					
 					case "texture":
 						if (textures.ContainsKey(name))
 							Log.Write("Texture with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
@@ -358,6 +366,20 @@ namespace Engine
 				return sounds[name].Content;
 			}
 			throw new KeyNotFoundException("Audio clip with name " + name + " does not exist.");
+		}
+		
+		public Music GetMusic(string name)
+		{
+			if (music.ContainsKey(name))
+			{
+				if (!music[name].IsLoaded)
+				{
+					Log.Write("Music \"" + name + "\" was not loaded. Loading it.");
+					music[name].Load(new MusicLoader());
+				}
+				return music[name].Content;
+			}
+			throw new KeyNotFoundException("Music with name " + name + " does not exist.");
 		}
 		
 		//The list of all tileset names

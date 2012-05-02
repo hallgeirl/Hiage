@@ -30,6 +30,7 @@ SOURCES =  \
 	src/Resources/Loaders/AudioClipLoader.cs \
 	src/Resources/Loaders/FontLoader.cs \
 	src/Resources/Loaders/MapLoader.cs \
+	src/Resources/Loaders/MusicLoader.cs \
 	src/Resources/Loaders/ObjectLoader.cs \
 	src/Resources/Loaders/SpriteLoader.cs \
 	src/Resources/Loaders/TextureLoader.cs \

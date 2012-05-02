@@ -61,6 +61,8 @@ namespace Mario
 			    background = new ParallaxBackground(game.Resources.GetTexture(map.Background), 0.5, 0.2, game.Display);
 			
 			camera = new Camera(display, 0, map.Width * map.TileSize, 0, map.Height * map.TileSize);
+			
+			game.Audio.PlayMusic("overworld-intro", "overworld");
 		}
 		
 		public override void Initialize(Game game)

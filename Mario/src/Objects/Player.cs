@@ -25,11 +25,11 @@ namespace Mario
 		protected int crouchState;
 		
 		
-		public Player (Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, //GameObject attributes
+		public Player (Game game, Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, //GameObject attributes
 		               WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons, //PhysicalObject attributes
 		               double runSpeed, double maxSpeed, 	//Character attributes
 		               PlayerState state)
-			: base(position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
+			: base(game, position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
 		{
 			//health = Player.HealthStatus.Small;
 			oldFriction = objectPhysics.Friction;
@@ -128,6 +128,7 @@ namespace Mario
 					PlayerState.Coins = PlayerState.Coins % 100;
 				}
 				((Coin)o).Delete = true;
+				game.Audio.PlaySound("coin");
 			}
 			
 			if (BoundingBox.Bottom >= o.BoundingBox.Top && o is BasicGroundEnemy && ((BasicGroundEnemy)o).Stompable && !((BasicGroundEnemy)o).Dying)
@@ -137,6 +138,7 @@ namespace Mario
 					BasicGroundEnemy enemy = (BasicGroundEnemy)o;
 					Velocity.Y = 200;
 					enemy.Kill();
+					game.Audio.PlaySound("stomp");
 				}
 			}
 		}
@@ -162,6 +164,8 @@ namespace Mario
 			if (OnGround)
 			{
 				Velocity.Y = 200;
+				game.Audio.PlaySound("mario-jump");
+				OnGround = false;
 				//Accellerate(new Vector(0,200));
 			}
 		}

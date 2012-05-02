@@ -12,8 +12,8 @@ namespace Mario
 		protected ObjectPhysics objectPhysics;
 		private   Timer 		inAirTimer = new Timer();
 		
-		public PhysicalObject (Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, 
-		                       WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons) : base(position, velocity, sprite, renderer, controller, boundingPolygons) 
+		public PhysicalObject (Game game, Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, 
+		                       WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons) : base(game, position, velocity, sprite, renderer, controller, boundingPolygons) 
 		{
 			this.worldPhysics = worldPhysics;
 			this.objectPhysics = objectPhysics;
@@ -135,7 +135,7 @@ namespace Mario
 		public bool OnGround
 		{
 			get;
-			private set;
+			protected set;
 		}
 		#endregion
 	}

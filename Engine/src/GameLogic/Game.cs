@@ -11,6 +11,7 @@ namespace Engine
 		Display 			display;
 		ResourceManager 	resourceManager;
 		InputManager		input;
+		AudioManager		audioManager;
 		List<IGameState> 	gameStates;
 		Stopwatch 			timer = new Stopwatch();
 		int 				fps = 60;
@@ -56,6 +57,7 @@ namespace Engine
 			
 			
 			input = new InputManager();
+			audioManager = new AudioManager(resourceManager);
 			
 			timer.Start();
 		}
@@ -189,6 +191,14 @@ namespace Engine
 			get
 			{
 				return input;
+			}
+		}
+		
+		public AudioManager Audio
+		{
+			get
+			{
+				return audioManager;
 			}
 		}
 		

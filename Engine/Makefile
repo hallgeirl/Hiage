@@ -4,6 +4,7 @@ CONFIG=DEBUG_X86
 SOURCES =  \
 	AssemblyInfo.cs \
 	lib/FTclass.cs \
+	src/Audio/AudioManager.cs \
 	src/Common/Box.cs \
 	src/Common/Constants.cs \
 	src/Common/Exceptions.cs \
@@ -20,22 +21,23 @@ SOURCES =  \
 	src/GameLogic/SpatialGrid.cs \
 	src/GameLogic/Sprite.cs \
 	src/GameLogic/TileMap.cs \
-	src/IO/InputManager.cs \
+	src/Input/InputManager.cs \
 	src/Rendering/Display.cs \
 	src/Rendering/IRenderable.cs \
 	src/Rendering/Renderer.cs \
 	src/Rendering/Texture.cs \
-	src/Resources/FontLoader.cs \
 	src/Resources/IResourceLoader.cs \
+	src/Resources/Loaders/AudioClipLoader.cs \
+	src/Resources/Loaders/FontLoader.cs \
+	src/Resources/Loaders/MapLoader.cs \
+	src/Resources/Loaders/ObjectLoader.cs \
+	src/Resources/Loaders/SpriteLoader.cs \
+	src/Resources/Loaders/TextureLoader.cs \
+	src/Resources/Loaders/TilesetLoader.cs \
 	src/Resources/MapDescriptor.cs \
-	src/Resources/MapLoader.cs \
 	src/Resources/ObjectDescriptor.cs \
-	src/Resources/ObjectLoader.cs \
 	src/Resources/ResourceManager.cs \
-	src/Resources/SpriteDescriptor.cs \
-	src/Resources/SpriteLoader.cs \
-	src/Resources/TextureLoader.cs \
-	src/Resources/TilesetLoader.cs
+	src/Resources/SpriteDescriptor.cs
 
 # Referenced assemblies
 ASSEMBLIES =  \

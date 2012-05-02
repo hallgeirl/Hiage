@@ -62,8 +62,6 @@ namespace Engine
 			return Keyboard.IsKeyPressed((Key)key);
 		}
 		
-
-
 		//Convert window coordinates to world coordinates
 		public Vector WindowToWorldPosition(Vector windowPos, Display display, bool relative)
 		{

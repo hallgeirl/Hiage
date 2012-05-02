@@ -3,6 +3,7 @@ using System;
 using System.Xml;
 using System.IO;
 using System.Collections.Generic;
+using SdlDotNet.Audio;
 
 
 namespace Engine
@@ -21,6 +22,7 @@ namespace Engine
 		Dictionary<string, Resource<SpriteDescriptor>> 	sprites  = new Dictionary<string, Resource<SpriteDescriptor>>();
 		Dictionary<string, Resource<ISE.FTFont>>  		fonts 	 = new Dictionary<string, Resource<ISE.FTFont>>();
 		Dictionary<string, Resource<Tileset>> 			tilesets = new Dictionary<string, Resource<Tileset>>();
+		Dictionary<string, Resource<Sound>> 		    sounds   = new Dictionary<string, Resource<Sound>>();
 		Dictionary<string, Resource<MapDescriptor>> 	tilemaps = new Dictionary<string, Resource<MapDescriptor>>();
 		Dictionary<string, Resource<ObjectDescriptor>> 	objects  = new Dictionary<string, Resource<ObjectDescriptor>>();
 		
@@ -122,6 +124,8 @@ namespace Engine
 						
 						switch (c.Name)
 						{
+
+							
 							case "sprite":
 								if (sprites.ContainsKey(name))
 									Log.Write("Sprite with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
@@ -146,12 +150,14 @@ namespace Engine
 								else
 									tilemaps.Add(name, new Resource<MapDescriptor>(f.FullName, name));
 								break;
+							
 							case "object":
 							 	if (objects.ContainsKey(name))
 									Log.Write("Object with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
 								else
 									objects.Add(name, new Resource<ObjectDescriptor>(f.FullName, name));
-								break;					
+								break;
+							
 							default:
 								Log.Write("Unknown resource type: \"" + c.Name + "\". Resource ignored.", Log.WARNING);
 								break;						}
@@ -215,23 +221,30 @@ namespace Engine
 				
 				switch (type)
 				{
-				case "texture":
-					if (textures.ContainsKey(name))
-						Log.Write("Texture with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
-					else 
-						textures.Add(name, new Resource<Texture>(file, name));
-					break;
+					case "sound":
+						if (sounds.ContainsKey(name))
+							Log.Write("Sound with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
+						else
+							sounds.Add(name, new Resource<Sound>(file, name));
+						break;
 					
-				case "font":
-					if (fonts.ContainsKey(name))
-						Log.Write("Sprite with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
-					else
-						fonts.Add(name, new Resource<ISE.FTFont>(file, name));
-					break;
-
-				default:
-					Log.Write("Invalid resource type for resource library file: \"" + type + "\". Resource ignored.", Log.WARNING);
-					break;
+					case "texture":
+						if (textures.ContainsKey(name))
+							Log.Write("Texture with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
+						else 
+							textures.Add(name, new Resource<Texture>(file, name));
+						break;
+						
+					case "font":
+						if (fonts.ContainsKey(name))
+							Log.Write("Font with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);
+						else
+							fonts.Add(name, new Resource<ISE.FTFont>(file, name));
+						break;
+	
+					default:
+						Log.Write("Invalid resource type for resource library file: \"" + type + "\". Resource ignored.", Log.WARNING);
+						break;
 				}
 				
 				Log.Write("Added " + type + " resource with path \"" + file + "\"");
@@ -331,6 +344,20 @@ namespace Engine
 				return objects[name].Content;
 			}
 			throw new KeyNotFoundException("Object with name " + name + " does not exist.");
+		}
+		
+		public Sound GetAudioClip(string name)
+		{
+			if (sounds.ContainsKey(name))
+			{
+				if (!sounds[name].IsLoaded)
+				{
+					Log.Write("Audio clip \"" + name + "\" was not loaded. Loading it.");
+					sounds[name].Load(new AudioClipLoader());
+				}
+				return sounds[name].Content;
+			}
+			throw new KeyNotFoundException("Audio clip with name " + name + " does not exist.");
 		}
 		
 		//The list of all tileset names

@@ -9,10 +9,10 @@ namespace Mario
 
 	public class BasicGroundEnemy : Character
 	{
-		public BasicGroundEnemy (Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, //GameObject attributes
+		public BasicGroundEnemy (Game game, Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, //GameObject attributes
 		               WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons,	//PhysicalObject attributes
 		               double runSpeed, double maxSpeed) 	//Character attributes
-			: base(position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
+			: base(game, position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
 		{
 			Stompable = true;
 		}

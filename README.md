@@ -19,7 +19,7 @@ Installation
 
 Required libraries and software:
 
-- C# compiler (Mono or Visual C# should both work; tested on Mono on Linux)
+- C# compiler (Mono or Visual C# should both work; tested on Mono on Linux, with the "dmcs" compiler)
 - Mono or .NET runtime (tested 3.5 and above)
 - libdevil-dev: Image loading and manipulation toolkit.
 

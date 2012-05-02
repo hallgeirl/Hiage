@@ -16,6 +16,7 @@ namespace Mario
 		protected double remainingFrameTime = 1;
 		protected double animationSpeedFactor = 1;
 		protected double frameTime;
+		protected Game game;
 
 		private double left, right;
 		private bool cachedLeft, cachedRight;
@@ -26,8 +27,9 @@ namespace Mario
 		protected int currentState = -1;
 		
 		//Construct a game object. Set controller to null if the object should be static.
-		public GameObject(Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, Dictionary<string, BoundingPolygon> boundingPolygons)
+		public GameObject(Game game, Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, Dictionary<string, BoundingPolygon> boundingPolygons)
 		{
+			this.game = game;
 			this.boundingPolygons = boundingPolygons;
 			Sprite = sprite;
 			Velocity = velocity;

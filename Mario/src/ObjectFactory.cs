@@ -54,20 +54,20 @@ namespace Mario
 			switch (obj.Type)
 			{
 			case "player":
-				return new Player(position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed, state.PlayerState);
+				return new Player(game, position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed, state.PlayerState);
 				//return new Player(position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed, state.PlayerState);
 			case "enemy":
 				switch (obj.Name)
 				{
 				case "goomba":
-					return new BasicGroundEnemy(position, velocity, sprite, game.Display.Renderer, new DumbGroundAI(), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed);
+					return new BasicGroundEnemy(game, position, velocity, sprite, game.Display.Renderer, new DumbGroundAI(), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed);
 				default:
 					Log.Write("Unknown enemy object name: " + obj.Name, Log.WARNING);
 					break;
 				}
 				break;
 			case "coin":
-				return new Coin(position, sprite, game.Display.Renderer, boundingPolygons);
+				return new Coin(game, position, sprite, game.Display.Renderer, boundingPolygons);
 			default:
 				Log.Write("Unknown object type: " + obj.Type, Log.WARNING);
 				break;

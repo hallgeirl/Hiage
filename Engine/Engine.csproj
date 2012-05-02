@@ -49,23 +49,17 @@
     <Reference Include="SdlDotNet">
       <HintPath>lib\SdlDotNet.dll</HintPath>
     </Reference>
-    <Reference Include="Tao.Sdl">
-      <HintPath>lib\Tao.Sdl.dll</HintPath>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tao.Sdl">
+      <HintPath>lib\Tao.Sdl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="src\Resources\SpriteLoader.cs" />
-    <Compile Include="src\Resources\TextureLoader.cs" />
-    <Compile Include="src\Resources\TilesetLoader.cs" />
     <Compile Include="src\Resources\ResourceManager.cs" />
     <Compile Include="src\Resources\IResourceLoader.cs" />
-    <Compile Include="src\Resources\FontLoader.cs" />
-    <Compile Include="src\Resources\ObjectLoader.cs" />
-    <Compile Include="src\Resources\MapLoader.cs" />
     <Compile Include="src\Resources\ObjectDescriptor.cs" />
     <Compile Include="src\Resources\SpriteDescriptor.cs" />
     <Compile Include="src\Resources\MapDescriptor.cs" />
@@ -90,14 +84,24 @@
     <Compile Include="src\Rendering\Renderer.cs" />
     <Compile Include="src\Rendering\Texture.cs" />
     <Compile Include="lib\FTclass.cs" />
-    <Compile Include="src\IO\InputManager.cs" />
+    <Compile Include="src\Resources\Loaders\SpriteLoader.cs" />
+    <Compile Include="src\Resources\Loaders\TextureLoader.cs" />
+    <Compile Include="src\Resources\Loaders\TilesetLoader.cs" />
+    <Compile Include="src\Resources\Loaders\FontLoader.cs" />
+    <Compile Include="src\Resources\Loaders\MapLoader.cs" />
+    <Compile Include="src\Resources\Loaders\ObjectLoader.cs" />
+    <Compile Include="src\Input\InputManager.cs" />
+    <Compile Include="src\Audio\AudioManager.cs" />
+    <Compile Include="src\Resources\Loaders\AudioClipLoader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="lib\" />
     <Folder Include="libs_src\" />
     <Folder Include="src\" />
-    <Folder Include="src\IO\" />
+    <Folder Include="src\Resources\Loaders\" />
+    <Folder Include="src\Input\" />
+    <Folder Include="src\Audio\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

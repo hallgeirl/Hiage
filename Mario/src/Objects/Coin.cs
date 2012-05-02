@@ -6,8 +6,8 @@ namespace Mario
 {
 	public class Coin : GameObject
 	{
-		public Coin (Vector position, Sprite sprite, Renderer renderer, Dictionary<string, BoundingPolygon> polygons) 
-			: base(position, new Vector(0,0), sprite, renderer, null, polygons)
+		public Coin (Game game, Vector position, Sprite sprite, Renderer renderer, Dictionary<string, BoundingPolygon> polygons) 
+			: base(game, position, new Vector(0,0), sprite, renderer, null, polygons)
 		{
 			sprite.PlayAnimation("normal", true);
 		}

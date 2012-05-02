@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sound effects -->
+    <!-- Mario -->
+    <resource type="sound" name="mario-jump" path="mario_jump.wav" />
+    <resource type="sound" name="mario-grow" path="mario_grow.wav" />
+    <resource type="sound" name="mario-death" path="mario_death.wav" />
+    <!-- Misc -->
+    <resource type="sound" name="coin" path="coin.wav" />
+    <resource type="sound" name="extra-life" path="extra_life.wav" />
+    <resource type="sound" name="stomp" path="stomp.wav" />
+
+</resources>

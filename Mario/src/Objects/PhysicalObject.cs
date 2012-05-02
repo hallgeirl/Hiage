@@ -49,9 +49,9 @@ namespace Mario
 		
 		#endregion
 		
-		public override void Update(double frameTime)
+		public override void UpdateAccelleration(double frameTime)
 		{
-			base.Update(frameTime);
+			base.UpdateAccelleration(frameTime);
 			
 			//Apply gravity
 			Accellerate(new Vector(0, -worldPhysics.Gravity));
@@ -63,8 +63,22 @@ namespace Mario
 				Accellerate(new Vector(-friction, 0));
 			else if (Velocity.X < -friction*frameTime)
 				Accellerate(new Vector(friction, 0));
-			else
+		}
+		
+		public override void UpdateVelocity(double frameTime)
+		{
+			base.UpdateVelocity(frameTime);
+			
+			//Pre-calculate the actual friction (based on world- and object physics attributes)
+			double friction = objectPhysics.Friction*worldPhysics.GroundFrictionFactor;
+			
+			if (Velocity.X <= friction*frameTime && Velocity.X >= -friction*frameTime)
 				Velocity.X = 0;
+		}
+		
+		public override void Update(double frameTime)
+		{
+			base.Update(frameTime);
 			
 			//Check if we're starting to fall
 			if (OnGround && inAirTimer.Elapsed > frameTime*2000)
@@ -77,24 +91,26 @@ namespace Mario
 		//Handle collisions against edges
 		public override void Collide(BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
-			if (collisionResult.IsIntersecting) return;
+			//if (collisionResult.isIntersecting) return;
 			
 			base.Collide(p, collisionNormal, collisionResult);
 			
 			// If intersecting, push back
-			/*if (collisionResult.IsIntersecting)
+			if (collisionResult.isIntersecting)
 			{
-				Position += collisionResult.MinimumTranslationVector;
+				Position += collisionResult.minimumTranslationVector;
 			}
-			else */
-				remainingFrameTime -= collisionResult.CollisionTime;
+			else 
+			{
+				remainingFrameTime -= collisionResult.collisionTime;
 
-				if (collisionResult.WillIntersect)
-					Position += (collisionResult.CollisionTime - 1e-6) * Velocity * frameTime;
+				if (collisionResult.hasIntersected)
+					Position -= (1-collisionResult.collisionTime + 1e-6) * Velocity * frameTime;
 				else
-					Position += collisionResult.MinimumTranslationVector;
+					Position -= collisionResult.minimumTranslationVector;
 
 				Velocity = Velocity - ((1.0+objectPhysics.Elasticity)*Velocity.DotProduct(collisionNormal))*collisionNormal;
+				Position += remainingFrameTime * Velocity * frameTime;
 
    				/*
 				 * Run the event handlers
@@ -111,6 +127,7 @@ namespace Mario
 					}
 					inAirTimer.Restart();
 				}
+			}
 		//	}
 		}
 		

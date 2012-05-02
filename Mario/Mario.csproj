@@ -35,9 +35,9 @@
           <DeployFilesVar />
           <ResourcesVar />
           <OthersVar />
-          <GacRefVar Sync="true" Name="PACKAGES" />
+          <GacRefVar Sync="true" Name="PACKAGES" Prefix="/r:" />
           <AsmRefVar Sync="true" Name="ASSEMBLIES" Prefix="/r:" />
-          <ProjectRefVar Sync="true" Name="PROJECTS" />
+          <ProjectRefVar Sync="true" Name="PROJECTS" Prefix="/r:" />
         </MonoDevelop.Autotools.MakefileInfo>
       </Properties>
     </MonoDevelop>
@@ -60,10 +60,12 @@
     <Compile Include="src\Physics.cs" />
     <Compile Include="src\PlayerInfo.cs" />
     <Compile Include="src\PlayerState.cs" />
+    <Compile Include="src\Controllers\DebugController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Hiage">
-      <HintPath>release\Hiage.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Engine\Engine.csproj">
+      <Project>{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}</Project>
+      <Name>Engine</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

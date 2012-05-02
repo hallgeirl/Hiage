@@ -213,7 +213,7 @@ namespace Engine
 		{
 			BoundingPolygon p = new BoundingPolygon(vertices);
 			p.MoveTo(center.X, center.Y);
-			return new BoundingPolygon(vertices);
+			return p; //return new BoundingPolygon(vertices);
 		}
 		
 		public override string ToString()

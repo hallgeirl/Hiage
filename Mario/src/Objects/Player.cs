@@ -132,7 +132,7 @@ namespace Mario
 			
 			if (BoundingBox.Bottom >= o.BoundingBox.Top && o is BasicGroundEnemy && ((BasicGroundEnemy)o).Stompable && !((BasicGroundEnemy)o).Dying)
 			{
-				if (collisionResult.WillIntersect)
+				if (collisionResult.hasIntersected)
 				{
 					BasicGroundEnemy enemy = (BasicGroundEnemy)o;
 					Velocity.Y = 200;
@@ -144,7 +144,7 @@ namespace Mario
 		public override void Collide (BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
 			base.Collide (p, collisionNormal, collisionResult);
-			if (collisionResult.HitNormal.X > 0.8 && sliding)
+			if (collisionResult.hitNormal.X > 0.8 && sliding)
 			{
 				sliding = false;
 				objectPhysics.Friction = oldFriction;
@@ -162,6 +162,7 @@ namespace Mario
 			if (OnGround)
 			{
 				Velocity.Y = 200;
+				//Accellerate(new Vector(0,200));
 			}
 		}
 		

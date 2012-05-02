@@ -82,24 +82,25 @@ namespace Mario
 			
 			currentState = standState;
 		}
-
 		
-		public override void Update (double frameTime)
+		public override void UpdateVelocity(double frameTime)
 		{
-			base.Update (frameTime);
-			
-			if (Velocity.X > 1e-12)
-				Sprite.Flipped = false;
-			else if (Velocity.X < -1e-12)
-			    Sprite.Flipped = true;
-
+			base.UpdateVelocity(frameTime);
 			
 			//Limit speed
 			if (Velocity.X < -MaxSpeed)
 				Velocity.X = -MaxSpeed;
 			else if (Velocity.X > MaxSpeed)
 			    Velocity.X = MaxSpeed;
-			
+		}
+		
+		public override void Update(double frameTime)
+		{
+			base.Update(frameTime);
+			if (Velocity.X > 1e-12)
+				Sprite.Flipped = false;
+			else if (Velocity.X < -1e-12)
+			    Sprite.Flipped = true;
 		}
 		
 		public double RunSpeed

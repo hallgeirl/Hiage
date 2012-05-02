@@ -127,6 +127,8 @@ namespace Engine
 			else while (timer.Elapsed.Milliseconds == 0) {}
 			
 			lastFrameTime = (double)timer.Elapsed.Milliseconds / 1000.0;
+			//TODO: Remove the following line
+			//lastFrameTime = 0.02;
 			GameTime += lastFrameTime;
 			currentFps = 1.0/lastFrameTime;
 		}

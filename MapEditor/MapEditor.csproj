@@ -14,21 +14,16 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
+    <OutputPath>release</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <additionalargs>-unsafe</additionalargs>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeExecute" command="bash ${ProjectDir}/copy_data" workingdir="${ProjectDir}" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <GenerateDocumentation>true</GenerateDocumentation>
@@ -42,7 +37,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'WindowsRelease|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\WindowsRelease</OutputPath>
+    <OutputPath>release</OutputPath>
     <WarningLevel>4</WarningLevel>
     <additionalargs>/platform:x86 /unsafe</additionalargs>
   </PropertyGroup>

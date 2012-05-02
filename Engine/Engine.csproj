@@ -53,6 +53,8 @@
       <HintPath>lib\Tao.Sdl.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
@@ -87,14 +89,15 @@
     <Compile Include="src\Rendering\IRenderable.cs" />
     <Compile Include="src\Rendering\Renderer.cs" />
     <Compile Include="src\Rendering\Texture.cs" />
-    <Compile Include="src\InputManager.cs" />
     <Compile Include="lib\FTclass.cs" />
+    <Compile Include="src\IO\InputManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="lib\" />
     <Folder Include="libs_src\" />
     <Folder Include="src\" />
+    <Folder Include="src\IO\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

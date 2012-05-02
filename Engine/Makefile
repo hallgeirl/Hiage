@@ -1,3 +1,5 @@
+CONFIG=DEBUG_X86
+
 # Source files
 SOURCES =  \
 	AssemblyInfo.cs \
@@ -18,7 +20,7 @@ SOURCES =  \
 	src/GameLogic/SpatialGrid.cs \
 	src/GameLogic/Sprite.cs \
 	src/GameLogic/TileMap.cs \
-	src/InputManager.cs \
+	src/IO/InputManager.cs \
 	src/Rendering/Display.cs \
 	src/Rendering/IRenderable.cs \
 	src/Rendering/Renderer.cs \
@@ -43,7 +45,10 @@ ASSEMBLIES =  \
 	/r:lib/Tao.OpenGl.dll \
 	/r:lib/Tao.Sdl.dll
 
-PACKAGES = /r:System.Drawing
+PACKAGES =  \
+	/r:System \
+	/r:System.Drawing \
+	/r:System.Xml
 
 PROJECTS =
 
@@ -52,12 +57,17 @@ DLL=Hiage.dll
 RELEASE=release
 ASSEMBLY=$(RELEASE)/$(DLL)
 
-
-
-
 # Compilers and compiler options
-CSC=mono-csc
-CSFLAGS=-o+
+CSC=dmcs
+CSFLAGS+=/noconfig /codepage:utf8 /warn:4
+
+ifeq ($(CONFIG), DEBUG_X86)
+CSFLAGS+=/optimize- /debug /define:"DEBUG"
+endif
+
+ifeq (CONFIG, RELEASE_X86)
+CSFLAGS+=/optimize+
+endif
 
 all:$(ASSEMBLY)
 	@mkdir -p $(RELEASE)
@@ -67,7 +77,7 @@ all:$(ASSEMBLY)
 $(ASSEMBLY): $(SOURCES)
 	@mkdir -p $(RELEASE)
 	@echo "Building $@..."
-	@$(CSC) $(SOURCES) $(ASSEMBLIES) $(PACKAGES) /target:library /out:$@ 
+	$(CSC) $(CSFLAGS) $(SOURCES) $(ASSEMBLIES) $(PACKAGES) /target:library /out:$@ 
 	@touch $(RELEASE)/last_build_tag
 
 clean:

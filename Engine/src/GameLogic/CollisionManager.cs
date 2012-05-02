@@ -10,17 +10,17 @@ namespace Engine
 	public class CollisionResult
 	{
 		// Bounding polygons will intersect at t=(0 <= CollisionTime < 1) into the future
-		public bool WillIntersect = false;
-		public double CollisionTime;
+		public bool hasIntersected = false;
+		public double collisionTime;
 		
 		// Intersecting right now
-		public bool IsIntersecting = false;
+		public bool isIntersecting = false;
 		// Pushback vector 
-		public Vector MinimumTranslationVector;
+		public Vector minimumTranslationVector;
 		// The frame duration used when testing
-		public double FrameTime;
+		public double frameTime;
 		
-		public Vector HitNormal;
+		public Vector hitNormal;
 
 		//Used internally to determine MTD
 		internal double distance;
@@ -245,15 +245,15 @@ namespace Engine
 			
 			//Find the "best" guess of HOW the objects collides.
 			//That is, what direction, and what normal was intersected first.
-			if ((!result.IsIntersecting && !result.WillIntersect) || //If the result intersection flags are both false, this is the first test.
-			    (result.IsIntersecting && (willIntersect || (isIntersecting && result.distance < distance))) || //Previous result was an overlapping one, while the latest result indicate o1 and o2 will collide in the future instead,
-                (result.WillIntersect && willIntersect && t > result.CollisionTime)) //Previous result was that o1 and o2 collides in the future, but this result indicates that they collide later.
+			if ((!result.isIntersecting && !result.hasIntersected) || //If the result intersection flags are both false, this is the first test.
+			    (result.isIntersecting && (willIntersect || (isIntersecting && result.distance < distance))) || //Previous result was an overlapping one, while the latest result indicate o1 and o2 will collide in the future instead,
+                (result.hasIntersected && willIntersect && t > result.collisionTime)) //Previous result was that o1 and o2 collides in the future, but this result indicates that they collide later.
 			{
-				result.IsIntersecting = isIntersecting;
-				result.WillIntersect = willIntersect;
-				result.CollisionTime = t;
+				result.isIntersecting = isIntersecting;
+				result.hasIntersected = willIntersect;
+				result.collisionTime = t;
 				result.distance = distance;
-				result.HitNormal = axis;
+				result.hitNormal = axis;
 				
 				#if DEBUG_COLLISION_OBJECT_POLYGON || DEBUG_COLLISION_OBJECT_OBJECT
 				Log.Write("\tNew best axis", Log.DEBUG);
@@ -262,8 +262,8 @@ namespace Engine
 			//No intersection now or in the future.
 			else if (!isIntersecting && !willIntersect)
 			{
-				result.WillIntersect = false; 
-				result.IsIntersecting = false;
+				result.hasIntersected = false; 
+				result.isIntersecting = false;
 			}
 		}
 		
@@ -273,9 +273,12 @@ namespace Engine
 		public static void TestCollision(ICollidable o, List<BoundingPolygon> polygons, double frameTime)
 		{
 			if (polygons.Count == 0) return;
+			
 			//Applying Separating Axis theorem
 			//First find all the axis. They are the union of the object's edge normals, and the polygon's edge normals.
 			//The polygon's edge normals will be retrieved for each polygon that is checked.
+
+			
 			List<Vector>[] edges = {o.BoundingBox.EdgeNormals, null};
 			
 			double remainingFrameTime = 1;
@@ -287,8 +290,10 @@ namespace Engine
 			#endif
 			
 			//As long as we may get another collision in this frame
-			while (o.Velocity.DotProduct(o.Velocity) > 0 && remainingFrameTime > 0 && loopCount < 4)
+			while (o.Velocity.DotProduct(o.Velocity) > 0 && remainingFrameTime > 0/* && loopCount < 4*/)
 			{
+				BoundingPolygon oldBoundingBox = (BoundingPolygon)o.BoundingBox.Clone();
+				oldBoundingBox.Translate(-o.Velocity.X*frameTime*remainingFrameTime, -o.Velocity.Y*frameTime*remainingFrameTime);
 				loopCount++;
 				
 				//This is the reference to the first edge we're colliding with. If null at the end, we didn't collide.
@@ -298,12 +303,12 @@ namespace Engine
 				//Final collision results
 				CollisionResult finalResult = new CollisionResult();
 
-				//How far do we actually move this frame?
+				//How far have we actually moved this frame?
 				Vector velocity = o.Velocity * frameTime;
 				
 				//Set the minimum translation vector to the longest vector possible during a frame
-				finalResult.MinimumTranslationVector = o.Velocity * frameTime;
-				finalResult.FrameTime = frameTime;
+				finalResult.minimumTranslationVector = o.Velocity * frameTime;
+				finalResult.frameTime = frameTime;
 				int finalNormalOwner = -1;
 				
 				//Check each edge
@@ -335,22 +340,22 @@ namespace Engine
 						foreach (Vector axis in poly)
 						{
 							// Do the collision test on the polygons
-							testAxis(ProjectPolygon(o.BoundingBox, axis), ProjectPolygon(p, axis), velocity, axis, result, remainingFrameTime, i);
-							if (object.ReferenceEquals(axis, result.HitNormal))
+							testAxis(ProjectPolygon(oldBoundingBox, axis), ProjectPolygon(p, axis), velocity, axis, result, remainingFrameTime, i);
+							if (object.ReferenceEquals(axis, result.hitNormal))
 								normalOwner = i;
 							
-							if (!result.WillIntersect && !result.IsIntersecting) 
+							if (!result.hasIntersected && !result.isIntersecting) 
 							{
 								separating =  true;
 								break;
 							}
-							if (result.IsIntersecting && double.IsNegativeInfinity(result.distance)) result.IsIntersecting = false;
+							if (result.isIntersecting && double.IsNegativeInfinity(result.distance)) result.isIntersecting = false;
 						}
 						if (separating) break;
 					}
 					
 					//Already intersecting
-					if (result.IsIntersecting)
+					if (result.isIntersecting)
 					{
 						finalResult = result;
 						finalNormalOwner = normalOwner;
@@ -359,12 +364,12 @@ namespace Engine
 					}
 					//Will intersect with p in the future. 
 					//If we're not already overlapping with another polygon, go ahead and update the current minimum collision time.
-					else if (result.WillIntersect && !finalResult.IsIntersecting)
+					else if (result.hasIntersected)
 					{
 						//If the collision time is the smallest so far, 
-						if (result.CollisionTime < minimumCollisionTime)
+						if (result.collisionTime < minimumCollisionTime)
 						{
-							minimumCollisionTime = result.CollisionTime;
+							minimumCollisionTime = result.collisionTime;
 							finalResult = result;
 							finalNormalOwner = normalOwner;
 							firstCollisionPolygon = p;
@@ -375,17 +380,17 @@ namespace Engine
 				//If we have a first collision, call the collision handler
 				if (firstCollisionPolygon != null)
 				{
-					if (finalResult.IsIntersecting)
-						finalResult.MinimumTranslationVector = (finalNormalOwner == 0 ? -1 : 1) * Math.Abs(finalResult.distance) * finalResult.HitNormal; //o.Velocity * finalResult.distance * frameTime;
+					if (finalResult.isIntersecting)
+						finalResult.minimumTranslationVector = (finalNormalOwner == 0 ? 1 : -1) * Math.Abs(finalResult.distance) * finalResult.hitNormal; //o.Velocity * finalResult.distance * frameTime;
 
 					remainingFrameTime -= minimumCollisionTime;
 					
 					//Subtract a small amount to behave correctly when we have small rounding errors.
-					finalResult.CollisionTime = minimumCollisionTime; // - 1e-6;//Constants.MinDouble;
+					finalResult.collisionTime = minimumCollisionTime; // - 1e-6;//Constants.MinDouble;
 
-					o.Collide(firstCollisionPolygon, finalNormalOwner == 1 ? finalResult.HitNormal : -finalResult.HitNormal, finalResult);
+					o.Collide(firstCollisionPolygon, finalNormalOwner == 1 ? finalResult.hitNormal : -finalResult.hitNormal, finalResult);
 					#if DEBUG_COLLISION_OBJECT_POLYGON
-					Log.Write("COLLISION." + " Time: " + finalResult.CollisionTime + " Normal: " + finalResult.HitNormal + " Remaining: " + remainingFrameTime + " Collision polygon: " + firstCollisionPolygon + " Velocity: " + o.Velocity + " Translation vector: " + finalResult.MinimumTranslationVector, Log.DEBUG);
+					Log.Write("COLLISION." + " Time: " + finalResult.collisionTime + " Normal: " + finalResult.hitNormal + " Remaining: " + remainingFrameTime + " Collision polygon: " + firstCollisionPolygon + " Velocity: " + o.Velocity + " Translation vector: " + finalResult.minimumTranslationVector, Log.DEBUG);
 					collCount++;					
 					#endif
 				}
@@ -420,7 +425,7 @@ namespace Engine
 			Log.Write("Velocity 1 " + o1.Velocity + " Velocity 2 " + o2.Velocity, Log.DEBUG);
 			#endif
 			CollisionResult result = new CollisionResult();
-			result.FrameTime = frameTime;
+			result.frameTime = frameTime;
 			bool separating = false;
 			int normalOwner = -1;
 			
@@ -438,11 +443,11 @@ namespace Engine
 					//Test for collision on one axis
 					testAxis(ProjectPolygon(o1.BoundingBox, axis), ProjectPolygon(o2.BoundingBox, axis), relativeVelocity, axis, result, 1, i);
 					
-					if (object.ReferenceEquals(axis, result.HitNormal))
+					if (object.ReferenceEquals(axis, result.hitNormal))
 						normalOwner = i;
 					
 					//No intersection (now or in the future)
-					if (!result.IsIntersecting && !result.WillIntersect)
+					if (!result.isIntersecting && !result.hasIntersected)
 					{
 						separating = true;
 						break;
@@ -454,14 +459,14 @@ namespace Engine
 			if (!separating)
 			{
 				#if DEBUG_COLLISION_OBJECT_OBJECT
-				Log.Write("COLLISION. Normal: " + result.HitNormal + " Time: " + result.CollisionTime, Log.DEBUG);
+				Log.Write("COLLISION. Normal: " + result.hitNormal + " Time: " + result.collisionTime, Log.DEBUG);
 				#endif
-				if (result.IsIntersecting)
-					result.MinimumTranslationVector = result.HitNormal * result.distance * frameTime;
+				if (result.isIntersecting)
+					result.minimumTranslationVector = result.hitNormal * result.distance * frameTime;
 
-				result.FrameTime = frameTime;
-				collisionEvents.Add(new CollisionEvent(o1, o2, normalOwner == 1 ? result.HitNormal : -result.HitNormal, result));
-				collisionEvents.Add(new CollisionEvent(o2, o1, normalOwner == 0 ? result.HitNormal : -result.HitNormal, result));
+				result.frameTime = frameTime;
+				collisionEvents.Add(new CollisionEvent(o1, o2, normalOwner == 1 ? result.hitNormal : -result.hitNormal, result));
+				collisionEvents.Add(new CollisionEvent(o2, o1, normalOwner == 0 ? result.hitNormal : -result.hitNormal, result));
 			}
 			#if DEBUG_COLLISION_OBJECT_OBJECT
 			else

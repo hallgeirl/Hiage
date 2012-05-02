@@ -60,23 +60,35 @@ namespace Mario
 			cachedRight = false;
 		}
 		
-		//Update this object's position and such
-		public virtual void Update(double frameTime)
+		public virtual void UpdateAccelleration(double frameTime)
 		{
-			Position += Velocity*frameTime*remainingFrameTime;
-			Velocity += accelVector*frameTime;
-						
-			accelVector.X = 0;
-			accelVector.Y = 0;
-			
 			if (controller != null)
 				controller.Control(this);
-
+		}
+		
+		public virtual void UpdateVelocity(double frameTime)
+		{
+			Velocity += accelVector*frameTime;
+			accelVector.X = 0;
+			accelVector.Y = 0;
+		}
+		
+		//Update this object's position and such
+		public virtual void UpdatePosition(double frameTime)
+		{
+			Position += Velocity*frameTime;
 			remainingFrameTime = 1;
 			
 			//Run the current object state
 			if (currentState != -1)
 				objectStates[currentState]();
+		}
+				
+		public virtual void Update(double frameTime)
+		{
+			UpdateAccelleration(frameTime);
+			UpdateVelocity(frameTime);
+			UpdatePosition(frameTime);
 		}
 		
 		#region ICollidable specifics
@@ -122,32 +134,35 @@ namespace Mario
 		
 		#endregion
 		
-		public void Render(double frameTime)
+		public void Render(double frameTime, bool debug=false)
 		{
+			if (Position.Y < -100)
+				Console.WriteLine("Omg! " + Position.Y);
 			Sprite.X = Position.X;
 			Sprite.Y = Position.Y;
 			Sprite.Update(frameTime*animationSpeedFactor);
 			
-			#if DEBUG
-			//Debug (Draw a square for the collision boundaries).
-			Box ca = GetCollisionCheckArea(frameTime);
-			renderer.SetDrawingColor(1,0,0,1);
-			renderer.DrawSquare(ca.Left, ca.Top, ca.Right, ca.Bottom);
-			renderer.SetDrawingColor(1,1,1,1);
-			
-			//Draw edges
-			List<Vector> bp = BoundingBox.Vertices;
-			for (int i = 0; i < bp.Count; i++)
+			if (debug)
 			{
-				Vector p1 = bp[i], p2 = bp[i == bp.Count-1 ? 0 : i+1];
+				//Debug (Draw a square for the collision boundaries).
+				Box ca = GetCollisionCheckArea(frameTime);
+				renderer.SetDrawingColor(1,0,0,1);
+				renderer.DrawSquare(ca.Left, ca.Top, ca.Right, ca.Bottom);
+				renderer.SetDrawingColor(1,1,1,1);
 				
-				//Draw edge
-				renderer.DrawLine(p1.X, p1.Y, p2.X, p2.Y);
-				
-				//Draw normal
-				//renderer.DrawLine(p1.X + (p2.X-p1.X)/2, p1.Y + (p2.Y-p1.Y)/2, p1.X + (p2.X-p1.X)/2+e.Normal.X*Tilesize/4, p1.Y + (p2.Y-p1.Y)/2+e.Normal.Y*Tilesize/4);
+				//Draw edges
+				List<Vector> bp = BoundingBox.Vertices;
+				for (int i = 0; i < bp.Count; i++)
+				{
+					Vector p1 = bp[i], p2 = bp[i == bp.Count-1 ? 0 : i+1];
+					
+					//Draw edge
+					renderer.DrawLine(p1.X, p1.Y, p2.X, p2.Y);
+					
+					//Draw normal
+					//renderer.DrawLine(p1.X + (p2.X-p1.X)/2, p1.Y + (p2.Y-p1.Y)/2, p1.X + (p2.X-p1.X)/2+e.Normal.X*Tilesize/4, p1.Y + (p2.Y-p1.Y)/2+e.Normal.Y*Tilesize/4);
+				}
 			}
-			#endif
 			
 			//renderer.DrawSquare(Position.X-Width/2, Position.Y-Height/2, Position.X+Width/2, Position.Y+Height/2);
 			

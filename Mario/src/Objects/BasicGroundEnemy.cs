@@ -29,6 +29,7 @@ namespace Mario
 		public override void Update(double frameTime)
 		{
 			base.Update(frameTime);
+			
 			if (dieTimer.Elapsed > 1000)
 				Delete = true;
 		}
@@ -57,7 +58,8 @@ namespace Mario
 		{
 			get 
 			{
-				return boundingPolygons["normal"];
+				var poly = boundingPolygons["normal"];
+				return poly;
 			}
 		}
 		

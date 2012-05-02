@@ -10,18 +10,18 @@
 	</geometry>
 
 	<tileset>grassland</tileset>
-	<background>goomba</background>
+	<background>background-green-mountains</background>
 
 	<properties>
-		<gravity>500</gravity>
+		<gravity>100</gravity>
 		<ground-friction-factor>1</ground-friction-factor>
 	</properties>
 
 	<objects>
 		<object>
 			<name>mario</name>
-			<x-pos>74.375</x-pos>
-			<y-pos>65.652173913043441</y-pos>
+			<x-pos>60</x-pos>
+			<y-pos>100</y-pos>
 		</object>
 	</objects>
 

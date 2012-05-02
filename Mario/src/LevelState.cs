@@ -163,9 +163,11 @@ namespace Mario
 			for (int i = 2; i < tileMap.Layers; i++)
 				tileMap.Render(i);
 			
-			game.Display.Renderer.DrawText("FPS: " + game.FPS.ToString("N2"), display.RenderedCameraX - display.ViewportWidth/2, display.RenderedCameraY - display.ViewportHeight/2);
+			game.Display.Renderer.DrawText("FPS: " + game.FPS.ToString("N2"), display.RenderedCameraX - display.ViewportWidth/2, display.RenderedCameraY - display.ViewportHeight/2+4);
 			game.Display.Renderer.DrawText("Lives: " + playerInfo.Lives, display.RenderedCameraX - display.ViewportWidth/2 + 5, display.RenderedCameraY + display.ViewportHeight/2 - 16);
 			game.Display.Renderer.DrawText("Coins: " + playerInfo.Coins, display.RenderedCameraX + display.ViewportWidth/2 - 55, display.RenderedCameraY + display.ViewportHeight/2 - 16);
+			
+			//game.Display.Renderer.DrawText("Player BB: " + objects[0].BoundingBox.ToString(), display.RenderedCameraX - display.ViewportWidth/2, display.RenderedCameraY - display.ViewportHeight/2 +16);
 		}
 		
 		public override void Run(double frameTime)
@@ -174,9 +176,9 @@ namespace Mario
 				o.Prepare(frameTime);
 			
 			HandleInput(frameTime);
-			PerformCollisionTests(frameTime);
-			
 			Update(frameTime);
+			
+			PerformCollisionTests(frameTime);
 			
 			Render(frameTime);
 		}

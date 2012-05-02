@@ -6,7 +6,7 @@
   </configuration>
   <import>
     <widget-library name="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <widget-library name="../bin/Debug/MapEditor.exe" internal="true" />
+    <widget-library name="../release/MapEditor.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="MainWindow" design-size="367 447">
     <action-group name="Default">
@@ -446,6 +446,7 @@
                             <property name="MemberName" />
                             <property name="CanFocus">True</property>
                             <property name="Label" translatable="yes">Draw tiles</property>
+                            <property name="Active">True</property>
                             <property name="DrawIndicator">True</property>
                             <property name="HasLabel">True</property>
                             <property name="UseUnderline">True</property>

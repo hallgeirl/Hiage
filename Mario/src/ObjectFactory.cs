@@ -55,6 +55,7 @@ namespace Mario
 			{
 			case "player":
 				return new Player(position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed, state.PlayerState);
+				//return new Player(position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed, state.PlayerState);
 			case "enemy":
 				switch (obj.Name)
 				{

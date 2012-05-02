@@ -204,7 +204,7 @@ namespace Engine
 		/// <summary>
 		/// Render the tilemap
 		/// </summary>
-		public void Render(int layer)
+		public void Render(int layer, bool debug = false)
 		{
 			Renderer renderer = display.Renderer;
 			//renderer.SetFont("arial", 8);
@@ -225,8 +225,7 @@ namespace Engine
 					
 					renderer.Render(xTile*Tilesize + OffsetX, yTile*Tilesize + OffsetY,(xTile+1)*Tilesize + OffsetX, (yTile+1)*Tilesize + OffsetY, t.Texture);
 					
-					#if DEBUG
-					if (map[xTile, yTile, 0].BoundingPolygon != null)
+					if (debug && map[xTile, yTile, 0].BoundingPolygon != null)
 					{
 						List<Vector> bp = map[xTile, yTile, 0].BoundingPolygon.Vertices;
 						for (int i = 0; i < bp.Count; i++)
@@ -240,7 +239,6 @@ namespace Engine
 							//renderer.DrawLine(p1.X + (p2.X-p1.X)/2, p1.Y + (p2.Y-p1.Y)/2, p1.X + (p2.X-p1.X)/2+e.Normal.X*Tilesize/4, p1.Y + (p2.Y-p1.Y)/2+e.Normal.Y*Tilesize/4);
 						}
 					}
-					#endif
 				}
 			}
 		}

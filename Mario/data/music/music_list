@@ -1,0 +1,7 @@
+#!/bin/bash
+
+files=`ls *.ogg|sed 's/.ogg$//g'`
+
+for f in $files; do
+    echo "<resource type=\"music\" name=\"$f\" path=\"$f.ogg\" />"
+done

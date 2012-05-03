@@ -64,5 +64,19 @@ namespace Engine
 			}
 		}
 		
+		public string DefaultAnimation
+		{
+			get; set;
+		}
+		
+		public bool HasAnimation(string animation)
+		{
+			foreach (var f in frames)
+			{
+				if (f.animationName == animation)
+					return true;
+			}
+			return false;
+		}
 	}
 }

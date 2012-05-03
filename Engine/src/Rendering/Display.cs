@@ -151,6 +151,41 @@ namespace Engine
 			return (x >= (cameraX-renderedZoom) && x <= (cameraX+renderedZoom) && y <= (cameraY+renderedZoom) && y >= (cameraY-renderedZoom));
 		}
 		
+		public Vector DisplayToWorldCoordinates(double x, double y)
+		{
+			return new Vector(RenderedCameraX - ViewportWidth/2 + x, RenderedCameraY - ViewportHeight/2 + y);
+		}
+		
+		public double ViewTop
+		{
+			get
+			{
+				return RenderedCameraY + ViewportHeight/2;
+			}
+		}
+		public double ViewBottom
+		{
+			get
+			{
+				return RenderedCameraY - ViewportHeight/2;
+			}
+		}
+		public double ViewLeft
+		{
+			get
+			{
+				return RenderedCameraX - ViewportWidth/2;
+			}
+		}
+		public double ViewRight
+		{
+			get
+			{
+				return RenderedCameraX + ViewportWidth/2;
+			}
+		}
+		
+		
 		#region Event handlers
 		/// <summary>
 		/// Handle resizes

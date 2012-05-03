@@ -1,5 +1,6 @@
 
 using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
 using SdlDotNet.Core;
@@ -12,7 +13,7 @@ namespace Engine
 		ResourceManager 	resourceManager;
 		InputManager		input;
 		AudioManager		audioManager;
-		List<IGameState> 	gameStates;
+		List<GameState> 	gameStates;
 		Stopwatch 			timer = new Stopwatch();
 		int 				fps = 60;
 		double 				currentFps = 0;
@@ -39,7 +40,7 @@ namespace Engine
 		public void Initialize(int width, int height, bool fullscreen, string windowTitle)
 		{
 			Log.Write("Engine initializing at " + DateTime.Now);
-			gameStates = new List<IGameState>();
+			gameStates = new List<GameState>();
 
 			//Create resource manager and load resources from the main resource file
 			resourceManager = new ResourceManager();
@@ -71,17 +72,20 @@ namespace Engine
 		/// <returns>
 		/// Previous <see cref="IGameState"/>
 		/// </returns>
-		public IGameState PushState(IGameState state)
+		public GameState PushState(GameState state)
 		{
 			if (state != null)
 			{
 				gameStates.Add(state);
-				state.Initialize(this);
+				//state.Initialize(this);
 			}
 			else
 			{
 				throw new NullReferenceException("PushState: state was null.");
 			}
+			
+			gameStates[gameStates.Count-1].IssueActivateEvent();
+			
 			if (gameStates.Count > 1)
 			{
 				return gameStates[gameStates.Count-2];
@@ -92,14 +96,17 @@ namespace Engine
 		/// <summary>
 		/// Pop (remove) the top game state
 		/// </summary>
-		public IGameState PopState()
+		public GameState PopState()
 		{
 			if (gameStates.Count == 0)
 			{
 				throw new IndexOutOfRangeException("PopState: No state to pop.");
 			}
-			IGameState temp = gameStates[gameStates.Count-1];
+			GameState temp = gameStates[gameStates.Count-1];
 			gameStates.RemoveAt(gameStates.Count-1);
+			
+			if (gameStates.Count > 0)
+				gameStates[gameStates.Count-1].IssueActivateEvent();
 			
 			return temp;
 		}
@@ -109,30 +116,35 @@ namespace Engine
 		/// </summary>
 		public void Run()
 		{
-			
-			//Poll for events (Close, resize etc.)
-			while (Events.Poll()){}
-			
-			timer.Reset();
-			timer.Start();
-			
-			display.PrepareRender();
-			
-			if (gameStates.Count > 0)
+			while (!Done)
 			{
-				gameStates[gameStates.Count-1].Run(lastFrameTime);
+				//Poll for events (Close, resize etc.)
+				while (Events.Poll())
+				{
+				}
+				
+				timer.Reset();
+				timer.Start();
+				
+				display.PrepareRender();
+				
+				if (gameStates.Count > 0)
+				{
+					//gameStates[gameStates.Count-1].Run(lastFrameTime);
+					gameStates[gameStates.Count-1].Run(lastFrameTime);
+				}
+				
+				display.Render();
+				
+				if (fps > 0) while (timer.Elapsed.Milliseconds < (1/(double)fps*1000)) {}
+				else while (timer.Elapsed.Milliseconds == 0) {}
+				
+				lastFrameTime = (double)timer.Elapsed.Milliseconds / 1000.0;
+				//TODO: Remove the following line
+				//lastFrameTime = 0.02;
+				GameTime += lastFrameTime;
+				currentFps = 1.0/lastFrameTime;
 			}
-			
-			display.Render();
-			
-			if (fps > 0) while (timer.Elapsed.Milliseconds < (1/(double)fps*1000)) {}
-			else while (timer.Elapsed.Milliseconds == 0) {}
-			
-			lastFrameTime = (double)timer.Elapsed.Milliseconds / 1000.0;
-			//TODO: Remove the following line
-			//lastFrameTime = 0.02;
-			GameTime += lastFrameTime;
-			currentFps = 1.0/lastFrameTime;
 		}
 		
 		/// <summary>
@@ -142,6 +154,8 @@ namespace Engine
 		{
 			done = true;
 			Events.QuitApplication();
+			audioManager.PlayMusic(null, null);
+			Thread.CurrentThread.Abort();
 		}
 		
 		#region Event handlers

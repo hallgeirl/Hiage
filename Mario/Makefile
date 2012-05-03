@@ -7,18 +7,20 @@ SOURCES =  \
 	src/Controllers/DumbGroundAI.cs \
 	src/Controllers/IController.cs \
 	src/Controllers/PlayerController.cs \
-	src/LevelState.cs \
+	src/GameStates/DeadState.cs \
+	src/GameStates/LevelState.cs \
+	src/GameStates/MarioGameState.cs \
+	src/Helpers.cs \
 	src/Main.cs \
-	src/MarioGameState.cs \
 	src/ObjectFactory.cs \
 	src/Objects/BasicGroundEnemy.cs \
 	src/Objects/Character.cs \
 	src/Objects/Coin.cs \
 	src/Objects/GameObject.cs \
+	src/Objects/Icon.cs \
 	src/Objects/PhysicalObject.cs \
 	src/Objects/Player.cs \
 	src/Physics.cs \
-	src/PlayerInfo.cs \
 	src/PlayerState.cs 
 
 # Referenced assemblies

@@ -64,7 +64,6 @@
     <Compile Include="src\Resources\SpriteDescriptor.cs" />
     <Compile Include="src\Resources\MapDescriptor.cs" />
     <Compile Include="src\GameLogic\Game.cs" />
-    <Compile Include="src\GameLogic\IGameState.cs" />
     <Compile Include="src\GameLogic\SpatialGrid.cs" />
     <Compile Include="src\GameLogic\TileMap.cs" />
     <Compile Include="src\GameLogic\Sprite.cs" />
@@ -94,6 +93,7 @@
     <Compile Include="src\Audio\AudioManager.cs" />
     <Compile Include="src\Resources\Loaders\AudioClipLoader.cs" />
     <Compile Include="src\Resources\Loaders\MusicLoader.cs" />
+    <Compile Include="src\GameLogic\GameState.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

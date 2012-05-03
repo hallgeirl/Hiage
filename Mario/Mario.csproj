@@ -47,9 +47,7 @@
     <Compile Include="src\Controllers\DumbGroundAI.cs" />
     <Compile Include="src\Controllers\IController.cs" />
     <Compile Include="src\Controllers\PlayerController.cs" />
-    <Compile Include="src\LevelState.cs" />
     <Compile Include="src\Main.cs" />
-    <Compile Include="src\MarioGameState.cs" />
     <Compile Include="src\ObjectFactory.cs" />
     <Compile Include="src\Objects\BasicGroundEnemy.cs" />
     <Compile Include="src\Objects\Character.cs" />
@@ -58,14 +56,21 @@
     <Compile Include="src\Objects\PhysicalObject.cs" />
     <Compile Include="src\Objects\Player.cs" />
     <Compile Include="src\Physics.cs" />
-    <Compile Include="src\PlayerInfo.cs" />
     <Compile Include="src\PlayerState.cs" />
     <Compile Include="src\Controllers\DebugController.cs" />
+    <Compile Include="src\GameStates\LevelState.cs" />
+    <Compile Include="src\GameStates\MarioGameState.cs" />
+    <Compile Include="src\GameStates\DeadState.cs" />
+    <Compile Include="src\Objects\Icon.cs" />
+    <Compile Include="src\Helpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj">
       <Project>{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}</Project>
       <Name>Engine</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\GameStates\" />
   </ItemGroup>
 </Project>

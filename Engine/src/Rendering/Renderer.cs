@@ -129,17 +129,17 @@ namespace Engine
 		/// </param>
 		public void Render(IRenderable target)
 		{
-			Render(target.X, target.Y, target.Width, target.Height, target.TextureLeft, target.TextureTop, target.TextureRight, target.TextureBottom, target.Texture, target.Rotation);
+			Render(target.X, target.Y, target.Width, target.Height, target.TextureLeft, target.TextureTop, target.TextureRight, target.TextureBottom, target.Texture, target.Rotation, target.Scaling);
 		}
 		
 		public void Render(IRenderable target, double glowRadius)
 		{
 			SetDrawingColor(1, 0, 0, 0.8);
-			Render(target.X, target.Y, target.Width + glowRadius*2, target.Height + glowRadius*2, target.TextureLeft, target.TextureTop, target.TextureRight, target.TextureBottom, target.Texture, target.Rotation);
+			Render(target.X, target.Y, target.Width + glowRadius*2, target.Height + glowRadius*2, target.TextureLeft, target.TextureTop, target.TextureRight, target.TextureBottom, target.Texture, target.Rotation, target.Scaling);
 			SetDrawingColor(1.0, 0.5, 0.5, 0.8);
-			Render(target.X, target.Y, target.Width + glowRadius, target.Height + glowRadius, target.TextureLeft, target.TextureTop, target.TextureRight, target.TextureBottom, target.Texture, target.Rotation);
+			Render(target.X, target.Y, target.Width + glowRadius, target.Height + glowRadius, target.TextureLeft, target.TextureTop, target.TextureRight, target.TextureBottom, target.Texture, target.Rotation, target.Scaling);
 			SetDrawingColor(1,1,1,1);
-			Render(target.X, target.Y, target.Width, target.Height, target.TextureLeft, target.TextureTop, target.TextureRight, target.TextureBottom, target.Texture, target.Rotation);	
+			Render(target.X, target.Y, target.Width, target.Height, target.TextureLeft, target.TextureTop, target.TextureRight, target.TextureBottom, target.Texture, target.Rotation, target.Scaling);	
 		}
 		
 		/// <summary>
@@ -260,7 +260,7 @@ namespace Engine
 		/// <param name="rotation">
 		/// A <see cref="System.Double"/>
 		/// </param>
-		public void Render(double x, double y, double width, double height, int texLeft, int texTop, int texRight, int texBottom, Texture texture, double rotation)
+		public void Render(double x, double y, double width, double height, int texLeft, int texTop, int texRight, int texBottom, Texture texture, double rotation, double scale)
 		{
 			if (currentTexture != texture.TextureID)
 			{
@@ -273,6 +273,7 @@ namespace Engine
 			Gl.glPushMatrix();
 			Gl.glTranslated(x, y, 0);
 			Gl.glRotated(rotation, 0, 0, 1);
+			Gl.glScaled(scale, scale, scale);
 			
 			Gl.glBegin(Gl.GL_QUADS);
 			
@@ -356,6 +357,12 @@ namespace Engine
 			currentFont = fontName;
 			currentFontSize = fontSize;
 		}
+		
+		public void DrawText(string text, Vector pos)
+		{
+			DrawText(text, pos.X, pos.Y);
+		}
+		
 		/// <summary>
 		/// Draw text to the screen.
 		/// </summary>

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <object id="goomba">
     <type>enemy</type>
-    <sprite>goomba</sprite>
+    <sprites>
+        <sprite>goomba</sprite>
+    </sprites>
 
     <!-- Physical properties -->
     <elasticity>0</elasticity>

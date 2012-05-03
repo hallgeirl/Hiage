@@ -10,9 +10,10 @@ namespace Mario
 	{
 		Renderer renderer;
 		IController controller;
-
+		
 		protected Dictionary<string, BoundingPolygon> boundingPolygons;
 		protected Vector accelVector = new Vector(0, 0);
+		protected Vector prevAccelVector = new Vector(0, 0);
 		protected double remainingFrameTime = 1;
 		protected double animationSpeedFactor = 1;
 		protected double frameTime;
@@ -24,21 +25,32 @@ namespace Mario
 		//States. These may be used for animation etc.
 		protected delegate void ObjectState();
 		protected List<ObjectState> objectStates = new List<ObjectState>();
-		protected int currentState = -1;
+		protected int currentState = -1, prevState = -1;
+		protected int framesInCurrentState = 0;
 		
 		//Construct a game object. Set controller to null if the object should be static.
-		public GameObject(Game game, Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, Dictionary<string, BoundingPolygon> boundingPolygons)
+		public GameObject(Game game, Vector position, Vector velocity, Dictionary<string, Sprite> sprites, string defaultSprite, IController controller, Dictionary<string, BoundingPolygon> boundingPolygons)
 		{
 			this.game = game;
 			this.boundingPolygons = boundingPolygons;
-			Sprite = sprite;
+			Sprites = sprites;
+			CurrentSprite = sprites[defaultSprite];
 			Velocity = velocity;
 			Position = position;
-			this.renderer = renderer;
+			this.renderer = game.Display.Renderer;
 			this.controller = controller;
 			//boundingPolygon.MoveTo(Position.X, Position.Y);
 			
 			SetupStates();
+		}
+		
+		protected void SetState(int newstate)
+		{
+			prevState = currentState;
+			currentState = newstate;
+			framesInCurrentState = 0;
+			
+			//objectStates[currentState]();
 		}
 		
 		protected abstract void SetupStates();
@@ -71,6 +83,7 @@ namespace Mario
 		public virtual void UpdateVelocity(double frameTime)
 		{
 			Velocity += accelVector*frameTime;
+			prevAccelVector = accelVector.Copy();
 			accelVector.X = 0;
 			accelVector.Y = 0;
 		}
@@ -91,6 +104,7 @@ namespace Mario
 			UpdateAccelleration(frameTime);
 			UpdateVelocity(frameTime);
 			UpdatePosition(frameTime);
+			framesInCurrentState++;
 		}
 		
 		#region ICollidable specifics
@@ -138,11 +152,9 @@ namespace Mario
 		
 		public void Render(double frameTime, bool debug=false)
 		{
-			if (Position.Y < -100)
-				Console.WriteLine("Omg! " + Position.Y);
-			Sprite.X = Position.X;
-			Sprite.Y = Position.Y;
-			Sprite.Update(frameTime*animationSpeedFactor);
+			CurrentSprite.X = Position.X;
+			CurrentSprite.Y = Position.Y;
+			CurrentSprite.Update(frameTime*animationSpeedFactor);
 			
 			if (debug)
 			{
@@ -168,7 +180,7 @@ namespace Mario
 			
 			//renderer.DrawSquare(Position.X-Width/2, Position.Y-Height/2, Position.X+Width/2, Position.Y+Height/2);
 			
-			renderer.Render(Sprite);
+			renderer.Render(CurrentSprite);
 		}			
 		
 		public void Accellerate(Vector accelVector)
@@ -190,7 +202,7 @@ namespace Mario
 			{
 				return position;
 			}
-			protected set
+			set
 			{
 				position = value;
 				if (BoundingBox != null)
@@ -228,10 +240,15 @@ namespace Mario
 		}
 	
 		//Sprite to draw
-		protected Sprite Sprite
+		protected Dictionary<string, Sprite> Sprites
 		{
 			get;
 			private set;
+		}
+		protected Sprite CurrentSprite
+		{
+			get; 
+			set;
 		}
 		
 		//Set to true to delete this object next frame

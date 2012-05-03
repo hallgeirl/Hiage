@@ -1,6 +1,10 @@
 using System;
+using System.Diagnostics;
 using SdlDotNet.Audio;
 using SdlDotNet.Core;
+using System.Threading;
+
+using Tao.Sdl;
 
 namespace Engine
 {
@@ -10,12 +14,8 @@ namespace Engine
 		
 		public AudioManager (ResourceManager resmanager)
 		{
-			this.resourceManager = resmanager;
+			resourceManager = resmanager;
 			MusicPlayer.EnableMusicFinishedCallback();
-			Events.Quit += new EventHandler<QuitEventArgs>(delegate (object sender, QuitEventArgs args)
-			                                              {
-														       MusicPlayer.Stop();
-													      });
 		}
 		
 		/// <summary>
@@ -45,6 +45,7 @@ namespace Engine
 		public void PlayMusic(string intro, string main)
 		{
 			MusicPlayer.Stop();
+			if (main == null) return;
 			Music m = resourceManager.GetMusic(main);
 			
 			if (intro != null && intro != "")
@@ -53,13 +54,12 @@ namespace Engine
 				Music intro_music = resourceManager.GetMusic(intro);
 				MusicPlayer.CurrentMusic = intro_music;
 				MusicPlayer.Play(1);
-				Events.MusicFinished += new EventHandler<MusicFinishedEventArgs>(delegate (object sender, MusicFinishedEventArgs args) 
-				                                                                { 
+				EventHandler<MusicFinishedEventArgs> handler = null;
+				handler = delegate (object sender, MusicFinishedEventArgs args) {	Events.MusicFinished -= handler;
 																					MusicPlayer.CurrentMusic = m; 
-																					MusicPlayer.Play(true); 
-																				});
-				//MusicPlayer.QueuedMusic = m;
-				
+																					MusicPlayer.Play(true);
+																				};
+				Events.MusicFinished += handler;
 			}
 			else
 			{
@@ -67,7 +67,8 @@ namespace Engine
 				MusicPlayer.Play(true);
 			}
 		}
-		
+
 	}
 }
 
+ 

@@ -16,11 +16,12 @@ namespace MapEditor
 		
 		public MapObject (ObjectDescriptor descriptor, ResourceManager resources, Renderer renderer, Vector position)
 		{
-			sprite = new Sprite(resources.GetSpriteDescriptor(descriptor.Sprite), resources);
+			SpriteDescriptor spriteDesc = resources.GetSpriteDescriptor(descriptor.Sprites[descriptor.DefaultSprite]);
+			sprite = new Sprite(spriteDesc, resources);
 			Position = position;
 			this.renderer = renderer;
 			
-			sprite.PlayAnimation("stand", true);
+			sprite.PlayAnimation(spriteDesc.DefaultAnimation, true);
 			
 			Name = descriptor.Name;
 			ExtraProperties = new Dictionary<string, string>();

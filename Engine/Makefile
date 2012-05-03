@@ -14,8 +14,8 @@ SOURCES =  \
 	src/Common/Vector.cs \
 	src/GameLogic/CollisionManager.cs \
 	src/GameLogic/Game.cs \
+	src/GameLogic/GameState.cs \
 	src/GameLogic/ICollidable.cs \
-	src/GameLogic/IGameState.cs \
 	src/GameLogic/ParallaxBackground.cs \
 	src/GameLogic/ParticleEngine.cs \
 	src/GameLogic/SpatialGrid.cs \

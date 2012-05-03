@@ -149,6 +149,7 @@ public partial class MainWindow: Gtk.Window, IEditorListener
 							{
 								MapDescriptor mapDescriptor = new MapLoader().LoadResource(filename, "");
 								TileMap newTm = new TileMap(model.Display, model.ResourceManager, mapDescriptor); 
+								model.MapID = mapDescriptor.MapID;
 								model.CurrentTileset = newTm.Tileset;
 								model.TileMap = newTm;
 								model.Objects.Clear();
@@ -284,6 +285,9 @@ public partial class MainWindow: Gtk.Window, IEditorListener
 		xmlWriter.WriteStartDocument();
 		xmlWriter.WriteWhitespace("\r\n");
 		xmlWriter.WriteStartElement("map");
+		xmlWriter.WriteStartAttribute("id");
+		xmlWriter.WriteValue(model.MapID);
+		xmlWriter.WriteEndAttribute();
 		
 		//Write dimensions
 		xmlWriter.WriteWhitespace("\r\n\t");

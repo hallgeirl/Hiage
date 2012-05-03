@@ -12,13 +12,14 @@ namespace Engine
 	/// </summary>
 	public class ObjectDescriptor
 	{		
-		public ObjectDescriptor (string name, string type, string sprite, Dictionary<string, BoundingPolygon> boundingPolygons, Dictionary<string, string> properties)
+		public ObjectDescriptor (string name, string type, string defaultSprite, Dictionary<string, string> sprites, Dictionary<string, BoundingPolygon> boundingPolygons, Dictionary<string, string> properties)
 		{
 			Name = name;
 			Type = type;
+			DefaultSprite = defaultSprite;
 			ExtraProperties = properties;
 			BoundingPolygons = boundingPolygons;
-			this.Sprite = sprite;
+			this.Sprites = sprites;
 		}
 		
 		public string Name
@@ -33,7 +34,13 @@ namespace Engine
 			private set;
 		}
 		
-		public string Sprite
+		public string DefaultSprite
+		{
+			get;
+			private set;
+		}
+		
+		public Dictionary<string,string> Sprites
 		{
 			get;
 			private set;

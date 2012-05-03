@@ -10,77 +10,92 @@ namespace Mario
 	/// </summary>
 	public abstract class Character : PhysicalObject
 	{
-		protected int standState, walkState, runState, inAirState, dieState;
+		protected int standState, walkState, runState, inAirState, dieState, brakeState;
 		protected Timer dieTimer = new Timer();
 
 		
 		//Just pass on the constructor stuff to base
-		public Character(Game game, Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, 
+		public Character(Game game, Vector position, Vector velocity, Dictionary<string, Sprite> sprites, string defaultSprite, IController controller, 
 		                 WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons,
 		                 double runSpeed, double maxSpeed) 
-			: base(game, position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons) 
+			: base(game, position, velocity, sprites, defaultSprite, controller, worldPhysics, objectPhysics, boundingPolygons) 
 		{
-			Sprite.PlayAnimation("stand", true);
+			CurrentSprite.PlayAnimation("stand", true);
 			MaxSpeed = maxSpeed;
 			RunSpeed = runSpeed;
 		}
+		
 		
 		protected override void SetupStates ()
 		{
 			standState = AddState(delegate { 
 				if (!OnGround)
 				{
-					currentState = inAirState;
+					SetState(inAirState);
 				}
 				else
 				{
 					if (Math.Abs(Velocity.X) > 1e-10)
-						currentState = walkState;
+						SetState(walkState);
 				}
 				
 				animationSpeedFactor = 1;
-				Sprite.PlayAnimation("stand", false); 
+				CurrentSprite.PlayAnimation("stand", false); 
 			});
 			
 			walkState = AddState(delegate {
 				if (!OnGround)
 				{
-					currentState = inAirState;
+					SetState(inAirState);
 				}
 				else
 				{
 					if (Math.Abs(Velocity.X) < 1e-10)
-						currentState = standState;
+						SetState(standState);
 					else if (Math.Abs(Velocity.X) > RunSpeed)
-						currentState = runState;
+						SetState(runState);
 				}
-				Sprite.PlayAnimation("walk", false);
+				CurrentSprite.PlayAnimation("walk", false);
 			});
 			
 			runState = AddState(delegate {
 				if (!OnGround)
-					currentState = inAirState;
+					SetState(inAirState);
 				else
 				{
-					if (Math.Abs(Velocity.X) < RunSpeed)
-						currentState = walkState;
+					if (Velocity.DotProduct(prevAccelVector) < 0 && Math.Abs(prevAccelVector.X) > friction*2)
+						SetState(brakeState);
+					else if (Math.Abs(Velocity.X) < RunSpeed)
+						SetState(walkState);
 				}
-				Sprite.PlayAnimation("run", false);
+				CurrentSprite.PlayAnimation("run", false);
 			});
 			
 			inAirState = AddState(delegate {
 				if (OnGround)
-					currentState = standState;
+					SetState(standState);
 				else
 				{
 					if (Velocity.Y > 0)
-						Sprite.PlayAnimation("jump", false);
+						CurrentSprite.PlayAnimation("jump", false);
 					else
-						Sprite.PlayAnimation("fall", false);
+						CurrentSprite.PlayAnimation("fall", false);
 				}
 			});
 			
-			currentState = standState;
+			brakeState = AddState(delegate {
+				if (!OnGround)
+					SetState(inAirState);
+				else
+				{
+					if (Velocity.X * prevAccelVector.X >= 0 || (Math.Abs(prevAccelVector.X) <= friction*2 && framesInCurrentState >= 2) )
+						SetState(standState);
+				}
+				CurrentSprite.PlayAnimation("brake", false);
+			});
+			
+			SetState(standState);
+			//currentState = standState;
 		}
 		
 		public override void UpdateVelocity(double frameTime)
@@ -98,9 +113,25 @@ namespace Mario
 		{
 			base.Update(frameTime);
 			if (Velocity.X > 1e-12)
-				Sprite.Flipped = false;
+				CurrentSprite.Flipped = false;
 			else if (Velocity.X < -1e-12)
-			    Sprite.Flipped = true;
+			    CurrentSprite.Flipped = true;
+			
+	/*		if (this is Player)
+			{
+				if (currentState ==  runState)
+					Console.WriteLine("Running."); 
+				else if (currentState ==  walkState)
+					Console.WriteLine("Walking."); 
+				else if (currentState ==  brakeState)
+					Console.WriteLine("Braking."); 
+				else if (currentState ==  inAirState)
+					Console.WriteLine("In air."); 
+				else if (currentState ==  standState)
+					Console.WriteLine("Standing."); 
+				else
+					Console.WriteLine("Unknown state.");
+			}*/
 		}
 		
 		public double RunSpeed

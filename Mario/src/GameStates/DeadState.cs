@@ -7,13 +7,13 @@ namespace Mario
 	/*
 	 *  Game state which handles the "playing" part of the game (tilemap, objects etc.)
 	 */
-	public class LevelState : MarioGameState
+	public class DeadState : MarioGameState
 	{
-		Game 				game;											 //Reference to the main game object				
 		Display 			display;
 		Camera 				camera;
 		PlayerState 		playerInfo;
-		//List<Sprite>		icons;
+		//string				mapName;
+//		List<Icon>			icons;
 		
 		ParallaxBackground	background = null;								 //Background used on this map
 		TileMap 			tileMap;										 //The tiles used on this map
@@ -24,12 +24,17 @@ namespace Mario
 		Timer 				fullscreenTimer = new Timer();	//Used to prevent a lot of fullscreen on/offs when holding down alt+enter more than one frame
 		
 		//Construct a levelstate object
-		public LevelState (PlayerState player, Game game, string mapName) : base(player)
+		public DeadState (Game game, PlayerState player, string mapName) : base(game, player)
 		{
+			Activated += delegate {
+				game.Display.Renderer.SetFont("verdana", 8);
+			};
+			
 			playerInfo = player;
 			
 			this.game = game;
 			this.display = game.Display;
+			//this.mapName = mapName;
 //			game.Display.CameraX = 50;
 			//game.Display.CameraY = 100;
 			
@@ -52,7 +57,6 @@ namespace Mario
 				if (o.Name == "mario")
 				{
 					this.player = (Player)objects[objects.Count-1];
-				
 				}
 			}
 			
@@ -64,12 +68,12 @@ namespace Mario
 			
 			game.Audio.PlayMusic("overworld-intro", "overworld");
 		}
-		
-		public override void Initialize(Game game)
+
+		/*public override void Initialize(Game game)
 		{
-			game.Display.Renderer.SetFont("verdana", 8);
+			
 			//icons.Add(new Sprite(game.Resources.GetSpriteDescriptor(
-		}
+		}*/
 		
 		//Simple insertion sort to sort all objects according to their left boundary
 		private void SortObjects(double frameTime)

@@ -5,7 +5,7 @@ using Engine;
 
 namespace MapEditor
 {
-	public class MapEditorState : IGameState, IEditorListener
+	public class MapEditorState : GameState, IEditorListener
 	{
 		EditorModel model;
 		ParallaxBackground background = null;
@@ -20,14 +20,11 @@ namespace MapEditor
 		
 		bool lmbDown = false;
 		
-		public MapEditorState(EditorModel model)
+		public MapEditorState(Game game, EditorModel model) : base(game)
 		{
 			this.model = model;
 			model.AddListener(this);
-		}
-		
-		public void Initialize(Game game)
-		{			
+			
 			display = game.Display;
 			renderer = display.Renderer;
 			input = game.Input;
@@ -35,6 +32,16 @@ namespace MapEditor
 			model.Display = display;
 			model.Zoom = display.Zoom;
 		}
+		
+		/*public override void Initialize(Game game)
+		{			
+			display = game.Display;
+			renderer = display.Renderer;
+			input = game.Input;
+			
+			model.Display = display;
+			model.Zoom = display.Zoom;
+		}*/
 		
 		public void ModelChanged(EditorModel.VariableName v, object oldValue, object newValue)
 		{
@@ -216,7 +223,7 @@ namespace MapEditor
 		}
 		
 		//Update and render the map
-		public void Run(double frameTime)
+		public override void Run(double frameTime)
 		{
 			lock (schedule)
 			{

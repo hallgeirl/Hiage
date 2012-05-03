@@ -22,18 +22,19 @@ namespace Mario
 		bool crouching = false;
 		bool sliding = false;
 		double oldFriction;
-		protected int crouchState;
+		protected int crouchState, growState;
+		Timer growTimer = new Timer();
 		
-		
-		public Player (Game game, Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, //GameObject attributes
+		public Player (Game game, Vector position, Vector velocity, Dictionary<string, Sprite> sprites, string defaultSprite, IController controller, //GameObject attributes
 		               WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons, //PhysicalObject attributes
 		               double runSpeed, double maxSpeed, 	//Character attributes
 		               PlayerState state)
-			: base(game, position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
+			: base(game, position, velocity, sprites, defaultSprite, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
 		{
-			//health = Player.HealthStatus.Small;
 			oldFriction = objectPhysics.Friction;
 			PlayerState = state;
+			
+			
 		}
 		
 		protected override void SetupStates ()
@@ -42,18 +43,50 @@ namespace Mario
 			
 			crouchState = AddState(delegate {
 				if (!crouching)
-					currentState = standState;
+					SetState(standState);
 				
-				Sprite.PlayAnimation("crouch", false);
+				CurrentSprite.PlayAnimation("crouch", false);
+			});
+			
+			growState = AddState(delegate {
+				if (prevState != growState)
+				{
+					growTimer.Start();
+					CurrentSprite = Sprites["big"];
+				}
+					
+				if (growTimer.Elapsed >= 2000)
+				{
+					PlayerState.HealthStatus = PlayerState.Health.Big;
+					//CurrentSprite.PlayAnimation("stand", false);
+					
+					SetState(standState);
+					growTimer.Stop();
+				}
+				CurrentSprite.PlayAnimation("crouch", false);
 			});
 		}
 		
 		public override BoundingPolygon BoundingBox
 		{
 			get
-			{ 
-				if (boundingPolygons == null) return null;
-				else return boundingPolygons["small-standing"];
+			{
+				if (PlayerState == null)
+					return null;
+				
+				switch (PlayerState.HealthStatus)
+				{
+				case PlayerState.Health.Small:
+					return boundingPolygons["small-standing"];
+				case PlayerState.Health.Big:
+					return boundingPolygons["big-standing"];
+				case PlayerState.Health.Flower:
+					return boundingPolygons["big-standing"];
+				case PlayerState.Health.Dying:
+					return null;
+				default:
+					throw new ArgumentOutOfRangeException("Invalid value of PlayerState.HealthStatus: " + PlayerState.HealthStatus);
+				}
 			}
 		}
 		
@@ -65,55 +98,8 @@ namespace Mario
 				Position.Y += 2;
 			}
 			
-			
 			base.Update(frameTime);
 			animationSpeedFactor = (Math.Abs(Velocity.X)*5 / MaxSpeed)+0.1;
-			
-			
-			#region Old code
-			//Update animations
-			/*if (crouching)
-			{
-				Sprite.PlayAnimation("crouch", false);
-			}
-			else
-			{
-				if (OnGround)
-				{
-					//If we're standing still on the ground, play the stand animation
-					if (Velocity.X > -1e-12 && Velocity.X < 1e-12)
-						Sprite.PlayAnimation("stand", false);
-					else
-					{
-						if ((accelVector.X > -objectPhysics.Friction*1.1 && Velocity.X > 0) || (accelVector.X < objectPhysics.Friction*1.1 && Velocity.X < 0))
-						{
-							//If we have an acceleration vector pointing in the same direction as the velocity (excluding the friction acceleration), play walk or run animation
-							if (Math.Abs(Velocity.X) > RunSpeed && Sprite.HasAnimation("run"))
-								Sprite.PlayAnimation("run", false);
-							else
-								Sprite.PlayAnimation("walk", false);
-						}
-						else
-						{
-							//Else, play the brake animation if it exists
-							if (Sprite.HasAnimation("brake"))
-								Sprite.PlayAnimation("brake", false);
-							else
-								Sprite.PlayAnimation("walk", false);
-						}
-					}
-				}
-				else
-				{
-					//If we're in the air, we're either jumping or falling
-					if (Velocity.Y > 0)
-						Sprite.PlayAnimation("jump", false);
-					else
-						Sprite.PlayAnimation("fall", false);
-				}
-			}*/
-			#endregion
-			
 		}
 
 		
@@ -207,6 +193,15 @@ namespace Mario
 		public PlayerState PlayerState
 		{
 			get; private set;
+		}
+		
+		protected void Grow()
+		{
+			if (currentState != growState && PlayerState.HealthStatus == PlayerState.Health.Small)
+			{
+				SetState(growState);
+			}
+			game.Audio.PlaySound("mario-grow");
 		}
 	}
 }

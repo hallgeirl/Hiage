@@ -28,6 +28,7 @@ namespace MapEditor
 			CurrentObject,
 			DrawToLayer,
 			Filename,
+			MapID,
 			MousePosition,
 			Running,
 			SelectedObject,
@@ -51,6 +52,7 @@ namespace MapEditor
 		string  currentObject;
 		int 	drawToLayer = 1;
 		string 	filename = "";
+		string  mapID = "";
 		Vector 	mousePosition = new Vector();
 		bool 	running = true;
 		MapObject selectedObject;
@@ -99,6 +101,16 @@ namespace MapEditor
 		}
 		
 		#region Model properties
+		public string MapID
+		{
+			get { return mapID; }
+			set 
+			{
+				NotifyListeners(VariableName.MapID, mapID, value);
+				mapID = value;
+			}
+		}
+				                
 		
 		public string Background
 		{

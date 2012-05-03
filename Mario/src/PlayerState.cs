@@ -8,6 +8,14 @@ namespace Mario
 	/// </summary>
 	public class PlayerState
 	{
+		public enum Health
+		{
+			Dying,
+			Small,
+			Big,
+			Flower
+		}
+		
 		public PlayerState ()
 		{
 			Lives = 5;
@@ -30,6 +38,8 @@ namespace Mario
 			get;
 			set;
 		}
+
+		public Health HealthStatus;
 	}
 }
 

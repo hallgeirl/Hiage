@@ -27,7 +27,7 @@ namespace MapEditor
 		{
 			game = new Game();
 			game.Initialize(1024, 768, false, "HIAGE Map Editor");
-			game.PushState(new MapEditorState(model));
+			game.PushState(new MapEditorState(game, model));
 			
 			
 			model.ResourceManager = game.Resources;

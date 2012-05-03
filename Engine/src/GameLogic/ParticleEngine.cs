@@ -234,6 +234,14 @@ namespace Engine
 					return 0;
 				}
 			}
+			
+			public double Scaling
+			{
+				get
+				{
+					return 1;
+				}
+			}
 			#endregion IRenderable implementation
 		}
 		

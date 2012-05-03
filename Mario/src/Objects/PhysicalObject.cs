@@ -11,12 +11,14 @@ namespace Mario
 		protected WorldPhysics 	worldPhysics;
 		protected ObjectPhysics objectPhysics;
 		private   Timer 		inAirTimer = new Timer();
-		
-		public PhysicalObject (Game game, Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, 
-		                       WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons) : base(game, position, velocity, sprite, renderer, controller, boundingPolygons) 
+		protected double 		friction;
+		public PhysicalObject (Game game, Vector position, Vector velocity, Dictionary<string, Sprite> sprites, string defaultSprite, IController controller, 
+		                       WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons) 
+			: base(game, position, velocity, sprites, defaultSprite, controller, boundingPolygons) 
 		{
 			this.worldPhysics = worldPhysics;
 			this.objectPhysics = objectPhysics;
+			this.friction = objectPhysics.Friction*worldPhysics.GroundFrictionFactor;
 			inAirTimer.Start();
 		}
 
@@ -57,7 +59,7 @@ namespace Mario
 			Accellerate(new Vector(0, -worldPhysics.Gravity));
 			
 			//Pre-calculate the actual friction (based on world- and object physics attributes)
-			double friction = objectPhysics.Friction*worldPhysics.GroundFrictionFactor;
+			//double friction = objectPhysics.Friction*worldPhysics.GroundFrictionFactor;
 			
 			if (Velocity.X > friction*frameTime)
 				Accellerate(new Vector(-friction, 0));
@@ -70,7 +72,7 @@ namespace Mario
 			base.UpdateVelocity(frameTime);
 			
 			//Pre-calculate the actual friction (based on world- and object physics attributes)
-			double friction = objectPhysics.Friction*worldPhysics.GroundFrictionFactor;
+			//double friction = objectPhysics.Friction*worldPhysics.GroundFrictionFactor;
 			
 			if (Velocity.X <= friction*frameTime && Velocity.X >= -friction*frameTime)
 				Velocity.X = 0;

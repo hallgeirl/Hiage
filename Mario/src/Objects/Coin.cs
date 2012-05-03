@@ -6,10 +6,10 @@ namespace Mario
 {
 	public class Coin : GameObject
 	{
-		public Coin (Game game, Vector position, Sprite sprite, Renderer renderer, Dictionary<string, BoundingPolygon> polygons) 
-			: base(game, position, new Vector(0,0), sprite, renderer, null, polygons)
+		public Coin (Game game, Vector position, Dictionary<string, Sprite> sprites, string defaultSprite, Dictionary<string, BoundingPolygon> polygons) 
+			: base(game, position, new Vector(0,0), sprites, defaultSprite, null, polygons)
 		{
-			sprite.PlayAnimation("normal", true);
+			CurrentSprite.PlayAnimation("normal", true);
 		}
 		
 		protected override void SetupStates ()

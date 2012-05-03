@@ -87,6 +87,11 @@ namespace Engine
 			get;
 		}
 		
+		double Scaling
+		{
+			get;
+		}
+		
 		//// <value>
 		/// If this returns true, the object will be deleted on the next pass in the renderer
 		/// </value>

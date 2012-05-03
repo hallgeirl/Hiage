@@ -34,6 +34,11 @@ namespace Engine
 			int defaultFrameHeight = (xmlTmp != null ? int.Parse(xmlTmp.InnerText) : 0);
 			xmlTmp = xmlDoc.SelectSingleNode("/sprite/defaults/frame-delay");
 			double defaultFrameDelay = (xmlTmp != null ? double.Parse(xmlTmp.InnerText) : 0);
+			xmlTmp = xmlDoc.SelectSingleNode("/sprite/defaults/animation");
+			sprite.DefaultAnimation = (xmlTmp != null ? xmlTmp.InnerText : "default");
+			
+			
+			string firstAnimation = null;
 			
 			//And all animation nodes
 			foreach (XmlNode animNode in xmlDoc.SelectNodes("/sprite/animation"))
@@ -42,6 +47,8 @@ namespace Engine
 				try
 				{
 					animationName = animNode.SelectSingleNode("name").InnerText;
+					if (firstAnimation == null)
+						firstAnimation = animationName;
 				}
 				catch (NullReferenceException e)
 				{
@@ -63,9 +70,19 @@ namespace Engine
 					Log.Write("Added frame " + animationName + " " + x + " " + y + " " + width + " " + height);
 					sprite.AddFrame(animationName, x, y, width, height, delay, next);
 				}
-				
+			
 			}
-
+		
+			if (!sprite.HasAnimation(sprite.DefaultAnimation) && firstAnimation != null)
+			{
+				Log.Write("Default animation \"" + sprite.DefaultAnimation + "\" was not found in sprite \"" + name + "\". Using \"" + firstAnimation + "\" as default.", Log.WARNING);
+				sprite.DefaultAnimation = firstAnimation;
+			}
+			else if (firstAnimation == null)
+			{
+				Log.Write("No animations defined for sprite \"" + name + "\".", Log.WARNING);
+			}
+			
 			return sprite;
 		}
 	}

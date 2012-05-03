@@ -33,7 +33,14 @@ namespace Mario
 		public GameObject Spawn(string objectName, Vector position, Vector velocity, WorldPhysics worldPhysics)
 		{
 			ObjectDescriptor obj = game.Resources.GetObjectDescriptor(objectName);
-			Sprite sprite = (string.IsNullOrEmpty(obj.Sprite) ? null : new Sprite(game.Resources.GetSpriteDescriptor(obj.Sprite), game.Resources));
+			Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
+			foreach (var s in obj.Sprites)
+			{
+				SpriteDescriptor spriteDesc = game.Resources.GetSpriteDescriptor(s.Value);
+				sprites[s.Key] = new Sprite(spriteDesc, game.Resources);
+				sprites[s.Key].PlayAnimation(spriteDesc.DefaultAnimation, false);
+			}
+			//Sprite sprites = (string.IsNullOrEmpty(obj.Sprite) ? null : new Sprite(game.Resources.GetSpriteDescriptor(obj.Sprite), game.Resources));
 			ObjectPhysics objectPhysics = ObjectPhysics.DefaultObjectPhysics;
 			double runSpeed = double.PositiveInfinity, maxSpeed = double.PositiveInfinity;
 			
@@ -54,26 +61,39 @@ namespace Mario
 			switch (obj.Type)
 			{
 			case "player":
-				return new Player(game, position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed, state.PlayerState);
+				return new Player(game, position, velocity, sprites, obj.DefaultSprite, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed, state.PlayerState);
 				//return new Player(position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed, state.PlayerState);
+			
 			case "enemy":
 				switch (obj.Name)
 				{
 				case "goomba":
-					return new BasicGroundEnemy(game, position, velocity, sprite, game.Display.Renderer, new DumbGroundAI(), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed);
+					return new BasicGroundEnemy(game, position, velocity, sprites, obj.DefaultSprite, new DumbGroundAI(), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed);
 				default:
 					Log.Write("Unknown enemy object name: " + obj.Name, Log.WARNING);
 					break;
 				}
 				break;
+				
 			case "coin":
-				return new Coin(game, position, sprite, game.Display.Renderer, boundingPolygons);
+				return new Coin(game, position, sprites, obj.DefaultSprite, boundingPolygons);
+			
 			default:
 				Log.Write("Unknown object type: " + obj.Type, Log.WARNING);
 				break;
 			}
 			
 			return null;
+		}
+		
+		public Icon CreateIcon(string sprite, double scaling)
+		{
+			Sprite iconSprite = new Sprite(game.Resources.GetSpriteDescriptor(sprite), game.Resources);
+			Dictionary<string, Sprite> dict = new Dictionary<string, Sprite>();
+			dict["icon"] = iconSprite;
+			iconSprite.Scaling = scaling;
+			
+			return new Icon(game, dict);
 		}
 	}
 }

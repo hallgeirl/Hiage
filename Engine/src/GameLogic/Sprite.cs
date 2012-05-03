@@ -182,7 +182,10 @@ namespace Engine
 		double x, y;			//Where is the sprite rendered?
 		double rotation;		//Orientation
 		string currentAnimation;
+		string defaultAnimation = "default";
 		Dictionary<string, Animation> animations = new Dictionary<string, Animation>(); //All animations for this sprite.
+		
+		public const string DEFAULT_ANIMATION = null;
 		
 		public Sprite(Texture tex)
 		{
@@ -191,6 +194,7 @@ namespace Engine
 			animations.Add(currentAnimation, new Animation());
 			animations[currentAnimation].AddFrame(0, 0, texture.Width, texture.Height, 0,0);
 			Flipped = false;
+			Scaling = 1;
 		}
 		
 		/// <summary>
@@ -204,6 +208,7 @@ namespace Engine
 		/// </param>
 		public Sprite(SpriteDescriptor spriteDesc, ResourceManager m)
 		{
+			defaultAnimation = spriteDesc.DefaultAnimation;
 			texture = m.GetTexture(spriteDesc.TextureName);
 
 			currentAnimation = "NO_ANIMATION";
@@ -219,6 +224,7 @@ namespace Engine
 				animations[frame.animationName].AddFrame(frame.x, frame.y, frame.width, frame.height, frame.delay, frame.nextFrame);
 			}
 			Flipped = false;
+			Scaling = 1;
 		}
 		
 		public bool HasAnimation(string name)
@@ -229,6 +235,11 @@ namespace Engine
 		
 		public void PlayAnimation(string name, bool reset)
 		{
+			if (String.IsNullOrEmpty(name))
+			{
+				name = defaultAnimation;
+			}
+			
 			if (animations.ContainsKey(name))
 			{
 				currentAnimation = name;
@@ -306,6 +317,12 @@ namespace Engine
 			{
 				rotation = value;
 			}
+		}
+		
+		public double Scaling
+		{
+			get;
+			set;
 		}
 		
 		public bool Flipped

@@ -1,37 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sprite id="mario-big">
-  <texture>mario-small</texture>
+  <texture>mario-big</texture>
 
   <defaults>
-    <frame-width>14</frame-width>
-    <frame-height>20</frame-height>
+    <frame-width>16</frame-width>
+    <frame-height>28</frame-height>
+    <animation>stand</animation>
   </defaults>
 
   <animation>
     <name>stand</name>
-    <frame x="1" y="4" delay="1" next="0" />
-  </animation>
-<!--
-  <animation>
-    <name>walk</name>
-    <frame x="130" y="0" delay="0.5" next="1" />
-    <frame x="156" y="0" delay="0.5" next="2" />
-    <frame x="182" y="0" delay="0.5" next="3" />
-    <frame x="208" y="0" delay="0.5" next="4" />
-    <frame x="234" y="0" delay="0.5" next="0" />
-  </animation>
--->
-  <animation>
-    <name>jump</name>
-    <frame x="48" y="2" delay="1" next="0" h="22" />
-  </animation>
-<!--
-  <animation>
-    <name>fall</name>
-    <frame x="109" y="3" delay="1" next="0" />
+    <frame x="3" y="3" delay="1" next="0" />
   </animation>
 
   <animation>
+    <name>walk</name>
+    <frame x="3" y="3" delay="0.5" next="1" />
+    <frame x="22" y="3" delay="0.5" next="2" />
+    <frame x="3" y="3" delay="0.5" next="3" />
+    <frame x="42" y="3" delay="0.5" next="0" />
+  </animation>
+
+  <animation>
+    <name>run</name>
+    <frame x="181" y="3" delay="0.5" next="1" w="18" />
+    <frame x="201" y="3" delay="0.5" next="2" w="18" />
+    <frame x="181" y="3" delay="0.5" next="3" w="18" />
+    <frame x="221" y="3" delay="0.5" next="0" w="18" />
+  </animation>
+
+  <animation>
+    <name>jump</name>
+    <frame x="62" y="0" delay="1" next="0" h="31" />
+  </animation>
+
+  <animation>
+    <name>fall</name>
+    <frame x="82" y="2" delay="1" next="0" h="29" />
+  </animation>
+
+  <animation>
+    <name>brake</name>
+    <frame x="162" y="2" delay="1" next="0" h="29" />
+  </animation>
+
+ <!-- <animation>
     <name>die</name>
     <frame x="0" y="24" delay="1" next="1" />
     <frame x="104" y="24" delay="1" next="1" />

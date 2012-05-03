@@ -9,10 +9,10 @@ namespace Mario
 
 	public class BasicGroundEnemy : Character
 	{
-		public BasicGroundEnemy (Game game, Vector position, Vector velocity, Sprite sprite, Renderer renderer, IController controller, //GameObject attributes
+		public BasicGroundEnemy (Game game, Vector position, Vector velocity, Dictionary<string, Sprite> sprites, string defaultSprite, IController controller, //GameObject attributes
 		               WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons,	//PhysicalObject attributes
 		               double runSpeed, double maxSpeed) 	//Character attributes
-			: base(game, position, velocity, sprite, renderer, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
+			: base(game, position, velocity, sprites, defaultSprite, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
 		{
 			Stompable = true;
 		}
@@ -22,7 +22,7 @@ namespace Mario
 			base.SetupStates();
 			
 			dieState = AddState(delegate {
-				Sprite.PlayAnimation("die", false);
+				CurrentSprite.PlayAnimation("die", false);
 			});
 		}
 		

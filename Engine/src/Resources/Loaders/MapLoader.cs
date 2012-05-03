@@ -20,6 +20,17 @@ namespace Engine
 			string tileset = "";
 
 			//Extract tilemap properties
+			if (String.IsNullOrEmpty(name))
+			{
+				try
+				{
+					name = doc.SelectSingleNode("/map").Attributes["id"].Value;
+				}
+				catch (Exception)
+				{
+					Log.Write("Map \"" + name + "\" has no id attribute.", Log.WARNING);
+				}
+			}
 			width 	 = int.Parse(doc.SelectSingleNode("/map/geometry/width").InnerText);
 			height   = int.Parse(doc.SelectSingleNode("/map/geometry/height").InnerText);
 			layers   = int.Parse(doc.SelectSingleNode("/map/geometry/layers").InnerText);
@@ -40,7 +51,7 @@ namespace Engine
 			if (tiledata == null)
 				throw new XmlException("No tiledata found!");
 			
-			result = new MapDescriptor(tiledata, width, height, layers, tilesize, offsetX, offsetY, tileset);
+			result = new MapDescriptor(name, tiledata, width, height, layers, tilesize, offsetX, offsetY, tileset);
 			
 			//And objects
 			foreach (XmlNode objectNode in doc.SelectNodes("/map/objects/object"))

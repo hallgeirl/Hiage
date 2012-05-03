@@ -1,3 +1,5 @@
+CONFIG=DEBUG_X86
+
 # Source files
 SOURCES =  \
 	AssemblyInfo.cs \
@@ -38,8 +40,18 @@ ASSEMBLY=$(RELEASE)/MapEditor.exe
 .PHONY: hiage
 
 # Compilers and compiler options
-CSC=mono-csc
-CSFLAGS=-o+
+CSC=dmcs
+CSFLAGS+=/noconfig /codepage:utf8 /warn:4
+
+ifeq ($(CONFIG), DEBUG_X86)
+CSFLAGS+=/optimize- /debug /define:"DEBUG"
+endif
+
+ifeq (CONFIG, RELEASE_X86)
+CSFLAGS+=/optimize+
+endif
+
+SHELL=/bin/bash
 
 all: hiage $(ASSEMBLY)
 	@mkdir -p $(RELEASE)
@@ -58,7 +70,7 @@ run:all
 $(ASSEMBLY): $(SOURCES) ../Engine/release/last_build_tag
 	@mkdir -p $(RELEASE)
 	@echo "Building $@..."
-	@$(CSC) $(SOURCES) $(ASSEMBLIES) $(PACKAGES) /target:exe /unsafe /out:$@ 
+	$(CSC) $(CSFLAGS) $(SOURCES) $(ASSEMBLIES) $(PACKAGES) /target:exe /unsafe /out:$@ 
 
 clean:
 	rm -rf $(BIN) *.pidb $(RELEASE)

@@ -5,6 +5,7 @@
   <defaults>
     <frame-width>14</frame-width>
     <frame-height>20</frame-height>
+    <animation>stand</animation>
   </defaults>
 
   <animation>

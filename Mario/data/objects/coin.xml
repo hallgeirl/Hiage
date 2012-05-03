@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <object id="coin">
     <type>coin</type>
-    <sprite>coin</sprite>
+    <sprites>
+        <sprite>coin</sprite>
+    </sprites>
     <elasticity>0</elasticity>
     
     <bounding-polygons>

@@ -21,6 +21,12 @@ namespace Engine
 			this.y = y;
 		}
 		
+		public Vector(Vector v)
+		{
+			this.x = v.x;
+			this.y = v.y;
+		}
+		
 		/// <summary>
 		/// Add a vector v to this vector, and return the results.
 		/// </summary>
@@ -111,6 +117,16 @@ namespace Engine
 		public Vector Copy()
 		{
 			return new Vector(X, Y);
+		}
+		
+		public void Set(double x, double y)
+		{
+			this.x = x; this.y = y;
+		}
+		
+		public void Set(Vector v)
+		{
+			this.x = v.x; this.y = v.y;
 		}
 		
 		public override string ToString()
@@ -245,6 +261,7 @@ namespace Engine
 				return Copy().Normalize();
 			}
 		}
+
 		
 		#endregion Properties
 	}

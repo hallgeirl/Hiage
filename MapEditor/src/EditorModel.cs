@@ -28,13 +28,19 @@ namespace MapEditor
 			CurrentObject,
 			DrawToLayer,
 			Filename,
+			GridOffsetX,
+			GridOffsetY,
+			GridSizeX,
+			GridSizeY,
 			MapID,
 			MousePosition,
 			Running,
 			SelectedObject,
+			SnapToGrid,
 			TileMap,
 			Tool,
 			Zoom
+			
 		}
 		
 		public enum Tool 
@@ -59,6 +65,11 @@ namespace MapEditor
 		TileMap tileMap;
 		Tool 	tool;
 		double 	zoom;
+		
+		//Grid size/snap properties
+		int gridSizeX, gridSizeY;
+		int gridOffsetX, gridOffsetY;
+		bool snapToGrid;
 		
 		
 		List<IEditorListener> listeners = new List<IEditorListener>(); // Listeners
@@ -297,6 +308,56 @@ namespace MapEditor
 				zoom = value; 
 			}
 		}
+		
+		public int GridSizeX
+		{
+			get { return gridSizeX; }
+			set 
+			{ 
+				NotifyListeners(VariableName.GridSizeX, gridSizeX, value);
+				gridSizeX = value; 
+			}
+		}
+		
+		public int GridSizeY
+		{
+			get { return gridSizeY; }
+			set 
+			{ 
+				NotifyListeners(VariableName.GridSizeY, gridSizeY, value);
+				gridSizeY = value; 
+			}
+		}
+		public int GridOffsetX
+		{
+			get { return gridOffsetX; }
+			set 
+			{ 
+				NotifyListeners(VariableName.GridOffsetX, gridOffsetX, value);
+				gridOffsetX = value; 
+			}
+		}
+		
+		public int GridOffsetY
+		{
+			get { return gridOffsetY; }
+			set 
+			{ 
+				NotifyListeners(VariableName.GridOffsetY, gridOffsetY, value);
+				gridOffsetY = value; 
+			}
+		}
+		
+		public bool SnapToGrid
+		{
+			get { return snapToGrid; }
+			set
+			{
+				NotifyListeners(VariableName.SnapToGrid, snapToGrid, value);
+				snapToGrid = value; 
+			}
+		}
+		
 		#endregion
 	}
 }

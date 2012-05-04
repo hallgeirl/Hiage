@@ -18,7 +18,8 @@ namespace MapEditor
 		{
 			SpriteDescriptor spriteDesc = resources.GetSpriteDescriptor(descriptor.Sprites[descriptor.DefaultSprite]);
 			sprite = new Sprite(spriteDesc, resources);
-			Position = position;
+			Position = new Vector(position);
+			DisplayPosition = new Vector(position);
 			this.renderer = renderer;
 			
 			sprite.PlayAnimation(spriteDesc.DefaultAnimation, true);
@@ -29,8 +30,8 @@ namespace MapEditor
 		
 		public void Update(double frameTime)
 		{
-			sprite.X = Position.X;
-			sprite.Y = Position.Y;
+			sprite.X = DisplayPosition.X;
+			sprite.Y = DisplayPosition.Y;
 			sprite.Update(frameTime);
 		}
 		
@@ -50,7 +51,13 @@ namespace MapEditor
 		public Vector Position
 		{
 			get;
-			private set;
+			set;
+		}
+		
+		public Vector DisplayPosition
+		{
+			get;
+			set;
 		}
 		
 		public string Name

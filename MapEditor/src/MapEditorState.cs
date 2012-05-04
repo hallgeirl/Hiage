@@ -153,8 +153,20 @@ namespace MapEditor
 					//Move objects
 					if (model.SelectedObject != null)
 					{
-						model.SelectedObject.Position.X += change.X;
-						model.SelectedObject.Position.Y += change.Y;
+						double x = model.SelectedObject.Position.X + change.X,
+							   y = model.SelectedObject.Position.Y + change.Y;
+						
+						model.SelectedObject.Position.X = x;
+						model.SelectedObject.Position.Y = y;
+						if (model.SnapToGrid)
+						{
+							int nx = (int)Math.Round((x+model.GridOffsetX)/(double)model.GridSizeX);
+							x = nx * model.GridSizeX + model.GridOffsetX;
+							int ny = (int)Math.Round((y+model.GridOffsetY)/(double)model.GridSizeY);
+							y = ny * model.GridSizeY + model.GridOffsetY;
+						}
+						model.SelectedObject.DisplayPosition.X = x;
+						model.SelectedObject.DisplayPosition.Y = y;
 						model.Changed = true;
 						
 						//Pan the window if neccesary
@@ -162,28 +174,28 @@ namespace MapEditor
 						{
 							display.CameraX += (boundarySize-(display.WindowWidth-input.MouseWindowPosition.X))*frameTime;
 							if (display.CameraX + display.ViewportWidth / 2 < model.TileMap.Right)
-								model.SelectedObject.Position.X += (boundarySize-(display.WindowWidth-input.MouseWindowPosition.X))*frameTime;
+								model.SelectedObject.DisplayPosition.X += (boundarySize-(display.WindowWidth-input.MouseWindowPosition.X))*frameTime;
 						}
 						
 						if (input.MouseWindowPosition.X <= boundarySize)
 						{
 							display.CameraX -= (boundarySize - input.MouseWindowPosition.X)*frameTime;
 							if (display.CameraX - display.ViewportWidth / 2 > model.TileMap.Left)
-								model.SelectedObject.Position.X -= (boundarySize - input.MouseWindowPosition.X)*frameTime;
+								model.SelectedObject.DisplayPosition.X -= (boundarySize - input.MouseWindowPosition.X)*frameTime;
 						}
 						
 						if (input.MouseWindowPosition.Y >= display.WindowHeight-boundarySize)
 						{
 							display.CameraY -= (boundarySize-(display.WindowHeight-input.MouseWindowPosition.Y))*frameTime;
 							if (display.CameraY - display.ViewportHeight / 2 > model.TileMap.Bottom)
-								model.SelectedObject.Position.Y -= (boundarySize-(display.WindowHeight-input.MouseWindowPosition.Y))*frameTime;
+								model.SelectedObject.DisplayPosition.Y -= (boundarySize-(display.WindowHeight-input.MouseWindowPosition.Y))*frameTime;
 						}
 						
 						if (input.MouseWindowPosition.Y <= boundarySize)
 						{
 							display.CameraY += (boundarySize - input.MouseWindowPosition.Y)*frameTime;
 							if (display.CameraY + display.ViewportHeight / 2 < model.TileMap.Top)
-								model.SelectedObject.Position.Y += (boundarySize - input.MouseWindowPosition.Y)*frameTime;
+								model.SelectedObject.DisplayPosition.Y += (boundarySize - input.MouseWindowPosition.Y)*frameTime;
 						}
 					}
 					break;
@@ -191,6 +203,12 @@ namespace MapEditor
 			}
 			else
 			{
+				if (lmbDown && model.CurrentTool == EditorModel.Tool.SelectObject)
+				{
+					if (model.SelectedObject != null)
+						model.SelectedObject.Position.Set(model.SelectedObject.DisplayPosition);
+							
+				}
 				lmbDown = false;
 			}
 			

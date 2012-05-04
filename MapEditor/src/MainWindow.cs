@@ -63,7 +63,7 @@ public partial class MainWindow: Gtk.Window, IEditorListener
 		radioDrawTiles.Toggle();
 		#endregion
 		
-		#region Background and draw-to-layer spin
+		#region Background, draw-to-layer spin
 		
 		comboBackgrounds.Changed += delegate(object sender, EventArgs e) {
 			model.Background = ((ComboBox)sender).ActiveText;
@@ -74,6 +74,39 @@ public partial class MainWindow: Gtk.Window, IEditorListener
 			model.DrawToLayer = spinDrawToLayer.ValueAsInt;
 		};
 		
+		entryMapID.Changed += delegate {
+			model.MapID = entryMapID.Text;
+		};
+		
+		#endregion
+		
+		#region Grid snapping
+		// default value for snapping
+		spinGridOffsetX.Value = 0;
+		spinGridOffsetY.Value = 0;
+		
+		model.SnapToGrid = checkSnapToGrid.Active;
+		model.GridSizeX = spinGridSizeX.ValueAsInt;
+		model.GridSizeY = spinGridSizeY.ValueAsInt;
+		model.GridOffsetX = spinGridOffsetX.ValueAsInt;
+		model.GridOffsetY = spinGridOffsetY.ValueAsInt;
+		
+		checkSnapToGrid.Toggled += delegate {
+			model.SnapToGrid = checkSnapToGrid.Active;
+		};
+		
+		spinGridSizeX.Changed += delegate {
+			model.GridSizeX = spinGridSizeX.ValueAsInt;
+		};
+		spinGridSizeY.Changed += delegate {
+			model.GridSizeY = spinGridSizeY.ValueAsInt;
+		};
+		spinGridOffsetX.Changed += delegate {
+			model.GridOffsetX = spinGridOffsetX.ValueAsInt;
+		};
+		spinGridOffsetY.Changed += delegate {
+			model.GridOffsetY = spinGridOffsetY.ValueAsInt;
+		};
 		#endregion
 		
 		//Set up event handlers for menu actions
@@ -511,24 +544,26 @@ public partial class MainWindow: Gtk.Window, IEditorListener
 		{
 		case EditorModel.VariableName.Background:
 			//Find the background in the combobox and set that element as active
-			TreeIter iter;
-			comboBackgrounds.Model.GetIterFirst(out iter);
-			bool found = false;
-			do
-			{
-				GLib.Value thisRow = new GLib.Value();
-				comboBackgrounds.Model.GetValue(iter, 0, ref thisRow);
-				if ((thisRow.Val as string).Equals(newValue))
+			Application.Invoke(delegate {
+				TreeIter iter;
+				comboBackgrounds.Model.GetIterFirst(out iter);
+				bool found = false;
+				do
 				{
-					comboBackgrounds.SetActiveIter(iter);
-					found = true;
-					break;
+					GLib.Value thisRow = new GLib.Value();
+					comboBackgrounds.Model.GetValue(iter, 0, ref thisRow);
+					if ((thisRow.Val as string).Equals(newValue))
+					{
+						comboBackgrounds.SetActiveIter(iter);
+						found = true;
+						break;
+					}
+				} while (comboBackgrounds.Model.IterNext (ref iter));
+				if (!found)
+				{
+					Log.Write("Background \"" + newValue + "\" was not found in combo box.", Log.WARNING);
 				}
-			} while (comboBackgrounds.Model.IterNext (ref iter));
-			if (!found)
-			{
-				Log.Write("Background \"" + newValue + "\" was not found in combo box.", Log.WARNING);
-			}
+			});
 			break;
 		case EditorModel.VariableName.MousePosition:
 			Vector v = (Vector)newValue;
@@ -558,6 +593,15 @@ public partial class MainWindow: Gtk.Window, IEditorListener
 					labelLayers.Text = "" + model.TileMap.Layers;
 					spinDrawToLayer.SetRange(1, tm.Layers);
 					spinDrawToLayer.Value = 1;
+				});
+			}
+			break;
+		
+		case EditorModel.VariableName.MapID:
+			if (entryMapID.Text != (string)newValue)
+			{
+				Application.Invoke(delegate {
+					entryMapID.Text = (string)newValue;
 				});
 			}
 			break;

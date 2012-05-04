@@ -152,26 +152,110 @@ Tileset setup:
   <tile texture="grassland/bush-large-right3.png" id="338" />
 
 <!-- Gray pipes -->
-  <tile texture="grassland/pipe-vertical-gray-top-left.png" id="401" />
-  <tile texture="grassland/pipe-vertical-gray-top-right.png" id="402" />
-  <tile texture="grassland/pipe-vertical-gray-body-left.png" id="403" />
-  <tile texture="grassland/pipe-vertical-gray-body-right.png" id="404" />
+  <tile texture="grassland/pipe-vertical-gray-top-left.png" id="401"></tile>
+  <tile texture="grassland/pipe-vertical-gray-top-right.png" id="402"></tile>
+  <tile texture="grassland/pipe-vertical-gray-body-left.png" id="403"></tile>
+  <tile texture="grassland/pipe-vertical-gray-body-right.png" id="404"></tile>
 
 <!-- Green pipes -->
-  <tile texture="grassland/pipe-vertical-green-top-left.png" id="415" />
-  <tile texture="grassland/pipe-vertical-green-top-right.png" id="416" />
-  <tile texture="grassland/pipe-vertical-green-body-left.png" id="417" />
-  <tile texture="grassland/pipe-vertical-green-body-right.png" id="418" />
+  <tile texture="grassland/pipe-vertical-green-top-left.png" id="415">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
+  <tile texture="grassland/pipe-vertical-green-top-right.png" id="416">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
+  <tile texture="grassland/pipe-vertical-green-body-left.png" id="417">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
+  <tile texture="grassland/pipe-vertical-green-body-right.png" id="418">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
 
 <!-- Yellow pipes -->
-  <tile texture="grassland/pipe-vertical-yellow-top-left.png" id="430" />
-  <tile texture="grassland/pipe-vertical-yellow-top-right.png" id="431" />
-  <tile texture="grassland/pipe-vertical-yellow-body-left.png" id="432" />
-  <tile texture="grassland/pipe-vertical-yellow-body-right.png" id="433" />
+  <tile texture="grassland/pipe-vertical-yellow-top-left.png" id="430">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
+  <tile texture="grassland/pipe-vertical-yellow-top-right.png" id="431">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
+  <tile texture="grassland/pipe-vertical-yellow-body-left.png" id="432">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
+  <tile texture="grassland/pipe-vertical-yellow-body-right.png" id="433">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
   
 <!-- Purple pipes -->
-  <tile texture="grassland/pipe-vertical-purple-top-left.png" id="445" />
-  <tile texture="grassland/pipe-vertical-purple-top-right.png" id="446" />
-  <tile texture="grassland/pipe-vertical-purple-body-left.png" id="447" />
-  <tile texture="grassland/pipe-vertical-purple-body-right.png" id="448" />
+  <tile texture="grassland/pipe-vertical-purple-top-left.png" id="445">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
+  <tile texture="grassland/pipe-vertical-purple-top-right.png" id="446">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
+  <tile texture="grassland/pipe-vertical-purple-body-left.png" id="447">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
+  <tile texture="grassland/pipe-vertical-purple-body-right.png" id="448">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
 </tileset>

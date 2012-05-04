@@ -33,7 +33,7 @@ namespace MapEditor
 			model.ResourceManager = game.Resources;
 			//model.CurrentTileset = model.ResourceManager.GetTileset("grassland");
 			
-			while (!game.Done && model.Running)
+			//while (!game.Done && model.Running)
 			{
 				game.Run();
 			}

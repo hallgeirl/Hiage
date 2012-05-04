@@ -509,6 +509,27 @@ public partial class MainWindow: Gtk.Window, IEditorListener
 	{
 		switch (var)
 		{
+		case EditorModel.VariableName.Background:
+			//Find the background in the combobox and set that element as active
+			TreeIter iter;
+			comboBackgrounds.Model.GetIterFirst(out iter);
+			bool found = false;
+			do
+			{
+				GLib.Value thisRow = new GLib.Value();
+				comboBackgrounds.Model.GetValue(iter, 0, ref thisRow);
+				if ((thisRow.Val as string).Equals(newValue))
+				{
+					comboBackgrounds.SetActiveIter(iter);
+					found = true;
+					break;
+				}
+			} while (comboBackgrounds.Model.IterNext (ref iter));
+			if (!found)
+			{
+				Log.Write("Background \"" + newValue + "\" was not found in combo box.", Log.WARNING);
+			}
+			break;
 		case EditorModel.VariableName.MousePosition:
 			Vector v = (Vector)newValue;
 			Application.Invoke(delegate { 

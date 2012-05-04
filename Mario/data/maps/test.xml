@@ -10,7 +10,7 @@
 	</geometry>
 
 	<tileset>grassland</tileset>
-	<background>background-blue-domes</background>
+	<background>block-inactive</background>
 
 	<properties>
 		<gravity>500</gravity>

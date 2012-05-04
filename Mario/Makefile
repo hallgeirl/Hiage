@@ -6,6 +6,7 @@ SOURCES =  \
 	src/Controllers/DebugController.cs \
 	src/Controllers/DumbGroundAI.cs \
 	src/Controllers/IController.cs \
+	src/Controllers/MarioDiesController.cs \
 	src/Controllers/PlayerController.cs \
 	src/GameStates/DeadState.cs \
 	src/GameStates/LevelState.cs \
@@ -18,6 +19,7 @@ SOURCES =  \
 	src/Objects/Coin.cs \
 	src/Objects/GameObject.cs \
 	src/Objects/Icon.cs \
+	src/Objects/Mushroom.cs \
 	src/Objects/PhysicalObject.cs \
 	src/Objects/Player.cs \
 	src/Physics.cs \

@@ -63,6 +63,8 @@
     <Compile Include="src\GameStates\DeadState.cs" />
     <Compile Include="src\Objects\Icon.cs" />
     <Compile Include="src\Helpers.cs" />
+    <Compile Include="src\Objects\Mushroom.cs" />
+    <Compile Include="src\Controllers\MarioDiesController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj">

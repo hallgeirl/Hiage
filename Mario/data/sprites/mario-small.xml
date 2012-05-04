@@ -47,7 +47,7 @@
 
   <animation>
     <name>die</name>
-    <frame x="0" y="24" delay="1" next="1" />
-    <frame x="104" y="24" delay="1" next="1" />
+    <frame x="192" y="0" delay="0.2" next="1" w="16" h="24" />
+    <frame x="208" y="0" delay="0.2" next="0" w="16" h="24" />
   </animation>
 </sprite>

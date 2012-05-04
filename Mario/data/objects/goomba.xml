@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <object id="goomba">
     <type>enemy</type>
+    <defaults>
+        <sprite>default</sprite>
+    </defaults>
     <sprites>
-        <sprite>goomba</sprite>
+        <sprite id="default">goomba</sprite>
     </sprites>
 
     <!-- Physical properties -->

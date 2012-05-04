@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <object id="coin">
     <type>coin</type>
+    <defaults>
+        <sprite>default</sprite>
+    </defaults>
     <sprites>
-        <sprite>coin</sprite>
+        <sprite id="default">coin</sprite>
     </sprites>
     <elasticity>0</elasticity>
     

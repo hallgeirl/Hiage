@@ -22,8 +22,9 @@ namespace Mario
 		bool crouching = false;
 		bool sliding = false;
 		double oldFriction;
-		protected int crouchState, growState;
+		protected int crouchState, growState, shrinkState;
 		Timer growTimer = new Timer();
+		Timer invincibleTimer = new Timer();
 		
 		public Player (Game game, Vector position, Vector velocity, Dictionary<string, Sprite> sprites, string defaultSprite, IController controller, //GameObject attributes
 		               WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons, //PhysicalObject attributes
@@ -34,7 +35,7 @@ namespace Mario
 			oldFriction = objectPhysics.Friction;
 			PlayerState = state;
 			
-			
+			invincibleTimer.Start();			
 		}
 		
 		protected override void SetupStates ()
@@ -49,21 +50,63 @@ namespace Mario
 			});
 			
 			growState = AddState(delegate {
-				if (prevState != growState)
+				if (framesInCurrentState == 0)
 				{
+					game.SimulationSpeed = 0;
+					growTimer.Restart();
 					growTimer.Start();
-					CurrentSprite = Sprites["big"];
 				}
-					
-				if (growTimer.Elapsed >= 2000)
+				
+				if (growTimer.Elapsed >= 1000)
 				{
+					CurrentSprite = Sprites["big"];
+					game.SimulationSpeed = Game.DefaultSimulationSpeed;
 					PlayerState.HealthStatus = PlayerState.Health.Big;
-					//CurrentSprite.PlayAnimation("stand", false);
 					
 					SetState(standState);
 					growTimer.Stop();
 				}
-				CurrentSprite.PlayAnimation("crouch", false);
+			});			
+			
+			shrinkState = AddState(delegate {
+				if (framesInCurrentState == 0)
+				{
+					game.SimulationSpeed = 0;
+					growTimer.Restart();
+					growTimer.Start();
+				}
+					
+				if (growTimer.Elapsed >= 1000)
+				{
+					CurrentSprite = Sprites["small"];
+					game.SimulationSpeed = Game.DefaultSimulationSpeed;
+					PlayerState.HealthStatus = PlayerState.Health.Small;
+					
+					SetState(standState);
+					growTimer.Stop();
+					invincibleTimer.Restart();
+					invincibleTimer.Start();
+				}
+			});			
+			
+			dieState = AddState(delegate {
+				if (framesInCurrentState == 0)
+				{
+					dieTimer.Restart();
+					dieTimer.Start();
+					Controller = new MarioDiesController();
+					CanCollide = false;
+				}
+				if (dieTimer.Elapsed > 1000 && dieTimer.Elapsed < 1100)
+				{
+					game.SimulationSpeed = Game.DefaultSimulationSpeed;
+					Velocity.Y = 300;
+				}
+				else if (dieTimer.Elapsed < 1000)
+				{
+					game.SimulationSpeed = 0;
+				}
+				CurrentSprite.PlayAnimation("die", false);
 			});
 		}
 		
@@ -92,19 +135,26 @@ namespace Mario
 		
 		public override void Update(double frameTime)
 		{
-			if (crouching)
-			{
-				crouching = false;
-				Position.Y += 2;
-			}
-			
 			base.Update(frameTime);
-			animationSpeedFactor = (Math.Abs(Velocity.X)*5 / MaxSpeed)+0.1;
+			if (currentState == dieState)
+			{
+			}
+			else
+			{
+				if (crouching)
+				{
+					crouching = false;
+					Position.Y += 2;
+				}
+			
+				animationSpeedFactor = (Math.Abs(Velocity.X)*5 / MaxSpeed)+0.1;
+			}
 		}
 
 		
 		public override void Collide (ICollidable o, Vector edgeNormal, CollisionResult collisionResult)
 		{
+			if (currentState == dieState) return;
 			if (o is Coin)
 			{
 				PlayerState.Coins++;
@@ -116,21 +166,35 @@ namespace Mario
 				((Coin)o).Delete = true;
 				game.Audio.PlaySound("coin");
 			}
-			
-			if (BoundingBox.Bottom >= o.BoundingBox.Top && o is BasicGroundEnemy && ((BasicGroundEnemy)o).Stompable && !((BasicGroundEnemy)o).Dying)
+			else if (o is Mushroom && ((Mushroom)o).MushroomType == Mushroom.ItemType.RedMushroom)
 			{
-				if (collisionResult.hasIntersected)
+				Grow();
+				((Mushroom)o).Delete = true;
+			}
+			else if (o is BasicGroundEnemy)
+			{
+				BasicGroundEnemy e = (BasicGroundEnemy)o;
+				if (BoundingBox.Bottom >= o.BoundingBox.Top && e.Stompable && !e.Dying)
 				{
-					BasicGroundEnemy enemy = (BasicGroundEnemy)o;
-					Velocity.Y = 200;
-					enemy.Kill();
-					game.Audio.PlaySound("stomp");
+					if (collisionResult.hasIntersected)
+					{
+						Velocity.Y = 200;
+						e.Kill();
+						game.Audio.PlaySound("stomp");
+					}
+				}
+				else if (!e.Dying)
+				{
+					Shrink();
 				}
 			}
+			
+			
 		}
 		
 		public override void Collide (BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
+			if (currentState == dieState) return;
 			base.Collide (p, collisionNormal, collisionResult);
 			if (collisionResult.hitNormal.X > 0.8 && sliding)
 			{
@@ -147,6 +211,7 @@ namespace Mario
 				
 		public override void UpAction()
 		{
+			if (currentState == dieState) return;
 			if (OnGround)
 			{
 				Velocity.Y = 200;
@@ -158,18 +223,20 @@ namespace Mario
 		
 		public override void DownAction()
 		{
+			if (currentState == dieState) return;
 			crouching = true;
-			Position.Y -= 2;
+			//Position.Y -= 2;
 			
 			if (currentState != crouchState)
 			{
-				currentState = crouchState;
+				SetState(crouchState);
 				
 			}
 		}
 		
 		public override void LeftAction()
 		{
+			if (currentState == dieState) return;
 			if (OnGround)
 			{
 				if (!crouching)
@@ -181,6 +248,7 @@ namespace Mario
 		
 		public override void RightAction()
 		{
+			if (currentState == dieState) return;
 			if (OnGround)
 			{
 				if (!crouching)
@@ -202,6 +270,22 @@ namespace Mario
 				SetState(growState);
 			}
 			game.Audio.PlaySound("mario-grow");
+		}
+		
+		protected void Shrink()
+		{
+			if (invincibleTimer.Elapsed < 1000) return;
+			if (currentState != dieState && PlayerState.HealthStatus == PlayerState.Health.Small)
+			{
+				game.Audio.PlaySound("mario-death");
+				game.Audio.PlayMusic(null, null);
+				Kill ();
+				SetState(dieState);
+			}
+			else if (currentState != shrinkState && PlayerState.HealthStatus == PlayerState.Health.Big)
+			{
+				SetState (shrinkState);
+			}
 		}
 	}
 }

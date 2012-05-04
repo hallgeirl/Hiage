@@ -152,10 +152,38 @@ Tileset setup:
   <tile texture="grassland/bush-large-right3.png" id="338" />
 
 <!-- Gray pipes -->
-  <tile texture="grassland/pipe-vertical-gray-top-left.png" id="401"></tile>
-  <tile texture="grassland/pipe-vertical-gray-top-right.png" id="402"></tile>
-  <tile texture="grassland/pipe-vertical-gray-body-left.png" id="403"></tile>
-  <tile texture="grassland/pipe-vertical-gray-body-right.png" id="404"></tile>
+  <tile texture="grassland/pipe-vertical-gray-top-left.png" id="401">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
+  <tile texture="grassland/pipe-vertical-gray-top-right.png" id="402">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
+  <tile texture="grassland/pipe-vertical-gray-body-left.png" id="403">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
+  <tile texture="grassland/pipe-vertical-gray-body-right.png" id="404">
+    <bounds>
+        <point x="0" y="0" />
+        <point x="15" y="0" />
+        <point x="15" y="15" />
+        <point x="0" y="15" />
+    </bounds>
+  </tile>
 
 <!-- Green pipes -->
   <tile texture="grassland/pipe-vertical-green-top-left.png" id="415">

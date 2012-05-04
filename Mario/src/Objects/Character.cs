@@ -148,7 +148,7 @@ namespace Mario
 		
 		public void Kill()
 		{
-			currentState = dieState;
+			SetState(dieState);
 			dieTimer.Start();
 			
 			Dying = true;

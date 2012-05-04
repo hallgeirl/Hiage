@@ -41,6 +41,8 @@ namespace Mario
 			this.controller = controller;
 			//boundingPolygon.MoveTo(Position.X, Position.Y);
 			
+			CanCollide = true;
+			
 			SetupStates();
 		}
 		
@@ -50,6 +52,8 @@ namespace Mario
 			currentState = newstate;
 			framesInCurrentState = 0;
 			
+			if (this is Player)
+			Console.WriteLine("Setting state to " + newstate);
 			//objectStates[currentState]();
 		}
 		
@@ -210,7 +214,13 @@ namespace Mario
 			}
 		}
 		Vector position = new Vector();
-
+		
+		public IController Controller
+		{
+			get { return controller; }
+			set { controller = value; }
+		}
+		
 		public double Left
 		{
 			get 
@@ -253,6 +263,12 @@ namespace Mario
 		
 		//Set to true to delete this object next frame
 		public bool Delete
+		{
+			get;
+			set;
+		}
+		
+		public bool CanCollide
 		{
 			get;
 			set;

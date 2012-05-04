@@ -78,6 +78,18 @@ namespace Mario
 			case "coin":
 				return new Coin(game, position, sprites, obj.DefaultSprite, boundingPolygons);
 			
+			case "mushroom":
+				Mushroom.ItemType itemType = Mushroom.ItemType.RedMushroom;
+				switch (obj.Name)
+				{
+				case "mushroom-red":
+					itemType = Mushroom.ItemType.RedMushroom;
+					break;
+				case "mushroom-green":
+					itemType = Mushroom.ItemType.GreenMushroom;
+					break;
+				}
+				return new Mushroom(game, position, sprites, obj.DefaultSprite, worldPhysics, objectPhysics, boundingPolygons, itemType);
 			default:
 				Log.Write("Unknown object type: " + obj.Type, Log.WARNING);
 				break;

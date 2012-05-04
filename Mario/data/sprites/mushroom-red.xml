@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sprite id="mushroom-red">
+  <texture>mushroom-red</texture>
+
+  <defaults>
+    <frame-width>16</frame-width>
+    <frame-height>16</frame-height>
+    <animation>stand</animation>
+  </defaults>
+
+  <animation>
+    <name>stand</name>
+    <frame x="0" y="0" delay="1" next="0" />
+  </animation>
+</sprite>

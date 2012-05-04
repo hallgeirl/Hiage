@@ -54,10 +54,14 @@ namespace Mario
 			//Spawn all objects
 			foreach (var o in map.Objects)
 			{
-				objects.Add(objectFactory.Spawn(o.Name, new Vector(o.X, o.Y), new Vector(0,-100), worldPhysics));
-				if (o.Name == "mario")
+				GameObject obj = objectFactory.Spawn(o.Name, new Vector(o.X, o.Y), new Vector(0,-100), worldPhysics);
+				if (obj != null)
 				{
-					this.player = (Player)objects[objects.Count-1];
+					objects.Add(obj);
+					if (o.Name == "mario")
+					{
+						this.player = (Player)objects[objects.Count-1];
+					}
 				}
 			}
 			
@@ -106,6 +110,7 @@ namespace Mario
 		{
 			foreach (var o in objects)
 			{
+				if (!o.CanCollide) continue;
 				CollisionManager.TestCollision(o, tileMap.GetBoundingPolygonsInRegion(o.GetCollisionCheckArea(frameTime), 0), frameTime);
 			}
 			
@@ -113,8 +118,10 @@ namespace Mario
 			
 			for (int i = 0; i < objects.Count; i++)
 			{
+				if (!objects[i].CanCollide) continue;
 				for (int j = i+1; j < objects.Count && objects[i].Right >= objects[j].Left; j++)
 				{
+					if (!objects[j].CanCollide) continue;
 					CollisionManager.TestCollision(objects[i], objects[j], frameTime);
 				}
 			}

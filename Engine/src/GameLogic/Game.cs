@@ -61,6 +61,7 @@ namespace Engine
 			audioManager = new AudioManager(resourceManager);
 			
 			timer.Start();
+			SimulationSpeed = DefaultSimulationSpeed;
 		}
 
 		/// <summary>
@@ -131,7 +132,7 @@ namespace Engine
 				if (gameStates.Count > 0)
 				{
 					//gameStates[gameStates.Count-1].Run(lastFrameTime);
-					gameStates[gameStates.Count-1].Run(lastFrameTime);
+					gameStates[gameStates.Count-1].Run(SimulationSpeed < 0 ? lastFrameTime : SimulationSpeed);
 				}
 				
 				display.Render();
@@ -247,6 +248,12 @@ namespace Engine
 			{
 				return currentFps;
 			}
+		}
+		
+		public const double DefaultSimulationSpeed = -1;
+		public double SimulationSpeed
+		{
+			get; set;
 		}
 	}
 }

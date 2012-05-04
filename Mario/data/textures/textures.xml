@@ -9,7 +9,8 @@
     <resource type="texture" name="block-inactive" path="sprites/block-inactive.png" />
     <resource type="texture" name="block-question" path="sprites/block-question.png" />
     <resource type="texture" name="coin" path="sprites/coin.png" />
-    <resource type="texture" name="extralife" path="sprites/extralife.png" />
+    <resource type="texture" name="mushroom-green" path="sprites/mushroom-green.png" />
+    <resource type="texture" name="mushroom-red" path="sprites/mushroom-red.png" />
 
     <resource type="texture" name="goomba" path="sprites/goomba.png" />
     <resource type="texture" name="mario-small" path="sprites/mario_small.png" />

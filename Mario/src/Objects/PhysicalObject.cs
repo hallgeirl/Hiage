@@ -6,19 +6,14 @@ using Engine;
 namespace Mario
 {
 	//Represents all objects which should be affected by physics
-	public abstract class PhysicalObject : GameObject
+	public abstract class PhysicalObject : GameObjectComponent
 	{
-		protected WorldPhysics 	worldPhysics;
-		protected ObjectPhysics objectPhysics;
 		private   Timer 		inAirTimer = new Timer();
 		protected double 		friction;
-		public PhysicalObject (Game game, Vector position, Vector velocity, Dictionary<string, Sprite> sprites, string defaultSprite, IController controller, 
-		                       WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons) 
-			: base(game, position, velocity, sprites, defaultSprite, controller, boundingPolygons) 
+		public PhysicalObject (Game game,  
+		                       Dictionary<string, BoundingPolygon> boundingPolygons) 
+			: base(game, boundingPolygons) 
 		{
-			this.worldPhysics = worldPhysics;
-			this.objectPhysics = objectPhysics;
-			this.friction = objectPhysics.Friction*worldPhysics.GroundFrictionFactor;
 			inAirTimer.Start();
 		}
 
@@ -51,23 +46,7 @@ namespace Mario
 		
 		#endregion
 		
-		public override void UpdateAccelleration(double frameTime)
-		{
-			base.UpdateAccelleration(frameTime);
-			
-			//Apply gravity
-			Accellerate(new Vector(0, -worldPhysics.Gravity));
-			
-			//Pre-calculate the actual friction (based on world- and object physics attributes)
-			//double friction = objectPhysics.Friction*worldPhysics.GroundFrictionFactor;
-			
-			if (Velocity.X > friction*frameTime)
-				Accellerate(new Vector(-friction, 0));
-			else if (Velocity.X < -friction*frameTime)
-				Accellerate(new Vector(friction, 0));
-		}
-		
-		public override void UpdateVelocity(double frameTime)
+		/*public override void UpdateVelocity(double frameTime)
 		{
 			base.UpdateVelocity(frameTime);
 			
@@ -76,7 +55,7 @@ namespace Mario
 			
 			if (Velocity.X <= friction*frameTime && Velocity.X >= -friction*frameTime)
 				Velocity.X = 0;
-		}
+		}*/
 		
 		public override void Update(double frameTime)
 		{
@@ -111,7 +90,8 @@ namespace Mario
 				else
 					Position -= collisionResult.minimumTranslationVector;
 
-				Velocity = Velocity - ((1.0+objectPhysics.Elasticity)*Velocity.DotProduct(collisionNormal))*collisionNormal;
+				//Velocity = Velocity - ((1.0+objectPhysics.Elasticity)*Velocity.DotProduct(collisionNormal))*collisionNormal;
+				Velocity = Velocity - ((1.0+0)*Velocity.DotProduct(collisionNormal))*collisionNormal;
 				Position += remainingFrameTime * Velocity * frameTime;
 
    				/*

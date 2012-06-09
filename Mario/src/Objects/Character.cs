@@ -15,12 +15,12 @@ namespace Mario
 
 		
 		//Just pass on the constructor stuff to base
-		public Character(Game game, Vector position, Vector velocity, Dictionary<string, Sprite> sprites, string defaultSprite, IController controller, 
-		                 WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons,
+		public Character(Game game,  
+		                  Dictionary<string, BoundingPolygon> boundingPolygons,
 		                 double runSpeed, double maxSpeed) 
-			: base(game, position, velocity, sprites, defaultSprite, controller, worldPhysics, objectPhysics, boundingPolygons) 
+			: base(game, boundingPolygons) 
 		{
-			CurrentSprite.PlayAnimation("stand", true);
+			//CurrentSprite.PlayAnimation("stand", true);
 			MaxSpeed = maxSpeed;
 			RunSpeed = runSpeed;
 		}
@@ -63,9 +63,9 @@ namespace Mario
 					SetState(inAirState);
 				else
 				{
-					if (Velocity.DotProduct(prevAccelVector) < 0 && Math.Abs(prevAccelVector.X) > friction*2)
-						SetState(brakeState);
-					else if (Math.Abs(Velocity.X) < RunSpeed)
+					//if (Velocity.DotProduct(prevAccelVector) < 0 && Math.Abs(prevAccelVector.X) > friction*2)
+					//	SetState(brakeState);
+					if (Math.Abs(Velocity.X) < RunSpeed)
 						SetState(walkState);
 				}
 				CurrentSprite.PlayAnimation("run", false);
@@ -88,7 +88,7 @@ namespace Mario
 					SetState(inAirState);
 				else
 				{
-					if (Velocity.X * prevAccelVector.X >= 0 || (Math.Abs(prevAccelVector.X) <= friction*2 && framesInCurrentState >= 2) )
+					//if (Velocity.X * prevAccelVector.X >= 0 || (Math.Abs(prevAccelVector.X) <= friction*2 && framesInCurrentState >= 2) )
 						SetState(standState);
 				}
 				CurrentSprite.PlayAnimation("brake", false);
@@ -98,7 +98,7 @@ namespace Mario
 			//currentState = standState;
 		}
 		
-		public override void UpdateVelocity(double frameTime)
+		/*public override void UpdateVelocity(double frameTime)
 		{
 			base.UpdateVelocity(frameTime);
 			
@@ -107,7 +107,7 @@ namespace Mario
 				Velocity.X = -MaxSpeed;
 			else if (Velocity.X > MaxSpeed)
 			    Velocity.X = MaxSpeed;
-		}
+		}*/
 		
 		public override void Update(double frameTime)
 		{
@@ -116,22 +116,6 @@ namespace Mario
 				CurrentSprite.Flipped = false;
 			else if (Velocity.X < -1e-12)
 			    CurrentSprite.Flipped = true;
-			
-	/*		if (this is Player)
-			{
-				if (currentState ==  runState)
-					Console.WriteLine("Running."); 
-				else if (currentState ==  walkState)
-					Console.WriteLine("Walking."); 
-				else if (currentState ==  brakeState)
-					Console.WriteLine("Braking."); 
-				else if (currentState ==  inAirState)
-					Console.WriteLine("In air."); 
-				else if (currentState ==  standState)
-					Console.WriteLine("Standing."); 
-				else
-					Console.WriteLine("Unknown state.");
-			}*/
 		}
 		
 		public double RunSpeed

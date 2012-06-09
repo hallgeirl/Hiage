@@ -3,9 +3,9 @@ CONFIG=DEBUG_X86
 # Source files
 SOURCES =  \
 	src/Camera.cs \
+	src/Controllers/ControllerComponent.cs \
 	src/Controllers/DebugController.cs \
 	src/Controllers/DumbGroundAI.cs \
-	src/Controllers/IController.cs \
 	src/Controllers/MarioDiesController.cs \
 	src/Controllers/PlayerController.cs \
 	src/GameStates/DeadState.cs \
@@ -17,7 +17,7 @@ SOURCES =  \
 	src/Objects/BasicGroundEnemy.cs \
 	src/Objects/Character.cs \
 	src/Objects/Coin.cs \
-	src/Objects/GameObject.cs \
+	src/Objects/GameObjectComponent.cs \
 	src/Objects/Icon.cs \
 	src/Objects/Mushroom.cs \
 	src/Objects/PhysicalObject.cs \

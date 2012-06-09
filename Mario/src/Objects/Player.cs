@@ -21,18 +21,16 @@ namespace Mario
 		//HealthStatus health;
 		bool crouching = false;
 		bool sliding = false;
-		double oldFriction;
 		protected int crouchState, growState, shrinkState;
 		Timer growTimer = new Timer();
 		Timer invincibleTimer = new Timer();
 		
-		public Player (Game game, Vector position, Vector velocity, Dictionary<string, Sprite> sprites, string defaultSprite, IController controller, //GameObject attributes
-		               WorldPhysics worldPhysics, ObjectPhysics objectPhysics, Dictionary<string, BoundingPolygon> boundingPolygons, //PhysicalObject attributes
+		public Player (Game game, //GameObject attributes
+		               Dictionary<string, BoundingPolygon> boundingPolygons, //PhysicalObject attributes
 		               double runSpeed, double maxSpeed, 	//Character attributes
 		               PlayerState state)
-			: base(game, position, velocity, sprites, defaultSprite, controller, worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed) 
+			: base(game, boundingPolygons, runSpeed, maxSpeed) 
 		{
-			oldFriction = objectPhysics.Friction;
 			PlayerState = state;
 			
 			invincibleTimer.Start();			
@@ -59,7 +57,7 @@ namespace Mario
 				
 				if (growTimer.Elapsed >= 1000)
 				{
-					CurrentSprite = Sprites["big"];
+					//CurrentSprite = Sprites["big"];
 					game.SimulationSpeed = Game.DefaultSimulationSpeed;
 					PlayerState.HealthStatus = PlayerState.Health.Big;
 					
@@ -78,7 +76,7 @@ namespace Mario
 					
 				if (growTimer.Elapsed >= 1000)
 				{
-					CurrentSprite = Sprites["small"];
+					//CurrentSprite = Sprites["small"];
 					game.SimulationSpeed = Game.DefaultSimulationSpeed;
 					PlayerState.HealthStatus = PlayerState.Health.Small;
 					
@@ -94,7 +92,7 @@ namespace Mario
 				{
 					dieTimer.Restart();
 					dieTimer.Start();
-					Controller = new MarioDiesController();
+					//Controller = new MarioDiesController();
 					CanCollide = false;
 				}
 				if (dieTimer.Elapsed > 1000 && dieTimer.Elapsed < 1100)
@@ -199,16 +197,9 @@ namespace Mario
 			if (collisionResult.hitNormal.X > 0.8 && sliding)
 			{
 				sliding = false;
-				objectPhysics.Friction = oldFriction;
 			}
 		}
 		
-		public void Slide()
-		{
-			sliding = true;
-			objectPhysics.Friction = 0;
-		}
-				
 		public override void UpAction()
 		{
 			if (currentState == dieState) return;

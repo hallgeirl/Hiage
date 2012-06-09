@@ -6,14 +6,9 @@ using Engine;
 namespace Mario
 {
 	//A generic game object class
-	public abstract class GameObject : ICollidable
+	public abstract class GameObjectComponent : GOComponent, ICollidable
 	{
-		Renderer renderer;
-		IController controller;
-		
 		protected Dictionary<string, BoundingPolygon> boundingPolygons;
-		protected Vector accelVector = new Vector(0, 0);
-		protected Vector prevAccelVector = new Vector(0, 0);
 		protected double remainingFrameTime = 1;
 		protected double animationSpeedFactor = 1;
 		protected double frameTime;
@@ -29,16 +24,10 @@ namespace Mario
 		protected int framesInCurrentState = 0;
 		
 		//Construct a game object. Set controller to null if the object should be static.
-		public GameObject(Game game, Vector position, Vector velocity, Dictionary<string, Sprite> sprites, string defaultSprite, IController controller, Dictionary<string, BoundingPolygon> boundingPolygons)
+		public GameObjectComponent(Game game, Dictionary<string, BoundingPolygon> boundingPolygons)
 		{
 			this.game = game;
 			this.boundingPolygons = boundingPolygons;
-			Sprites = sprites;
-			CurrentSprite = sprites[defaultSprite];
-			Velocity = velocity;
-			Position = position;
-			this.renderer = game.Display.Renderer;
-			this.controller = controller;
 			//boundingPolygon.MoveTo(Position.X, Position.Y);
 			
 			CanCollide = true;
@@ -78,20 +67,6 @@ namespace Mario
 			cachedRight = false;
 		}
 		
-		public virtual void UpdateAccelleration(double frameTime)
-		{
-			if (controller != null)
-				controller.Control(this);
-		}
-		
-		public virtual void UpdateVelocity(double frameTime)
-		{
-			Velocity += accelVector*frameTime;
-			prevAccelVector = accelVector.Copy();
-			accelVector.X = 0;
-			accelVector.Y = 0;
-		}
-		
 		//Update this object's position and such
 		public virtual void UpdatePosition(double frameTime)
 		{
@@ -103,10 +78,8 @@ namespace Mario
 				objectStates[currentState]();
 		}
 				
-		public virtual void Update(double frameTime)
+		public override void Update(double frameTime)
 		{
-			UpdateAccelleration(frameTime);
-			UpdateVelocity(frameTime);
 			UpdatePosition(frameTime);
 			framesInCurrentState++;
 		}
@@ -134,14 +107,16 @@ namespace Mario
 
 		public virtual void Collide(BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
+			ControllerComponent controller = (ControllerComponent)Owner.GetComponent("controller");
 			if (controller != null)
 				controller.HandleCollision(this, p, collisionNormal, collisionResult);
 		}
 		
 		public virtual void Collide(ICollidable o, Vector edgeNormal, CollisionResult collisionResult)
 		{
+			ControllerComponent controller = (ControllerComponent)Owner.GetComponent("controller");
 			if (controller != null)
-				controller.HandleCollision(this, (GameObject)o, collisionResult);
+				controller.HandleCollision(this, (GameObjectComponent)o, collisionResult);
 		}
 		#endregion
 
@@ -154,49 +129,35 @@ namespace Mario
 		
 		#endregion
 		
-		public void Render(double frameTime, bool debug=false)
+		public Sprite CurrentSprite
 		{
-			CurrentSprite.X = Position.X;
-			CurrentSprite.Y = Position.Y;
-			CurrentSprite.Update(frameTime*animationSpeedFactor);
-			
-			if (debug)
+			get 
 			{
-				//Debug (Draw a square for the collision boundaries).
-				Box ca = GetCollisionCheckArea(frameTime);
-				renderer.SetDrawingColor(1,0,0,1);
-				renderer.DrawSquare(ca.Left, ca.Top, ca.Right, ca.Bottom);
-				renderer.SetDrawingColor(1,1,1,1);
-				
-				//Draw edges
-				List<Vector> bp = BoundingBox.Vertices;
-				for (int i = 0; i < bp.Count; i++)
-				{
-					Vector p1 = bp[i], p2 = bp[i == bp.Count-1 ? 0 : i+1];
-					
-					//Draw edge
-					renderer.DrawLine(p1.X, p1.Y, p2.X, p2.Y);
-					
-					//Draw normal
-					//renderer.DrawLine(p1.X + (p2.X-p1.X)/2, p1.Y + (p2.Y-p1.Y)/2, p1.X + (p2.X-p1.X)/2+e.Normal.X*Tilesize/4, p1.Y + (p2.Y-p1.Y)/2+e.Normal.Y*Tilesize/4);
-				}
-			}
-			
-			//renderer.DrawSquare(Position.X-Width/2, Position.Y-Height/2, Position.X+Width/2, Position.Y+Height/2);
-			
-			renderer.Render(CurrentSprite);
-		}			
+				DrawableComponent d = (DrawableComponent)Owner.GetComponent("drawable"); 
+				return (Sprite)d.Renderable;
+			} 
+		}
 		
 		public void Accellerate(Vector accelVector)
 		{
-			this.accelVector += accelVector;
+			MotionComponent motion = (MotionComponent)Owner.GetComponent("motion");
+			
+			motion.Accelleration.Add(accelVector);
 		}
 		
 		//Current velocity
 		public Vector Velocity
 		{
-			get;
-			protected set;
+			get
+			{
+				MotionComponent physics = (MotionComponent)Owner.GetComponent("motion");
+				return physics.Velocity;
+			}
+			protected set 
+			{
+				MotionComponent physics = (MotionComponent)Owner.GetComponent("motion");
+				physics.Velocity.Set(value);
+			}
 		}
 		
 		//Current position
@@ -204,21 +165,16 @@ namespace Mario
 		{
 			get
 			{
-				return position;
+				TransformComponent transform = (TransformComponent)Owner.GetComponent("transform");
+				return transform.Position;
 			}
 			set
 			{
-				position = value;
+				TransformComponent transform = (TransformComponent)Owner.GetComponent("transform");
+				transform.Position.Set(value);
 				if (BoundingBox != null)
-					BoundingBox.MoveTo(position.X, position.Y);
+					BoundingBox.MoveTo(transform.Position.X, transform.Position.Y);
 			}
-		}
-		Vector position = new Vector();
-		
-		public IController Controller
-		{
-			get { return controller; }
-			set { controller = value; }
 		}
 		
 		public double Left
@@ -249,18 +205,6 @@ namespace Mario
 			}
 		}
 	
-		//Sprite to draw
-		protected Dictionary<string, Sprite> Sprites
-		{
-			get;
-			private set;
-		}
-		protected Sprite CurrentSprite
-		{
-			get; 
-			set;
-		}
-		
 		//Set to true to delete this object next frame
 		public bool Delete
 		{
@@ -272,6 +216,11 @@ namespace Mario
 		{
 			get;
 			set;
+		}
+		
+		public override string Family
+		{
+			get { return "go"; }
 		}
 	}
 }

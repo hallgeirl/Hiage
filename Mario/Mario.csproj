@@ -45,14 +45,12 @@
   <ItemGroup>
     <Compile Include="src\Camera.cs" />
     <Compile Include="src\Controllers\DumbGroundAI.cs" />
-    <Compile Include="src\Controllers\IController.cs" />
     <Compile Include="src\Controllers\PlayerController.cs" />
     <Compile Include="src\Main.cs" />
     <Compile Include="src\ObjectFactory.cs" />
     <Compile Include="src\Objects\BasicGroundEnemy.cs" />
     <Compile Include="src\Objects\Character.cs" />
     <Compile Include="src\Objects\Coin.cs" />
-    <Compile Include="src\Objects\GameObject.cs" />
     <Compile Include="src\Objects\PhysicalObject.cs" />
     <Compile Include="src\Objects\Player.cs" />
     <Compile Include="src\Physics.cs" />
@@ -65,6 +63,8 @@
     <Compile Include="src\Helpers.cs" />
     <Compile Include="src\Objects\Mushroom.cs" />
     <Compile Include="src\Controllers\MarioDiesController.cs" />
+    <Compile Include="src\Objects\GameObjectComponent.cs" />
+    <Compile Include="src\Controllers\ControllerComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj">

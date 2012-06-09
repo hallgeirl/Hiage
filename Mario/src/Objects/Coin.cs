@@ -4,12 +4,12 @@ using Engine;
 
 namespace Mario
 {
-	public class Coin : GameObject
+	public class Coin : GameObjectComponent
 	{
-		public Coin (Game game, Vector position, Dictionary<string, Sprite> sprites, string defaultSprite, Dictionary<string, BoundingPolygon> polygons) 
-			: base(game, position, new Vector(0,0), sprites, defaultSprite, null, polygons)
+		public Coin (Game game, Dictionary<string, BoundingPolygon> polygons) 
+			: base(game, polygons)
 		{
-			CurrentSprite.PlayAnimation("normal", true);
+			//CurrentSprite.PlayAnimation("normal", true);
 		}
 		
 		protected override void SetupStates ()

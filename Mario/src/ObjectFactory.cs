@@ -58,17 +58,27 @@ namespace Mario
 				boundingPolygons[key] = (BoundingPolygon)obj.BoundingPolygons[key].Clone();
 			}
 			
+			GameObject go = new GameObject(obj.Type);
+			
 			switch (obj.Type)
 			{
 			case "player":
-				return new Player(game, position, velocity, sprites, obj.DefaultSprite, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed, state.PlayerState);
+				go.AddComponent(new Player(game, boundingPolygons, runSpeed, maxSpeed, state.PlayerState));
+				go.AddComponent(new PlayerController(game.Input));
+				go.AddComponent(new GravityComponent(worldPhysics.Gravity));
+				go.AddComponent(new FrictionComponent(worldPhysics.GroundFrictionFactor * objectPhysics.Friction, true, false));
+				break;
 				//return new Player(position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed, state.PlayerState);
 			
 			case "enemy":
 				switch (obj.Name)
 				{
 				case "goomba":
-					return new BasicGroundEnemy(game, position, velocity, sprites, obj.DefaultSprite, new DumbGroundAI(), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed);
+					go.AddComponent(new BasicGroundEnemy(game, boundingPolygons, runSpeed, maxSpeed));
+					go.AddComponent(new DumbGroundAI());
+					go.AddComponent(new GravityComponent(worldPhysics.Gravity));
+					go.AddComponent(new FrictionComponent(worldPhysics.GroundFrictionFactor * objectPhysics.Friction, true, false));
+					break;
 				default:
 					Log.Write("Unknown enemy object name: " + obj.Name, Log.WARNING);
 					break;
@@ -76,7 +86,8 @@ namespace Mario
 				break;
 				
 			case "coin":
-				return new Coin(game, position, sprites, obj.DefaultSprite, boundingPolygons);
+				go.AddComponent(new Coin(game, boundingPolygons));
+				break;
 			
 			case "mushroom":
 				Mushroom.ItemType itemType = Mushroom.ItemType.RedMushroom;
@@ -89,23 +100,38 @@ namespace Mario
 					itemType = Mushroom.ItemType.GreenMushroom;
 					break;
 				}
-				return new Mushroom(game, position, sprites, obj.DefaultSprite, worldPhysics, objectPhysics, boundingPolygons, itemType);
+				go.AddComponent(new Mushroom(game, boundingPolygons, itemType));
+				go.AddComponent(new DumbGroundAI());
+				go.AddComponent(new GravityComponent(worldPhysics.Gravity));
+				go.AddComponent(new FrictionComponent(worldPhysics.GroundFrictionFactor * objectPhysics.Friction, true, false));
+				break;
 			default:
 				Log.Write("Unknown object type: " + obj.Type, Log.WARNING);
 				break;
 			}
 			
-			return null;
+			go.AddComponent(new TransformComponent(position));
+			go.AddComponent(new RendererComponent(game.Display.Renderer));
+			go.AddComponent (new SpriteComponent(sprites[obj.DefaultSprite]));
+			//go.AddComponent(new PhysicsComponent(velocity, new Vector(0,0)));
+			go.AddComponent(new MotionComponent(velocity, new Vector(0,0)));
+			return go;
 		}
 		
-		public Icon CreateIcon(string sprite, double scaling)
+		public GameObject CreateIcon(string sprite, double scaling)
 		{
+			GameObject go = new GameObject("icon");
 			Sprite iconSprite = new Sprite(game.Resources.GetSpriteDescriptor(sprite), game.Resources);
 			Dictionary<string, Sprite> dict = new Dictionary<string, Sprite>();
 			dict["icon"] = iconSprite;
 			iconSprite.Scaling = scaling;
 			
-			return new Icon(game, dict);
+			go.AddComponent(new Icon(game, dict));
+			go.AddComponent(new RendererComponent(game.Display.Renderer));
+			go.AddComponent(new TransformComponent());
+			go.AddComponent(new SpriteComponent(iconSprite));
+			
+			return go;
 		}
 	}
 }

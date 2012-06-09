@@ -7,15 +7,12 @@ namespace Mario
 	/// <summary>
 	/// Controller for player (takes keyboard input etc.)
 	/// </summary>
-	public class DebugController : IController
+	public class DebugController : ControllerComponent
 	{
-		public DebugController()
-		{
-		}
-		
 		//Control the object
-		public void Control(GameObject obj)
+		public override void Update(double frameTime)
 		{
+			GameObjectComponent obj = ((GameObjectComponent)Owner.GetComponent("go"));
 			obj.LeftAction();
 			obj.UpAction();
 		}
@@ -24,11 +21,11 @@ namespace Mario
 		 *  These are left empty since a player controller is fully controlled by the player, and thus don't need to respond to collisions automatically.
 		 */
 		#region Empty collision handlers
-		public void HandleCollision(GameObject obj, BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
+		public override void HandleCollision(GameObjectComponent obj, BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
 		}
 			
-		public void HandleCollision(GameObject obj1, GameObject obj2, CollisionResult collisionResult)
+		public override void HandleCollision(GameObjectComponent obj1, GameObjectComponent obj2, CollisionResult collisionResult)
 		{
 		}
 		#endregion

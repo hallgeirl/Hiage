@@ -12,6 +12,16 @@ SOURCES =  \
 	src/Common/RandomGenerator.cs \
 	src/Common/Timer.cs \
 	src/Common/Vector.cs \
+	src/EntitySystem/DrawableComponent.cs \
+	src/EntitySystem/FrictionComponent.cs \
+	src/EntitySystem/GameObject.cs \
+	src/EntitySystem/GOComponent.cs \
+	src/EntitySystem/GravityComponent.cs \
+	src/EntitySystem/MotionComponent.cs \
+	src/EntitySystem/RendererComponent.cs \
+	src/EntitySystem/SpriteComponent.cs \
+	src/EntitySystem/TransformComponent.cs \
+	src/Exceptions/LoggedException.cs \
 	src/GameLogic/CollisionManager.cs \
 	src/GameLogic/Game.cs \
 	src/GameLogic/GameState.cs \
@@ -19,12 +29,12 @@ SOURCES =  \
 	src/GameLogic/ParallaxBackground.cs \
 	src/GameLogic/ParticleEngine.cs \
 	src/GameLogic/SpatialGrid.cs \
-	src/GameLogic/Sprite.cs \
 	src/GameLogic/TileMap.cs \
 	src/Input/InputManager.cs \
 	src/Rendering/Display.cs \
 	src/Rendering/IRenderable.cs \
 	src/Rendering/Renderer.cs \
+	src/Rendering/Sprite.cs \
 	src/Rendering/Texture.cs \
 	src/Resources/IResourceLoader.cs \
 	src/Resources/Loaders/AudioClipLoader.cs \

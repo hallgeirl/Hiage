@@ -14,7 +14,7 @@ namespace Mario
 		Camera 				camera;
 		PlayerState 		playerInfo;
 		string				mapName;
-		Dictionary<string, Icon> icons = new Dictionary<string, Icon>();
+		Dictionary<string, GameObject> icons = new Dictionary<string, GameObject>();
 		
 		ParallaxBackground	background = null;								 //Background used on this map
 		TileMap 			tileMap;										 //The tiles used on this map
@@ -54,13 +54,16 @@ namespace Mario
 			//Spawn all objects
 			foreach (var o in map.Objects)
 			{
-				GameObject obj = objectFactory.Spawn(o.Name, new Vector(o.X, o.Y), new Vector(0,-100), worldPhysics);
+				GameObject obj = objectFactory.Spawn(o.Name, new Vector(o.X, o.Y), new Vector(0,0), worldPhysics);
 				if (obj != null)
 				{
 					objects.Add(obj);
+					GameObjectComponent go = (GameObjectComponent)obj.GetComponent("go");
+					
 					if (o.Name == "mario")
 					{
-						this.player = (Player)objects[objects.Count-1];
+						this.player = (Player)go;
+						//this.player = (Player)objects[objects.Count-1];
 					}
 				}
 			}
@@ -84,13 +87,15 @@ namespace Mario
 			for (int i = 1; i < objects.Count; i++)
 			{
 				GameObject obj1 = objects[i];
+				GameObjectComponent go1 = (GameObjectComponent)obj1.GetComponent("go");
 				int j = i - 1;
 				bool done = false;
 				
 				do
 				{
 					GameObject obj2 = objects[j];
-					if (obj2.Left > obj1.Left)
+					GameObjectComponent go2 = (GameObjectComponent)obj2.GetComponent("go");
+					if (go1.Left < go2.Left)
 					{
 						objects[j+1] = objects[j];
 						j--;
@@ -101,8 +106,11 @@ namespace Mario
 						done = true;
 				} while (!done);
 					
+				//objects[j+1] = objects[i];
 				objects[j+1] = obj1;
 			}
+			
+			
 		}
 		
 		//Perform all collision tests
@@ -110,19 +118,24 @@ namespace Mario
 		{
 			foreach (var o in objects)
 			{
-				if (!o.CanCollide) continue;
-				CollisionManager.TestCollision(o, tileMap.GetBoundingPolygonsInRegion(o.GetCollisionCheckArea(frameTime), 0), frameTime);
+				GameObjectComponent go = (GameObjectComponent)o.GetComponent("go");
+				if (!go.CanCollide) continue;
+				CollisionManager.TestCollision(go, tileMap.GetBoundingPolygonsInRegion(go.GetCollisionCheckArea(frameTime), 0), frameTime);
 			}
 			
 			SortObjects(frameTime);
 			
 			for (int i = 0; i < objects.Count; i++)
 			{
-				if (!objects[i].CanCollide) continue;
-				for (int j = i+1; j < objects.Count && objects[i].Right >= objects[j].Left; j++)
+				GameObjectComponent go1 = (GameObjectComponent)objects[i].GetComponent("go");
+				if (!go1.CanCollide) continue;
+				for (int j = i+1; j < objects.Count; j++)
 				{
-					if (!objects[j].CanCollide) continue;
-					CollisionManager.TestCollision(objects[i], objects[j], frameTime);
+					GameObjectComponent go2 = (GameObjectComponent)objects[j].GetComponent("go");
+					if (go1.Right < go2.Left) break;
+					if (!go2.CanCollide) continue;
+					CollisionManager.TestCollision(go1, go2, frameTime);
+					
 				}
 			}
 			
@@ -133,8 +146,24 @@ namespace Mario
 		{
 			for (int i = 0; i < objects.Count; i++)
 			{
-				objects[i].Update(frameTime);
-				if (objects[i].Delete)
+				ControllerComponent controller = (ControllerComponent)objects[i].GetComponent("controller");
+				if (controller != null)
+					controller.Update(frameTime);
+					
+				GravityComponent gravity = (GravityComponent)objects[i].GetComponent("gravity");
+				FrictionComponent friction = (FrictionComponent)objects[i].GetComponent("friction");
+				if (gravity != null)
+					gravity.Update(frameTime);
+				if (friction != null)
+					friction.Update(frameTime);
+				
+				MotionComponent motion = (MotionComponent)objects[i].GetComponent("motion");
+				if (motion != null)
+					motion.Update(frameTime);
+				
+				GameObjectComponent go = (GameObjectComponent)objects[i].GetComponent("go");
+				go.Update(frameTime);
+				if (go.Delete)
 				{
 					objects.RemoveAt(i);
 					if (i < objects.Count)
@@ -170,7 +199,14 @@ namespace Mario
 				tileMap.Render(i);
 
 			foreach (GameObject o in objects)
-				o.Render(frameTime);
+			{
+				DrawableComponent dc = (DrawableComponent)o.GetComponent("drawable");
+				RendererComponent r = (RendererComponent)o.GetComponent("renderer");
+				
+				dc.Update(frameTime);
+				if (r != null)
+					r.Update(frameTime);
+			}
 			
 			for (int i = 2; i < tileMap.Layers; i++)
 				tileMap.Render(i);
@@ -181,20 +217,31 @@ namespace Mario
 			game.Display.Renderer.DrawText("x" + playerInfo.Lives, left + 25, top - 16);
 			game.Display.Renderer.DrawText("x" + playerInfo.Coins, right - 30, top - 16);
 			
-			icons["coin"].Position = new Vector(right - 35, top-13);
-			icons["mario"].Position = new Vector(left + 20, top-13);
+			GameObjectComponent coinIcon = (GameObjectComponent)icons["coin"].GetComponent("go");
+			GameObjectComponent marioIcon = (GameObjectComponent)icons["mario"].GetComponent("go");
+			coinIcon.Position = new Vector(right - 35, top-13);
+			marioIcon.Position = new Vector(left + 20, top-13);
 			
 			//render icons
-			foreach (Icon i in icons.Values)
-				i.Render(frameTime);
-			
+			foreach (GameObject i in icons.Values)
+			{
+				DrawableComponent dc = (DrawableComponent)i.GetComponent("drawable");
+				RendererComponent r = (RendererComponent)i.GetComponent("renderer");
+				
+				dc.Update(frameTime);
+				if (r != null)
+					r.Update(frameTime);
+			}
 			//game.Display.Renderer.DrawText("Player BB: " + objects[0].BoundingBox.ToString(), display.RenderedCameraX - display.ViewportWidth/2, display.RenderedCameraY - display.ViewportHeight/2 +16);
 		}
 		
 		public override void Run(double frameTime)
 		{
 			foreach (var o in objects)
-				o.Prepare(frameTime);
+			{
+				GameObjectComponent go = (GameObjectComponent)o.GetComponent("go");
+				go.Prepare(frameTime);
+			}
 			
 			HandleInput(frameTime);
 			Update(frameTime);

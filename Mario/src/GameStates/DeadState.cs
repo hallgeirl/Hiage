@@ -56,7 +56,7 @@ namespace Mario
 				objects.Add(objectFactory.Spawn(o.Name, new Vector(o.X, o.Y), new Vector(0,-100), worldPhysics));
 				if (o.Name == "mario")
 				{
-					this.player = (Player)objects[objects.Count-1];
+					this.player = (Player)objects[objects.Count-1].GetComponent("go");
 				}
 			}
 			
@@ -80,13 +80,13 @@ namespace Mario
 		{
 			for (int i = 1; i < objects.Count; i++)
 			{
-				GameObject obj1 = objects[i];
+				GameObjectComponent obj1 = (GameObjectComponent)objects[i].GetComponent("go");
 				int j = i - 1;
 				bool done = false;
 				
 				do
 				{
-					GameObject obj2 = objects[j];
+					GameObjectComponent obj2 = (GameObjectComponent)objects[j].GetComponent("go");
 					if (obj2.Left > obj1.Left)
 					{
 						objects[j+1] = objects[j];
@@ -98,7 +98,7 @@ namespace Mario
 						done = true;
 				} while (!done);
 					
-				objects[j+1] = obj1;
+				objects[j+1] = objects[i];
 			}
 		}
 		
@@ -107,16 +107,20 @@ namespace Mario
 		{
 			foreach (var o in objects)
 			{
-				CollisionManager.TestCollision(o, tileMap.GetBoundingPolygonsInRegion(o.GetCollisionCheckArea(frameTime), 0), frameTime);
+				GameObjectComponent go = (GameObjectComponent)o.GetComponent("go");
+				CollisionManager.TestCollision(go, tileMap.GetBoundingPolygonsInRegion(go.GetCollisionCheckArea(frameTime), 0), frameTime);
 			}
 			
 			SortObjects(frameTime);
 			
 			for (int i = 0; i < objects.Count; i++)
 			{
-				for (int j = i+1; j < objects.Count && objects[i].Right >= objects[j].Left; j++)
+				GameObjectComponent go1 = (GameObjectComponent)objects[i].GetComponent("go");
+				for (int j = i+1; j < objects.Count; j++)
 				{
-					CollisionManager.TestCollision(objects[i], objects[j], frameTime);
+					GameObjectComponent go2 = (GameObjectComponent)objects[j].GetComponent("go");
+					if (go1.Right >= go2.Left) break;
+					CollisionManager.TestCollision(go1, go2, frameTime);
 				}
 			}
 			
@@ -127,8 +131,9 @@ namespace Mario
 		{
 			for (int i = 0; i < objects.Count; i++)
 			{
-				objects[i].Update(frameTime);
-				if (objects[i].Delete)
+				GameObjectComponent go = (GameObjectComponent)objects[i].GetComponent("go");
+				go.Update(frameTime);
+				if (go.Delete)
 				{
 					objects.RemoveAt(i);
 					if (i < objects.Count)
@@ -164,7 +169,8 @@ namespace Mario
 				tileMap.Render(i);
 
 			foreach (GameObject o in objects)
-				o.Render(frameTime);
+			{
+			}
 			
 			for (int i = 2; i < tileMap.Layers; i++)
 				tileMap.Render(i);
@@ -179,7 +185,11 @@ namespace Mario
 		public override void Run(double frameTime)
 		{
 			foreach (var o in objects)
-				o.Prepare(frameTime);
+			{
+				GameObjectComponent go = (GameObjectComponent)o.GetComponent("go");
+				
+				go.Prepare(frameTime);
+			}
 			
 			HandleInput(frameTime);
 			Update(frameTime);

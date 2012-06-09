@@ -13,14 +13,11 @@ namespace Mario
 		}
 		
 		public Mushroom(Game game, 
-		                    Vector position, 
-		                    Dictionary<string, Sprite> sprites, string defaultSprite, 
-		                    WorldPhysics worldPhysics, ObjectPhysics objectPhysics, 
 		                    Dictionary<string, BoundingPolygon> polygons, 
 		                    ItemType itemType) 
-			: base(game, position, new Vector(0,0), sprites, defaultSprite, new DumbGroundAI(), worldPhysics, objectPhysics, polygons)
+			: base(game, polygons)
 		{
-			CurrentSprite.PlayAnimation(Sprite.DEFAULT_ANIMATION, true);
+			//CurrentSprite.PlayAnimation(Sprite.DEFAULT_ANIMATION, true);
 			MushroomType = itemType;
 		}
 		

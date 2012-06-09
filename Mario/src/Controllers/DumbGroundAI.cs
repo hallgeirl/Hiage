@@ -7,23 +7,20 @@ namespace Mario
 	/// <summary>
 	/// AI controller which only does one thing: Run until it meets a wall, and then turn around.
 	/// </summary>
-	public class DumbGroundAI : IController
+	public class DumbGroundAI : ControllerComponent
 	{
 		int direction = 1;
 		
-		public DumbGroundAI ()
+		public override void Update(double frameTime)
 		{
-		}
-		
-		public void Control(GameObject obj)
-		{
+			GameObjectComponent obj = ((GameObjectComponent)Owner.GetComponent("go"));
 			if (direction == 1)
 				obj.RightAction();
 			else
 				obj.LeftAction();
 		}
 		
-		public void HandleCollision(GameObject obj, BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
+		public override void HandleCollision(GameObjectComponent obj, BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
 		{
 			if (collisionNormal.X > 0.8)
 			{
@@ -43,7 +40,7 @@ namespace Mario
 			}
 		}
 			
-		public void HandleCollision(GameObject obj1, GameObject obj2, CollisionResult collisionResult)
+		public override void HandleCollision(GameObjectComponent obj1, GameObjectComponent obj2, CollisionResult collisionResult)
 		{
 			//if (!(obj2 is Player) && collisionResult.CollisionTime > 1e-10)
 			if (obj2 is BasicGroundEnemy && collisionResult.collisionTime > 1e-10)

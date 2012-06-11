@@ -22,6 +22,10 @@ namespace Engine
 			
 			renderer.Render(drawable.Renderable);
 		}
+		
+		public override void ReceiveMessage (Message message)
+		{
+		}
 	}
 }
 

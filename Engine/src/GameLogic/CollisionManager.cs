@@ -19,11 +19,27 @@ namespace Engine
 		public Vector minimumTranslationVector;
 		// The frame duration used when testing
 		public double frameTime;
-		
-		public Vector hitNormal;
 
+		//Normal for hit surface, and its owner
+		public Vector hitNormal;
+		public int normalOwner;
+		
+		//Object 
+		//public CollidableComponent obj2;
+		
 		//Used internally to determine MTD
 		internal double distance;
+		
+		public static CollisionResult NoCollision
+		{
+			get 
+			{
+				CollisionResult res = new CollisionResult();
+				res.hasIntersected = false; 
+				res.isIntersecting = false;
+				return res;
+			}
+		}
 	}
 	
 	/// <summary>
@@ -270,18 +286,32 @@ namespace Engine
 		/// <summary>
 		/// Test collision against a series of polygons.
 		/// </summary>
-		public static void TestCollision(ICollidable o, List<BoundingPolygon> polygons, double frameTime)
+		public static CollisionResult TestCollision(CollidableComponent o, List<BoundingPolygon> polygons, double frameTime, int axis)
 		{
-			if (polygons.Count == 0) return;
+			CollisionResult finalResult = CollisionResult.NoCollision;
+			
+			if (polygons.Count == 0) 
+			{
+				return finalResult;
+			}
+			
+			Vector velocity;
+			if (axis < 0)
+				velocity = o.Velocity * frameTime;
+			else 
+			{
+				velocity = new Vector(0,0);
+				velocity[axis] = o.Velocity[axis]*frameTime;
+			}
+			
 			
 			//Applying Separating Axis theorem
 			//First find all the axis. They are the union of the object's edge normals, and the polygon's edge normals.
 			//The polygon's edge normals will be retrieved for each polygon that is checked.
 
 			
-			List<Vector>[] edges = {o.BoundingBox.EdgeNormals, null};
+			List<Vector>[] edges = {o.BoundingPolygon.EdgeNormals, null};
 			
-			double remainingFrameTime = 1;
 			int loopCount = 0;
 
 			#if DEBUG_COLLISION_OBJECT_POLYGON
@@ -289,123 +319,120 @@ namespace Engine
 			Log.Write("Testing collision object vs polygon, polygon count: " + polygons.Count, Log.DEBUG);
 			#endif
 			
+				
 			//As long as we may get another collision in this frame
-			while (o.Velocity.DotProduct(o.Velocity) > 0 && remainingFrameTime > 0/* && loopCount < 4*/)
+			BoundingPolygon oldBoundingBox = (BoundingPolygon)o.BoundingPolygon.Clone();
+			oldBoundingBox.Translate(-velocity.X, -velocity.Y);
+			loopCount++;
+			
+			//This is the reference to the first edge we're colliding with. If null at the end, we didn't collide.
+			BoundingPolygon firstCollisionPolygon = null;
+			//The current minimum time until collision
+			double minimumCollisionTime = double.PositiveInfinity;
+
+			//How far have we actually moved this frame?
+			
+			//Set the minimum translation vector to the longest vector possible during a frame
+			//finalResult.minimumTranslationVector = o.Velocity * frameTime;
+			//finalResult.frameTime = frameTime;
+			int finalNormalOwner = -1;
+			
+			//Check each edge
+			foreach (BoundingPolygon p in polygons)
 			{
-				BoundingPolygon oldBoundingBox = (BoundingPolygon)o.BoundingBox.Clone();
-				oldBoundingBox.Translate(-o.Velocity.X*frameTime*remainingFrameTime, -o.Velocity.Y*frameTime*remainingFrameTime);
-				loopCount++;
-				
-				//This is the reference to the first edge we're colliding with. If null at the end, we didn't collide.
-				BoundingPolygon firstCollisionPolygon = null;
-				//The current minimum time until collision
-				double minimumCollisionTime = double.PositiveInfinity;
-				//Final collision results
-				CollisionResult finalResult = new CollisionResult();
-
-				//How far have we actually moved this frame?
-				Vector velocity = o.Velocity * frameTime;
-				
-				//Set the minimum translation vector to the longest vector possible during a frame
-				finalResult.minimumTranslationVector = o.Velocity * frameTime;
-				finalResult.frameTime = frameTime;
-				int finalNormalOwner = -1;
-				
-				//Check each edge
-				foreach (BoundingPolygon p in polygons)
+				/*if (p.Vertices.Count == 2 && p.EdgeNormals[0].DotProduct(o.Velocity) > 0)
 				{
-					/*if (p.Vertices.Count == 2 && p.EdgeNormals[0].DotProduct(o.Velocity) > 0)
-					{
-						#if DEBUG_COLLISION_OBJECT_POLYGON
-						Log.Write("Polygon has only one edge, which faces the same way as the movement direction. Ignoring.", Log.DEBUG);
-						#endif
-						continue;
-					}*/
-					
 					#if DEBUG_COLLISION_OBJECT_POLYGON
-					Log.Write("Object bounding polygon: " + o.BoundingBox, Log.DEBUG);
-					Log.Write("Testing polygon " + p, Log.DEBUG);
+					Log.Write("Polygon has only one edge, which faces the same way as the movement direction. Ignoring.", Log.DEBUG);
 					#endif
-					
-					//Collision results for the current polygon
-					CollisionResult result = new CollisionResult();
-					edges[1] = p.EdgeNormals;
+					continue;
+				}*/
+				
+				#if DEBUG_COLLISION_OBJECT_POLYGON
+				Log.Write("Object bounding polygon: " + o.BoundingPolygon, Log.DEBUG);
+				Log.Write("Testing polygon " + p, Log.DEBUG);
+				#endif
+				
+				//Collision results for the current polygon
+				CollisionResult result = new CollisionResult();
+				result.minimumTranslationVector = velocity;
+				result.frameTime = frameTime;
+				edges[1] = p.EdgeNormals;
 
-					bool separating = false;
-					int normalOwner = -1;
-					
-					for (int i = 0; i < edges.Length; i++)
+				bool separating = false;
+				int normalOwner = -1;
+				
+				for (int i = 0; i < edges.Length; i++)
+				{
+					var poly = edges[i];
+					foreach (Vector _axis in poly)
 					{
-						var poly = edges[i];
-						foreach (Vector axis in poly)
+						// Do the collision test on the polygons
+						testAxis(ProjectPolygon(oldBoundingBox, _axis), ProjectPolygon(p, _axis), velocity, _axis, result, 1, i);
+						if (object.ReferenceEquals(_axis, result.hitNormal))
+							normalOwner = i;
+						
+						if (!result.hasIntersected && !result.isIntersecting) 
 						{
-							// Do the collision test on the polygons
-							testAxis(ProjectPolygon(oldBoundingBox, axis), ProjectPolygon(p, axis), velocity, axis, result, remainingFrameTime, i);
-							if (object.ReferenceEquals(axis, result.hitNormal))
-								normalOwner = i;
-							
-							if (!result.hasIntersected && !result.isIntersecting) 
-							{
-								separating =  true;
-								break;
-							}
-							if (result.isIntersecting && double.IsNegativeInfinity(result.distance)) result.isIntersecting = false;
+							separating =  true;
+							break;
 						}
-						if (separating) break;
+						if (result.isIntersecting && double.IsNegativeInfinity(result.distance)) result.isIntersecting = false;
 					}
-					
-					//Already intersecting
-					if (result.isIntersecting)
+					if (separating) break;
+				}
+				
+				//Already intersecting
+				if (result.isIntersecting)
+				{
+					finalResult = result;
+					finalNormalOwner = normalOwner;
+					minimumCollisionTime = 0;
+					firstCollisionPolygon = p;
+				}
+				//Will intersect with p in the future. 
+				//If we're not already overlapping with another polygon, go ahead and update the current minimum collision time.
+				else if (result.hasIntersected)
+				{
+					//If the collision time is the smallest so far, 
+					if (result.collisionTime < minimumCollisionTime)
 					{
+						minimumCollisionTime = result.collisionTime;
 						finalResult = result;
 						finalNormalOwner = normalOwner;
-						minimumCollisionTime = 0;
 						firstCollisionPolygon = p;
 					}
-					//Will intersect with p in the future. 
-					//If we're not already overlapping with another polygon, go ahead and update the current minimum collision time.
-					else if (result.hasIntersected)
-					{
-						//If the collision time is the smallest so far, 
-						if (result.collisionTime < minimumCollisionTime)
-						{
-							minimumCollisionTime = result.collisionTime;
-							finalResult = result;
-							finalNormalOwner = normalOwner;
-							firstCollisionPolygon = p;
-						}
-					} 
-				}
-				
-				//If we have a first collision, call the collision handler
-				if (firstCollisionPolygon != null)
-				{
-					if (finalResult.isIntersecting)
-						finalResult.minimumTranslationVector = (finalNormalOwner == 0 ? 1 : -1) * Math.Abs(finalResult.distance) * finalResult.hitNormal; //o.Velocity * finalResult.distance * frameTime;
+				} 
+			}
+			
+			//If we have a first collision, call the collision handler
+			if (firstCollisionPolygon != null)
+			{
+				if (finalResult.isIntersecting)
+					finalResult.minimumTranslationVector = (finalNormalOwner == 0 ? 1 : -1) * Math.Abs(finalResult.distance) * finalResult.hitNormal; //o.Velocity * finalResult.distance * frameTime;
 
-					remainingFrameTime -= minimumCollisionTime;
+				//Subtract a small amount to behave correctly when we have small rounding errors.
+				finalResult.collisionTime = minimumCollisionTime; // - 1e-6;//Constants.MinDouble;
+				if (finalNormalOwner != 1)
+					finalResult.hitNormal = -finalResult.hitNormal;
 					
-					//Subtract a small amount to behave correctly when we have small rounding errors.
-					finalResult.collisionTime = minimumCollisionTime; // - 1e-6;//Constants.MinDouble;
-
-					o.Collide(firstCollisionPolygon, finalNormalOwner == 1 ? finalResult.hitNormal : -finalResult.hitNormal, finalResult);
-					#if DEBUG_COLLISION_OBJECT_POLYGON
-					Log.Write("COLLISION." + " Time: " + finalResult.collisionTime + " Normal: " + finalResult.hitNormal + " Remaining: " + remainingFrameTime + " Collision polygon: " + firstCollisionPolygon + " Velocity: " + o.Velocity + " Translation vector: " + finalResult.minimumTranslationVector, Log.DEBUG);
-					collCount++;					
-					#endif
-				}
-				else 
-				{
-					remainingFrameTime = 0;
-					#if DEBUG_COLLISION_OBJECT_POLYGON
-					Log.Write("NO COLLISION.", Log.DEBUG);
-					#endif
-				}
+				#if DEBUG_COLLISION_OBJECT_POLYGON
+				Log.Write("COLLISION." + " Time: " + finalResult.collisionTime + " Normal: " + finalResult.hitNormal + " Remaining: " + remainingFrameTime + " Collision polygon: " + firstCollisionPolygon + " Velocity: " + o.Velocity + " Translation vector: " + finalResult.minimumTranslationVector, Log.DEBUG);
+				collCount++;					
+				#endif
+			}
+			else 
+			{
+				#if DEBUG_COLLISION_OBJECT_POLYGON
+				Log.Write("NO COLLISION.", Log.DEBUG);
+				#endif
 			}
 			
 			#if DEBUG_COLLISION_OBJECT_POLYGON
 			Log.Write("Collision count: " + collCount + "\n", Log.DEBUG);
 			#endif
+			
+			return finalResult;
 		}
 		
 		/// <summary>
@@ -415,8 +442,8 @@ namespace Engine
 		{
 			#if DEBUG_COLLISION_OBJECT_OBJECT
 			Log.Write("Begin collision test object vs object", Log.DEBUG);
-			Log.Write("Bounding box 1: " + o1.BoundingBox.ToString(), Log.DEBUG);
-			Log.Write("Bounding box 2: " + o2.BoundingBox.ToString(), Log.DEBUG);
+			Log.Write("Bounding box 1: " + o1.BoundingPolygon.ToString(), Log.DEBUG);
+			Log.Write("Bounding box 2: " + o2.BoundingPolygon.ToString(), Log.DEBUG);
 			#endif
 			
 			//Calculate relative velocity between o1 and o2, as seen from o1
@@ -429,7 +456,7 @@ namespace Engine
 			bool separating = false;
 			int normalOwner = -1;
 			
-			List<Vector>[] polygons = {o1.BoundingBox.EdgeNormals, o2.BoundingBox.EdgeNormals};
+			List<Vector>[] polygons = {o1.BoundingPolygon.EdgeNormals, o2.BoundingPolygon.EdgeNormals};
 			
 			// Find each edge normal in the bounding polygons, which is used as axes.
 			//foreach (var poly in polygons)
@@ -441,7 +468,7 @@ namespace Engine
 				foreach (var axis in poly)
 				{
 					//Test for collision on one axis
-					testAxis(ProjectPolygon(o1.BoundingBox, axis), ProjectPolygon(o2.BoundingBox, axis), relativeVelocity, axis, result, 1, i);
+					testAxis(ProjectPolygon(o1.BoundingPolygon, axis), ProjectPolygon(o2.BoundingPolygon, axis), relativeVelocity, axis, result, 1, i);
 					
 					if (object.ReferenceEquals(axis, result.hitNormal))
 						normalOwner = i;

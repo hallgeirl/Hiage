@@ -5,8 +5,6 @@ using Engine;
 
 namespace Mario
 {
-
-
 	public class BasicGroundEnemy : Character
 	{
 		public BasicGroundEnemy (Game game, //GameObject attributes
@@ -54,7 +52,7 @@ namespace Mario
 				Accellerate(new Vector(-300, 0));
 		}
 		
-		public override BoundingPolygon BoundingBox 
+		public override BoundingPolygon BoundingPolygon 
 		{
 			get 
 			{

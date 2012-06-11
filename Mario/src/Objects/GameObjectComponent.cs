@@ -70,8 +70,8 @@ namespace Mario
 		//Update this object's position and such
 		public virtual void UpdatePosition(double frameTime)
 		{
-			Position += Velocity*frameTime;
-			remainingFrameTime = 1;
+			//Position += Velocity*frameTime;
+			//remainingFrameTime = 1;
 			
 			//Run the current object state
 			if (currentState != -1)
@@ -86,7 +86,7 @@ namespace Mario
 		
 		#region ICollidable specifics
 		//Bounding box before update
-		public abstract BoundingPolygon BoundingBox
+		public abstract BoundingPolygon BoundingPolygon
 		{
 			get;
 		}
@@ -97,10 +97,10 @@ namespace Mario
 		{
 			double dx = Math.Abs(Velocity.X)*frameTime;
 			double dy = Math.Abs(Velocity.Y)*frameTime;
-			collisionCheckArea.Left = BoundingBox.Left-dx;
-			collisionCheckArea.Right = BoundingBox.Right+dx;
-			collisionCheckArea.Top = BoundingBox.Top+dy;
-			collisionCheckArea.Bottom = BoundingBox.Bottom-dy;
+			collisionCheckArea.Left = BoundingPolygon.Left-dx;
+			collisionCheckArea.Right = BoundingPolygon.Right+dx;
+			collisionCheckArea.Top = BoundingPolygon.Top+dy;
+			collisionCheckArea.Bottom = BoundingPolygon.Bottom-dy;
 			
 			return collisionCheckArea;
 		}
@@ -172,8 +172,8 @@ namespace Mario
 			{
 				TransformComponent transform = (TransformComponent)Owner.GetComponent("transform");
 				transform.Position.Set(value);
-				if (BoundingBox != null)
-					BoundingBox.MoveTo(transform.Position.X, transform.Position.Y);
+				if (BoundingPolygon != null)
+					BoundingPolygon.MoveTo(transform.Position.X, transform.Position.Y);
 			}
 		}
 		
@@ -183,7 +183,7 @@ namespace Mario
 			{ 
 				if (!cachedLeft)
 				{
-					left = Math.Min(BoundingBox.Left, BoundingBox.Left + Velocity.X*frameTime); 
+					left = Math.Min(BoundingPolygon.Left, BoundingPolygon.Left + Velocity.X*frameTime); 
 					cachedLeft = true;
 				}
 				
@@ -197,7 +197,7 @@ namespace Mario
 			{ 
 				if (!cachedRight)
 				{
-					right = Math.Max(BoundingBox.Right, BoundingBox.Right + Velocity.X*frameTime); 
+					right = Math.Max(BoundingPolygon.Right, BoundingPolygon.Right + Velocity.X*frameTime); 
 					cachedRight = true;
 				}
 				
@@ -221,6 +221,10 @@ namespace Mario
 		public override string Family
 		{
 			get { return "go"; }
+		}
+		
+		public override void ReceiveMessage (Message message)
+		{
 		}
 	}
 }

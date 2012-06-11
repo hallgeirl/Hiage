@@ -108,7 +108,7 @@ namespace Mario
 			});
 		}
 		
-		public override BoundingPolygon BoundingBox
+		public override BoundingPolygon BoundingPolygon
 		{
 			get
 			{
@@ -172,7 +172,7 @@ namespace Mario
 			else if (o is BasicGroundEnemy)
 			{
 				BasicGroundEnemy e = (BasicGroundEnemy)o;
-				if (BoundingBox.Bottom >= o.BoundingBox.Top && e.Stompable && !e.Dying)
+				if (BoundingPolygon.Bottom >= o.BoundingPolygon.Top && e.Stompable && !e.Dying)
 				{
 					if (collisionResult.hasIntersected)
 					{

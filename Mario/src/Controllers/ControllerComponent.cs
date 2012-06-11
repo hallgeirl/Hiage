@@ -24,5 +24,9 @@ namespace Mario
 				return "controller";
 			}
 		}
+		
+		public override void ReceiveMessage (Message message)
+		{
+		}
 	}
 }

@@ -24,6 +24,10 @@ namespace Engine
 			MotionComponent motion = (MotionComponent)Owner.GetComponent("motion");
 			motion.Accelleration.Y -= g;
 		}
+		
+		public override void ReceiveMessage (Message message)
+		{
+		}
 	}
 }
 

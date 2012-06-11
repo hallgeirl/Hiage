@@ -57,6 +57,10 @@ namespace Engine
 				    velocity.Y = 0;
 			}
 		}
+		
+		public override void ReceiveMessage (Message message)
+		{
+		}
 	}
 }
 

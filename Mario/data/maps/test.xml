@@ -21,7 +21,8 @@
 		<object>
 			<name>mario</name>
 			<x-pos>46.89453125</x-pos>
-			<y-pos>93.307291666666586</y-pos>
+			<y-pos>130</y-pos>
+			<!--<y-pos>93.307291666666586</y-pos>-->
 		</object>
 		<object>
 			<name>goomba</name>

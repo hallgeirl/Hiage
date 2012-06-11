@@ -12,6 +12,7 @@ namespace Mario
 			game.Initialize(800, 600, false, "Hiage Mario");
 			game.MaxFPS = 60;
 			game.Display.Zoom = 150;
+			//game.SimulationSpeed = 0.1;
 			//Log.OutputStreamWriter = new StreamWriter("log.txt");
 
 			PlayerState initialState = new PlayerState();

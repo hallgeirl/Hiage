@@ -12,15 +12,17 @@ SOURCES =  \
 	src/Common/RandomGenerator.cs \
 	src/Common/Timer.cs \
 	src/Common/Vector.cs \
-	src/EntitySystem/DrawableComponent.cs \
-	src/EntitySystem/FrictionComponent.cs \
+	src/EntitySystem/Components/CollidableComponent.cs \
+	src/EntitySystem/Components/CollisionResponseComponent.cs \
+	src/EntitySystem/Components/DrawableComponent.cs \
+	src/EntitySystem/Components/FrictionComponent.cs \
+	src/EntitySystem/Components/GravityComponent.cs \
+	src/EntitySystem/Components/MotionComponent.cs \
+	src/EntitySystem/Components/RendererComponent.cs \
+	src/EntitySystem/Components/SpriteComponent.cs \
+	src/EntitySystem/Components/TransformComponent.cs \
 	src/EntitySystem/GameObject.cs \
 	src/EntitySystem/GOComponent.cs \
-	src/EntitySystem/GravityComponent.cs \
-	src/EntitySystem/MotionComponent.cs \
-	src/EntitySystem/RendererComponent.cs \
-	src/EntitySystem/SpriteComponent.cs \
-	src/EntitySystem/TransformComponent.cs \
 	src/Exceptions/LoggedException.cs \
 	src/GameLogic/CollisionManager.cs \
 	src/GameLogic/Game.cs \
@@ -31,6 +33,16 @@ SOURCES =  \
 	src/GameLogic/SpatialGrid.cs \
 	src/GameLogic/TileMap.cs \
 	src/Input/InputManager.cs \
+	src/MessagePassing/IMessageRecipient.cs \
+	src/MessagePassing/Message.cs \
+	src/MessagePassing/Messages/RequestMessage.cs \
+	src/MessagePassing/Messages/ResponseMessage.cs \
+	src/MessagePassing/Messages/SetAnimationSpeedFactorMessage.cs \
+	src/MessagePassing/Messages/SetDirectionMessage.cs \
+	src/MessagePassing/Messages/SetHorizontalFlipMessage.cs \
+	src/MessagePassing/Messages/VelocityChangedMessage.cs \
+	src/MessagePassing/Property.cs \
+	src/MessagePassing/VelocityProperty.cs \
 	src/Rendering/Display.cs \
 	src/Rendering/IRenderable.cs \
 	src/Rendering/Renderer.cs \

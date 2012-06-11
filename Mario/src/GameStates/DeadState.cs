@@ -4,6 +4,8 @@ using Engine;
 
 namespace Mario
 {
+#if false
+	
 	/*
 	 *  Game state which handles the "playing" part of the game (tilemap, objects etc.)
 	 */
@@ -108,7 +110,12 @@ namespace Mario
 			foreach (var o in objects)
 			{
 				GameObjectComponent go = (GameObjectComponent)o.GetComponent("go");
-				CollisionManager.TestCollision(go, tileMap.GetBoundingPolygonsInRegion(go.GetCollisionCheckArea(frameTime), 0), frameTime);
+				//CollisionManager.TestCollision(go, tileMap.GetBoundingPolygonsInRegion(go.GetCollisionCheckArea(frameTime), 0), frameTime);
+				CollidableComponent cc = (CollidableComponent)o.GetComponent("collidable");
+				if (cc != null)
+				{
+					cc.TestCollision(tileMap.GetBoundingPolygonsInRegion(go.GetCollisionCheckArea(frameTime), 0), frameTime);
+				}
 			}
 			
 			SortObjects(frameTime);
@@ -199,4 +206,5 @@ namespace Mario
 			Render(frameTime);
 		}
 	}
+#endif
 }

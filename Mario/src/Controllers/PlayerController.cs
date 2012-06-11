@@ -18,17 +18,16 @@ namespace Mario
 		//Control the object
 		public override void Update(double frameTime)
 		{
-			GameObjectComponent obj = ((GameObjectComponent)Owner.GetComponent("go"));
+			ControllerInterfaceComponent controllerInterface = (ControllerInterfaceComponent)Owner.GetComponent("controllerinterface");
+			//GameObjectComponent obj = ((GameObjectComponent)Owner.GetComponent("go"));
 			if (input.KeyPressed(HKey.LeftArrow))
-				obj.LeftAction();
+				controllerInterface.LeftAction();
 			if (input.KeyPressed(HKey.RightArrow))
-				obj.RightAction();
-			
+				controllerInterface.RightAction();
 			if (input.KeyPressed(HKey.UpArrow))
-				obj.UpAction();
-
+				controllerInterface.UpAction();
 			if (input.KeyPressed(HKey.DownArrow))
-				obj.DownAction();
+				controllerInterface.DownAction();
 		}
 		
 		/*

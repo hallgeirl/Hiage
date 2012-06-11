@@ -290,7 +290,7 @@ namespace Engine
 		void Collide(ICollidable o, Vector edgeNormal, CollisionResult collisionResult);
 		
 		// Bounding box for the collidable object before updating
-		BoundingPolygon BoundingBox
+		BoundingPolygon BoundingPolygon
 		{
 			get;
 		}

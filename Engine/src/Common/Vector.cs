@@ -1,5 +1,6 @@
 
 using System;
+using System.ComponentModel;
 
 namespace Engine
 {
@@ -7,24 +8,30 @@ namespace Engine
 	/// <summary>
 	/// Mathematical 2D vector class which can be used for positioning, directions etc.
 	/// </summary>
-	public class Vector : ICloneable
+	public class Vector : ICloneable, INotifyPropertyChanged
 	{
-		double x, y;
+		double[] x = new double[2];
 		
 		public Vector()
 		{
+			x[0] = 0;
+			x[1] = 0;
 		}
 		
 		public Vector(double x, double y)
 		{
-			this.x = x;
-			this.y = y;
+			X = x; 
+			Y = y; 
+			//this.x = x;
+			//this.y = y;
 		}
 		
 		public Vector(Vector v)
 		{
-			this.x = v.x;
-			this.y = v.y;
+			X = v.X; 
+			Y = v.Y; 
+			//this.x = v.x;
+			//this.y = v.y;
 		}
 		
 		/// <summary>
@@ -38,8 +45,9 @@ namespace Engine
 		/// </returns>
 		public Vector Add(Vector v)
 		{
-			x += v.X;
-			y += v.Y;
+			
+			X += v.X;
+			Y += v.Y;
 			
 			return this;
 		}
@@ -55,8 +63,8 @@ namespace Engine
 		/// </returns>
 		public Vector Subtract(Vector v)
 		{
-			x -= v.X;
-			y -= v.Y;
+			x[0] -= v.X;
+			x[1] -= v.Y;
 			
 			return this;
 		}
@@ -72,8 +80,8 @@ namespace Engine
 		/// </returns>
 		public Vector Scale(double scalar)
 		{
-			x *= scalar;
-			y *= scalar;
+			x[0] *= scalar;
+			x[1] *= scalar;
 			
 			return this;
 		}
@@ -81,8 +89,8 @@ namespace Engine
 		//Elementwise multiplication
 		public Vector Multiply(Vector v)
 		{
-			x *= v.X;
-			y *= v.Y;
+			x[0] *= v.X;
+			x[1] *= v.Y;
 			
 			return this;
 		}
@@ -98,7 +106,7 @@ namespace Engine
 		/// </returns>
 		public double DotProduct(Vector v)
 		{
-			return (x * v.X + y * v.Y);
+			return (x[0] * v.X + x[1] * v.Y);
 		}
 		
 		public Vector Normalize()
@@ -121,12 +129,13 @@ namespace Engine
 		
 		public void Set(double x, double y)
 		{
-			this.x = x; this.y = y;
+			X = x; 
+			Y = y;
 		}
 		
 		public void Set(Vector v)
 		{
-			this.x = v.x; this.y = v.y;
+			X = v.x[0]; Y = v.x[1];
 		}
 		
 		public override string ToString()
@@ -135,6 +144,19 @@ namespace Engine
 		}
 		
 		#region Operator overloads
+		public double this[int key]
+		{
+			get
+			{
+				return x[key];
+			}
+			set
+			{
+				x[key] = value;
+				NotifyPropertyChanged(null);
+			}
+		}
+		
 		public static Vector operator +(Vector v1, Vector v2)
 		{
 			return (new Vector(v1.X+v2.X, v1.Y+v2.Y));
@@ -223,11 +245,12 @@ namespace Engine
 		{
 			get
 			{
-				return x;
+				return x[0];
 			}
 			set
 			{
-				x = value;
+				x[0] = value;
+				NotifyPropertyChanged("X");
 			}
 		}
 		
@@ -238,11 +261,12 @@ namespace Engine
 		{
 			get
 			{
-				return y;
+				return x[1];
 			}
 			set
 			{
-				y = value;
+				x[1] = value;
+				NotifyPropertyChanged("Y");
 			}
 		}
 		
@@ -250,7 +274,7 @@ namespace Engine
 		{
 			get
 			{
-				return Math.Sqrt(x*x+y*y);
+				return Math.Sqrt(x[0]*x[0]+x[1]*x[1]);
 			}
 		}
 		
@@ -264,5 +288,18 @@ namespace Engine
 
 		
 		#endregion Properties
+		
+		#region INotifyPropertyChanged
+		
+		private void NotifyPropertyChanged(string property)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, null);
+//				PropertyChanged(new PropertyChangedEventArgs(property));
+		}
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		#endregion
 	}
 }

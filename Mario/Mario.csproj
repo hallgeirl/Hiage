@@ -65,6 +65,24 @@
     <Compile Include="src\Controllers\MarioDiesController.cs" />
     <Compile Include="src\Objects\GameObjectComponent.cs" />
     <Compile Include="src\Controllers\ControllerComponent.cs" />
+    <Compile Include="src\Components\ControllerInterfaceComponent.cs" />
+    <Compile Include="src\Components\MarioControllerInterfaceComponent.cs" />
+    <Compile Include="src\Components\ObjectStates\InAirState.cs" />
+    <Compile Include="src\CollisionHandlers\PhysicalObjectCollisionHandler.cs" />
+    <Compile Include="src\CollisionHandlers\InAirCollisionHandler.cs" />
+    <Compile Include="src\Messages\CollidedWithGroundMessage.cs" />
+    <Compile Include="src\Components\ObjectStates\MovementAnimationState.cs" />
+    <Compile Include="src\Components\ObjectStates\ObjectState.cs" />
+    <Compile Include="src\Components\ObjectStates\RunState.cs" />
+    <Compile Include="src\Components\ObjectStates\StandState.cs" />
+    <Compile Include="src\Components\ObjectStates\WalkState.cs" />
+    <Compile Include="src\Components\StateMachineComponent.cs" />
+    <Compile Include="src\Messages\SetStateMessage.cs" />
+    <Compile Include="src\Messages\ControlIssuedMessage.cs" />
+    <Compile Include="src\Messages\LandedMessage.cs" />
+    <Compile Include="src\Messages\InAirMessage.cs" />
+    <Compile Include="src\Components\ObjectPropertiesComponent.cs" />
+    <Compile Include="src\Components\SpeedLimitComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj">
@@ -74,5 +92,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\GameStates\" />
+    <Folder Include="src\Components\" />
+    <Folder Include="src\Components\ObjectStates\" />
+    <Folder Include="src\CollisionHandlers\" />
+    <Folder Include="src\Messages\" />
   </ItemGroup>
 </Project>

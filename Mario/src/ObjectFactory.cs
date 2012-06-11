@@ -63,22 +63,61 @@ namespace Mario
 			switch (obj.Type)
 			{
 			case "player":
+			{
 				go.AddComponent(new Player(game, boundingPolygons, runSpeed, maxSpeed, state.PlayerState));
 				go.AddComponent(new PlayerController(game.Input));
+				go.AddComponent(new MarioControllerInterfaceComponent());
 				go.AddComponent(new GravityComponent(worldPhysics.Gravity));
 				go.AddComponent(new FrictionComponent(worldPhysics.GroundFrictionFactor * objectPhysics.Friction, true, false));
+				
+				//collision
+				CollisionResponseComponent cr = new CollisionResponseComponent();
+				cr.AddHandler(new PhysicalObjectCollisionHandler());
+				cr.AddHandler(new InAirCollisionHandler());
+				go.AddComponent(cr);
+				go.AddComponent(new CollidableComponent(boundingPolygons["small-standing"]));
+				
+				//states
+				StateMachineComponent su = new StateMachineComponent();
+				go.AddComponent(su);
+				su.AddState(new WalkState(su, runSpeed));
+				su.AddState(new RunState(su,runSpeed));
+				su.AddState(new StandState(su));
+				su.AddState(new InAirState(su));
+
+				go.BroadcastMessage(new SetStateMessage("state_stand"));
+				                   
+				
 				break;
-				//return new Player(position, velocity, sprite, game.Display.Renderer, new PlayerController(game.Input), worldPhysics, objectPhysics, boundingPolygons, runSpeed, maxSpeed, state.PlayerState);
+			}
 			
 			case "enemy":
 				switch (obj.Name)
 				{
 				case "goomba":
+				{
 					go.AddComponent(new BasicGroundEnemy(game, boundingPolygons, runSpeed, maxSpeed));
 					go.AddComponent(new DumbGroundAI());
 					go.AddComponent(new GravityComponent(worldPhysics.Gravity));
 					go.AddComponent(new FrictionComponent(worldPhysics.GroundFrictionFactor * objectPhysics.Friction, true, false));
+				
+					StateMachineComponent su = new StateMachineComponent();
+					go.AddComponent(su);
+					su.AddState(new WalkState(su, runSpeed));
+					su.AddState(new RunState(su,runSpeed));
+					su.AddState(new StandState(su));
+					su.AddState(new InAirState(su));
+	
+					go.AddComponent(new SpeedLimitComponent(maxSpeed));
+					
+					//collision
+					CollisionResponseComponent cr = new CollisionResponseComponent();
+					cr.AddHandler(new PhysicalObjectCollisionHandler());
+					cr.AddHandler(new InAirCollisionHandler());
+					go.AddComponent(cr);
+					go.AddComponent(new CollidableComponent(boundingPolygons["normal"]));
 					break;
+				}
 				default:
 					Log.Write("Unknown enemy object name: " + obj.Name, Log.WARNING);
 					break;

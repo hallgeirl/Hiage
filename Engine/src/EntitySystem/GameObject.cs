@@ -5,8 +5,21 @@ namespace Engine
 {
 	public class GameObject
 	{
+		public delegate void MessageHandler(object messageData);
+		private class MessageSubscriber
+		{
+			public MessageSubscriber(GOComponent component, MessageHandler handler)
+			{
+				this.messageHandler = handler;
+				this.component = component;
+			}
+			
+			public GOComponent component;
+			public MessageHandler messageHandler;
+		}
 		#region Private fields
 		Dictionary<string, GOComponent> components;
+		Dictionary<int, List<MessageSubscriber>> messageSubscribers;
 		#endregion
 		
 		#region Properties
@@ -17,13 +30,16 @@ namespace Engine
 		}
 		#endregion
 		
+
 		public GameObject (string objectName)
 		{
 			ObjectName = objectName;
 			
 			components = new Dictionary<string, GOComponent>();
+			messageSubscribers = new Dictionary<int, List<MessageSubscriber>>();
 		}
 		
+		#region Add/remove components
 		/// <summary>
 		/// Adds the component.
 		/// </summary>
@@ -92,6 +108,62 @@ namespace Engine
 			else
 				return null;
 		}
+		#endregion
+		
+		#region Messaging
+		static int maxMessageID = 1;
+		static object messageIDLock = new object();
+		public static int RegisterMessage()
+		{
+			int id;
+			lock (messageIDLock)
+			{
+				id = maxMessageID;
+				maxMessageID++;
+			}
+			return id;
+		}
+		
+		public void Subscribe(int message, GOComponent component, MessageHandler handler) 
+		{
+			if (!messageSubscribers.ContainsKey(message))
+				messageSubscribers[message] = new List<MessageSubscriber>();
+				
+			messageSubscribers[message].Add(new MessageSubscriber(component, handler));
+		}
+		
+		public void Unsubscribe(int message, GOComponent component)
+		{
+			MessageSubscriber mm = null;
+			foreach(MessageSubscriber m in messageSubscribers[message])
+			{
+				if (m.component == component)
+				{
+					mm = m;
+					break;
+				}
+			}
+			messageSubscribers[message].Remove(mm);
+		}
+		
+		public void SendMessage(int message, object messageData)
+		{
+			foreach(MessageSubscriber m in messageSubscribers[message])
+			{
+				m.messageHandler(messageData);
+			}
+		}
+		
+		public void BroadcastMessage(Message message)
+		{
+			foreach (IMessageRecipient c in components.Values)
+			{
+				c.ReceiveMessage(message);
+			}
+		}
+		
+		#endregion
+		
 	}
 }
 

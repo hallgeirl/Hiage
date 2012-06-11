@@ -4,6 +4,12 @@ namespace Engine
 {
 	public abstract class DrawableComponent : GOComponent
 	{
+		public static int PlayAnimationMessage;
+		static DrawableComponent()
+		{
+			PlayAnimationMessage = GameObject.RegisterMessage();
+		}
+		
 		public DrawableComponent () : base()
 		{
 		}
@@ -16,6 +22,10 @@ namespace Engine
 		public abstract IRenderable Renderable
 		{
 			get; 
+		}
+		
+		public override void ReceiveMessage (Message message)
+		{
 		}
 	}
 }

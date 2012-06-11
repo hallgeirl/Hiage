@@ -13,7 +13,6 @@ namespace Mario
 		Display 			display;
 		Camera 				camera;
 		PlayerState 		playerInfo;
-		string				mapName;
 		Dictionary<string, GameObject> icons = new Dictionary<string, GameObject>();
 		
 		ParallaxBackground	background = null;								 //Background used on this map
@@ -35,7 +34,7 @@ namespace Mario
 			
 			this.game = game;
 			this.display = game.Display;
-			this.mapName = mapName;
+			//this.mapName = mapName;
 //			game.Display.CameraX = 50;
 			//game.Display.CameraY = 100;
 			
@@ -54,6 +53,9 @@ namespace Mario
 			//Spawn all objects
 			foreach (var o in map.Objects)
 			{
+				//TODO: debug
+				//if (!(o.Name == "mario")) continue;
+				
 				GameObject obj = objectFactory.Spawn(o.Name, new Vector(o.X, o.Y), new Vector(0,0), worldPhysics);
 				if (obj != null)
 				{
@@ -116,12 +118,6 @@ namespace Mario
 		//Perform all collision tests
 		public void PerformCollisionTests(double frameTime)
 		{
-			foreach (var o in objects)
-			{
-				GameObjectComponent go = (GameObjectComponent)o.GetComponent("go");
-				if (!go.CanCollide) continue;
-				CollisionManager.TestCollision(go, tileMap.GetBoundingPolygonsInRegion(go.GetCollisionCheckArea(frameTime), 0), frameTime);
-			}
 			
 			SortObjects(frameTime);
 			
@@ -135,7 +131,6 @@ namespace Mario
 					if (go1.Right < go2.Left) break;
 					if (!go2.CanCollide) continue;
 					CollisionManager.TestCollision(go1, go2, frameTime);
-					
 				}
 			}
 			
@@ -146,23 +141,51 @@ namespace Mario
 		{
 			for (int i = 0; i < objects.Count; i++)
 			{
+				GameObject o = objects[i];
 				ControllerComponent controller = (ControllerComponent)objects[i].GetComponent("controller");
-				if (controller != null)
-					controller.Update(frameTime);
-					
 				GravityComponent gravity = (GravityComponent)objects[i].GetComponent("gravity");
 				FrictionComponent friction = (FrictionComponent)objects[i].GetComponent("friction");
+				MotionComponent motion = (MotionComponent)objects[i].GetComponent("motion");
+				GameObjectComponent go = (GameObjectComponent)objects[i].GetComponent("go");
+				CollidableComponent cc = (CollidableComponent)o.GetComponent("collidable");
+				CollisionResponseComponent cr = (CollisionResponseComponent)objects[i].GetComponent("collisionresponse");
+				TransformComponent tr = (TransformComponent)o.GetComponent("transform");
+				StateMachineComponent stateUpdater = (StateMachineComponent)o.GetComponent("stateupdater");
+				SpeedLimitComponent speedlimit = (SpeedLimitComponent)o.GetComponent("speedlimit");
+				
+				if (controller != null)
+					controller.Update(frameTime);
 				if (gravity != null)
 					gravity.Update(frameTime);
 				if (friction != null)
 					friction.Update(frameTime);
 				
-				MotionComponent motion = (MotionComponent)objects[i].GetComponent("motion");
-				if (motion != null)
-					motion.Update(frameTime);
+				//do each axis separately
+				for (int axis = 0; axis <= 1; axis++)
+				{
+					if (motion != null)
+						motion.Update(frameTime, axis);
+					
+					if (speedlimit != null)
+						speedlimit.Update(frameTime);
+						
+					if (tr != null)
+						tr.Update(frameTime, axis);
+					
+					if (cc != null)
+					{
+						cc.Update(frameTime);
+						cc.TestCollision(tileMap.GetBoundingPolygonsInRegion(cc.GetCollisionCheckArea(frameTime), 0), frameTime, axis);
+					}
+					if (cr != null)
+						cr.Update(frameTime, axis);
+				}	
 				
-				GameObjectComponent go = (GameObjectComponent)objects[i].GetComponent("go");
-				go.Update(frameTime);
+				if (stateUpdater != null)
+					stateUpdater.Update(frameTime);
+				
+				//go.Update(frameTime);
+					
 				if (go.Delete)
 				{
 					objects.RemoveAt(i);
@@ -244,6 +267,7 @@ namespace Mario
 			}
 			
 			HandleInput(frameTime);
+			
 			Update(frameTime);
 			
 			PerformCollisionTests(frameTime);

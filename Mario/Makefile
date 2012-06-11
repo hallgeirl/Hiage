@@ -3,6 +3,19 @@ CONFIG=DEBUG_X86
 # Source files
 SOURCES =  \
 	src/Camera.cs \
+	src/CollisionHandlers/InAirCollisionHandler.cs \
+	src/CollisionHandlers/PhysicalObjectCollisionHandler.cs \
+	src/Components/ControllerInterfaceComponent.cs \
+	src/Components/MarioControllerInterfaceComponent.cs \
+	src/Components/ObjectPropertiesComponent.cs \
+	src/Components/ObjectStates/InAirState.cs \
+	src/Components/ObjectStates/MovementAnimationState.cs \
+	src/Components/ObjectStates/ObjectState.cs \
+	src/Components/ObjectStates/RunState.cs \
+	src/Components/ObjectStates/StandState.cs \
+	src/Components/ObjectStates/WalkState.cs \
+	src/Components/SpeedLimitComponent.cs \
+	src/Components/StateMachineComponent.cs \
 	src/Controllers/ControllerComponent.cs \
 	src/Controllers/DebugController.cs \
 	src/Controllers/DumbGroundAI.cs \
@@ -13,6 +26,11 @@ SOURCES =  \
 	src/GameStates/MarioGameState.cs \
 	src/Helpers.cs \
 	src/Main.cs \
+	src/Messages/CollidedWithGroundMessage.cs \
+	src/Messages/ControlIssuedMessage.cs \
+	src/Messages/InAirMessage.cs \
+	src/Messages/LandedMessage.cs \
+	src/Messages/SetStateMessage.cs \
 	src/ObjectFactory.cs \
 	src/Objects/BasicGroundEnemy.cs \
 	src/Objects/Character.cs \

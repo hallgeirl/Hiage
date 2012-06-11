@@ -96,14 +96,26 @@
     <Compile Include="src\EntitySystem\GOComponent.cs" />
     <Compile Include="src\EntitySystem\GameObject.cs" />
     <Compile Include="src\Exceptions\LoggedException.cs" />
-    <Compile Include="src\EntitySystem\RendererComponent.cs" />
     <Compile Include="src\Rendering\Sprite.cs" />
-    <Compile Include="src\EntitySystem\DrawableComponent.cs" />
-    <Compile Include="src\EntitySystem\SpriteComponent.cs" />
-    <Compile Include="src\EntitySystem\TransformComponent.cs" />
-    <Compile Include="src\EntitySystem\GravityComponent.cs" />
-    <Compile Include="src\EntitySystem\MotionComponent.cs" />
-    <Compile Include="src\EntitySystem\FrictionComponent.cs" />
+    <Compile Include="src\EntitySystem\Components\CollidableComponent.cs" />
+    <Compile Include="src\EntitySystem\Components\CollisionResponseComponent.cs" />
+    <Compile Include="src\EntitySystem\Components\DrawableComponent.cs" />
+    <Compile Include="src\EntitySystem\Components\FrictionComponent.cs" />
+    <Compile Include="src\EntitySystem\Components\GravityComponent.cs" />
+    <Compile Include="src\EntitySystem\Components\MotionComponent.cs" />
+    <Compile Include="src\EntitySystem\Components\RendererComponent.cs" />
+    <Compile Include="src\EntitySystem\Components\SpriteComponent.cs" />
+    <Compile Include="src\EntitySystem\Components\TransformComponent.cs" />
+    <Compile Include="src\MessagePassing\IMessageRecipient.cs" />
+    <Compile Include="src\MessagePassing\Message.cs" />
+    <Compile Include="src\MessagePassing\Messages\VelocityChangedMessage.cs" />
+    <Compile Include="src\MessagePassing\Messages\SetDirectionMessage.cs" />
+    <Compile Include="src\MessagePassing\Messages\SetHorizontalFlipMessage.cs" />
+    <Compile Include="src\MessagePassing\Messages\SetAnimationSpeedFactorMessage.cs" />
+    <Compile Include="src\MessagePassing\Property.cs" />
+    <Compile Include="src\MessagePassing\VelocityProperty.cs" />
+    <Compile Include="src\MessagePassing\Messages\RequestMessage.cs" />
+    <Compile Include="src\MessagePassing\Messages\ResponseMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -115,6 +127,9 @@
     <Folder Include="src\Audio\" />
     <Folder Include="src\EntitySystem\" />
     <Folder Include="src\Exceptions\" />
+    <Folder Include="src\EntitySystem\Components\" />
+    <Folder Include="src\MessagePassing\" />
+    <Folder Include="src\MessagePassing\Messages\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

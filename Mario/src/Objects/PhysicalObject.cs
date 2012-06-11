@@ -46,17 +46,6 @@ namespace Mario
 		
 		#endregion
 		
-		/*public override void UpdateVelocity(double frameTime)
-		{
-			base.UpdateVelocity(frameTime);
-			
-			//Pre-calculate the actual friction (based on world- and object physics attributes)
-			//double friction = objectPhysics.Friction*worldPhysics.GroundFrictionFactor;
-			
-			if (Velocity.X <= friction*frameTime && Velocity.X >= -friction*frameTime)
-				Velocity.X = 0;
-		}*/
-		
 		public override void Update(double frameTime)
 		{
 			base.Update(frameTime);
@@ -67,50 +56,6 @@ namespace Mario
 				OnGround = false;
 				OnFall();
 			}
-		}
-		
-		//Handle collisions against edges
-		public override void Collide(BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
-		{
-			//if (collisionResult.isIntersecting) return;
-			
-			base.Collide(p, collisionNormal, collisionResult);
-			
-			// If intersecting, push back
-			if (collisionResult.isIntersecting)
-			{
-				Position += collisionResult.minimumTranslationVector;
-			}
-			else 
-			{
-				remainingFrameTime -= collisionResult.collisionTime;
-
-				if (collisionResult.hasIntersected)
-					Position -= (1-collisionResult.collisionTime + 1e-6) * Velocity * frameTime;
-				else
-					Position -= collisionResult.minimumTranslationVector;
-
-				//Velocity = Velocity - ((1.0+objectPhysics.Elasticity)*Velocity.DotProduct(collisionNormal))*collisionNormal;
-				Velocity = Velocity - ((1.0+0)*Velocity.DotProduct(collisionNormal))*collisionNormal;
-				Position += remainingFrameTime * Velocity * frameTime;
-
-   				/*
-				 * Run the event handlers
-				 */
-				if (Math.Abs(collisionNormal.X) > 0.8)
-					OnCollidedWithWall();
-				
-				if (collisionNormal.Y > 0.5)
-				{
-					if (!OnGround)
-					{
-						OnLanded();
-						OnGround = true;
-					}
-					inAirTimer.Restart();
-				}
-			}
-		//	}
 		}
 		
 		#region Properties

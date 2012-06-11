@@ -31,7 +31,7 @@ namespace Mario
 		}
 		
 		
-		public override BoundingPolygon BoundingBox 
+		public override BoundingPolygon BoundingPolygon 
 		{
 			get 
 			{

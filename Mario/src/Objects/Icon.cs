@@ -18,7 +18,7 @@ namespace Mario
 		public override void RightAction() {}
 		
 				//Bounding box before update
-		public override BoundingPolygon BoundingBox
+		public override BoundingPolygon BoundingPolygon
 		{
 			get 
 			{

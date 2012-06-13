@@ -3,21 +3,15 @@ using Engine;
 
 namespace Mario
 {
-	public class MarioControllerInterfaceComponent : ControllerInterfaceComponent
+	public class GroundEnemyInterfaceComponent : ControllerInterfaceComponent
 	{
-		private bool onGround = true;
-		public MarioControllerInterfaceComponent ()
+		bool onGround;
+		public GroundEnemyInterfaceComponent ()
 		{
 		}
 		
 		public override void UpAction()
 		{
-			MotionComponent motion = (MotionComponent)Owner.GetComponent("motion");
-			
-			if (motion != null && onGround)
-			{
-				motion.Velocity.Y = 200;
-			}
 				
 			/*if (OnGround)
 			{
@@ -42,10 +36,7 @@ namespace Mario
 		
 		public override void LeftAction()
 		{
-			MotionComponent motion = (MotionComponent)Owner.GetComponent("motion");
-			
-			if (motion != null)
-				motion.Accelleration.X -= 400;
+			Accelleration.X -= 400;
 			/*if (OnGround)
 			{
 				if (!crouching)
@@ -57,8 +48,7 @@ namespace Mario
 		
 		public override void RightAction()
 		{
-			MotionComponent motion = (MotionComponent)Owner.GetComponent("motion");
-			motion.Accelleration.X += 400;
+			Accelleration.X += 400;
 			/*if (OnGround)
 			{
 				if (!crouching)
@@ -70,11 +60,28 @@ namespace Mario
 		
 		public override void ReceiveMessage (Message message)
 		{
+			base.ReceiveMessage(message);
+			
 			if (message is InAirMessage)
 				onGround = false;
 			else if (message is LandedMessage)
 				onGround = true;
+			else if (message is VelocityChangedMessage)
+				Velocity = ((VelocityChangedMessage)message).Velocity;
+			else if (message is AccellerationChangedMessage)
+				Accelleration = ((AccellerationChangedMessage)message).Accelleration;
 		}
+		
+		private Vector Accelleration
+		{
+			get;set;
+		}
+		
+		private Vector Velocity
+		{
+			get;set;
+		}
+		
 	}
 }
 

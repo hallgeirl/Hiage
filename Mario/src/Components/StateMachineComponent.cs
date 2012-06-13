@@ -7,25 +7,22 @@ namespace Mario
 	public class StateMachineComponent : GOComponent
 	{
 		private ObjectState currentState;
-		private Dictionary<string, ObjectState> states;
+		private Dictionary<string, ObjectState> states = new Dictionary<string, ObjectState>();
 		
-		public static int StateChangedMessage;
-		static StateMachineComponent()
+		public StateMachineComponent(ComponentDescriptor descriptor, ResourceManager resources) : base(descriptor, resources)
 		{
-			StateChangedMessage = GameObject.RegisterMessage();
-		}
+		}	
 		
-		public StateMachineComponent() : base()
+		private ObjectState CurrentState
 		{
-			OwnerSet += delegate 
-			{
-				Owner.Subscribe(StateChangedMessage, this, delegate(object messageData) 
-                {
-					currentState = (ObjectState)messageData;
-				});
-			};
-			
-			states = new Dictionary<string, ObjectState>();
+			get { return currentState; }
+			set 
+			{ 
+				currentState = value; 
+				if (StateChanged != null) 
+					StateChanged(this, new EventArgs()); 
+				currentState.ActivateState();
+			}
 		}
 		
 		public override string Family 
@@ -47,21 +44,17 @@ namespace Mario
 		
 		public override void Update (double frameTime)
 		{
-			if (currentState != null)
-				currentState.Update(frameTime);
+			if (CurrentState != null)
+				CurrentState.Update(frameTime);
 		}
 		
-		public void SendMessage(Message message)
-		{
-			ReceiveMessage(message);
-		}
 		
 		public override void ReceiveMessage (Message message)
 		{
 			if (message is SetStateMessage)
-				currentState = states[((SetStateMessage)message).StateID];
+				CurrentState = states[((SetStateMessage)message).StateID];
 			
-			else if (currentState != null)
+			else if (CurrentState != null)
 			{
 				if (message is VelocityChangedMessage)
 				{
@@ -69,9 +62,40 @@ namespace Mario
 						s.ReceiveMessage(message);
 				}
 				else
-					currentState.ReceiveMessage(message);
+					CurrentState.ReceiveMessage(message);
 			}
 		}
+			
+		protected override void LoadFromDescriptor (ComponentDescriptor descriptor)
+		{
+			if (descriptor.Name != "statemachine")
+				throw new LoggedException("Cannot load StateMachineComponent from descriptor " + descriptor.Name);
+				
+			foreach (ComponentDescriptor s in descriptor.Subcomponents)
+			{
+				switch ((string)s["id"])
+				{
+				case "stand":
+					AddState(new StandState(this));
+					break;
+				case "walk":
+					AddState(new WalkState(this, double.Parse(s["runspeed"])));
+					break;
+				case "run":
+					AddState(new RunState(this, double.Parse(s["runspeed"])));
+					break;
+				case "inair":
+					AddState(new InAirState(this));
+					break;
+				}
+			}
+			
+			if (descriptor.Attributes.ContainsKey("default"))
+				CurrentState = states[descriptor["default"]];
+		}
+		
+		public event EventHandler StateChanged;
+		
 	}
 }
 

@@ -9,9 +9,13 @@ namespace Mario
 	/// </summary>
 	public abstract class ControllerComponent : GOComponent
 	{
-		//Collision response
-		public abstract void HandleCollision(GameObjectComponent obj, BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult);
-		public abstract void HandleCollision(GameObjectComponent obj1, GameObjectComponent obj2, CollisionResult collisionResult);
+		public ControllerComponent()
+		{
+		}
+		
+//		public ControllerComponent(ComponentDescriptor descriptor, ResourceManager resources) : base(descriptor, resources)
+//		{
+//		}
 		
 		//Control the object (decide what to do the next frame)
 		public override void Update (double frameTime)
@@ -28,5 +32,12 @@ namespace Mario
 		public override void ReceiveMessage (Message message)
 		{
 		}
+		
+		protected override void LoadFromDescriptor (ComponentDescriptor descriptor)
+		{
+			if (descriptor.Name != "controller")
+				throw new LoggedException("Cannot load ControllerComponent from descriptor " + descriptor.Name);
+		}
+		
 	}
 }

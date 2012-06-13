@@ -13,26 +13,35 @@ namespace Mario
 		
 		public override void ReceiveMessage (Message message)
 		{
-			if (message is CollidedWithGroundMessage)
-				framesOnGround = 0;
 			
-			if (message is VelocityChangedMessage)
+			if (message is CollisionEventMessage)
 			{
-				Velocity = ((VelocityChangedMessage)message).Velocity;
-				
-				if (Velocity.X < -1e-10)
-					Owner.Owner.BroadcastMessage(new SetHorizontalFlipMessage(true));
-				else if (Velocity.X > 1e-10)
-					Owner.Owner.BroadcastMessage(new SetHorizontalFlipMessage(false));
-				
-				Owner.Owner.BroadcastMessage(new SetAnimationSpeedFactorMessage(Math.Abs(Velocity.X)*5/400+0.1));
+				CollisionResult result = ((CollisionEventMessage)message).Result;
+				if (result.hasIntersected && result.hitNormal.Y > 0.1)
+					framesOnGround = 0;
 			}
+			
+//			if (message is CollidedWithGroundMessage)
+//				framesOnGround = 0;
+//			
+			if (message is VelocityChangedMessage)
+				Velocity = ((VelocityChangedMessage)message).Velocity;
 		}
 		
 		protected Vector Velocity
 		{
 			get; 
 			private set;
+		}
+		
+		public override void Update(double frameTime)
+		{
+			if (Velocity.X < -1e-10)
+				Owner.Owner.BroadcastMessage(new SetHorizontalFlipMessage(true));
+			else if (Velocity.X > 1e-10)
+				Owner.Owner.BroadcastMessage(new SetHorizontalFlipMessage(false));
+				
+			Owner.Owner.BroadcastMessage(new SetAnimationSpeedFactorMessage(Math.Abs(Velocity.X)*5/400+0.1));
 		}
 	}
 }

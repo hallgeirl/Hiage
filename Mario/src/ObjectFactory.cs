@@ -30,147 +30,80 @@ namespace Mario
 			return val;
 		}
 		
+		private GOComponent SpawnComponent(ComponentDescriptor descriptor)
+		{
+			switch (descriptor.Name)
+			{
+			case "sprites":
+				return new SpriteComponent(descriptor, game.Resources);
+			case "friction":
+				return new FrictionComponent(descriptor, game.Resources, true, false);
+			case "gravity":
+				return new GravityComponent(descriptor, game.Resources, 500);
+			case "transform":
+				return new TransformComponent(descriptor, game.Resources, new Vector(0,0));
+			case "motion":
+				return new MotionComponent(descriptor, game.Resources);
+			case "renderer":
+				return new RendererComponent(descriptor, game.Resources, game.Display.Renderer);
+			case "statemachine":
+				return new StateMachineComponent(descriptor, game.Resources);
+			case "speedlimit":
+				return new SpeedLimitComponent(descriptor, game.Resources);
+			case "collidable":
+				return new CollidableComponent(descriptor, game.Resources);
+			case "collisionresponse":
+				return new CollisionResponseComponent(descriptor, game.Resources);
+			case "physicalobjectcollisionresponse":
+				return new PhysicalObjectCollisionResponseComponent(descriptor, game.Resources);
+			case "mariointerface":
+				return new MarioInterfaceComponent(descriptor, game.Resources);
+			case "groundenemyinterface":
+				return new GroundEnemyInterfaceComponent();
+			case "groundai":
+				return new DumbGroundAIComponent();
+			}
+			return null;
+		}
+		
 		public GameObject Spawn(string objectName, Vector position, Vector velocity, WorldPhysics worldPhysics)
 		{
 			ObjectDescriptor obj = game.Resources.GetObjectDescriptor(objectName);
-			Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
-			foreach (var s in obj.Sprites)
-			{
-				SpriteDescriptor spriteDesc = game.Resources.GetSpriteDescriptor(s.Value);
-				sprites[s.Key] = new Sprite(spriteDesc, game.Resources);
-				sprites[s.Key].PlayAnimation(spriteDesc.DefaultAnimation, false);
-			}
 			//Sprite sprites = (string.IsNullOrEmpty(obj.Sprite) ? null : new Sprite(game.Resources.GetSpriteDescriptor(obj.Sprite), game.Resources));
-			ObjectPhysics objectPhysics = ObjectPhysics.DefaultObjectPhysics;
-			double runSpeed = double.PositiveInfinity, maxSpeed = double.PositiveInfinity;
+//			ObjectPhysics objectPhysics = ObjectPhysics.DefaultObjectPhysics;
 			
-			//Get any physical attributes for this object
-			objectPhysics.Elasticity = TryGetDoubleProperty(obj, "elasticity");
-			objectPhysics.Friction = TryGetDoubleProperty(obj, "friction");
-							
-			runSpeed = TryGetDoubleProperty(obj, "run-speed");
-			maxSpeed = TryGetDoubleProperty(obj, "max-speed");
+			GameObject go = new GameObject(obj.Name);
 			
-			//Clone the bounding polygon dictionary
-			Dictionary<string, BoundingPolygon> boundingPolygons = new Dictionary<string, BoundingPolygon>();
-			foreach (var key in obj.BoundingPolygons.Keys)
+			foreach (ComponentDescriptor c in obj.Components)
 			{
-				boundingPolygons[key] = (BoundingPolygon)obj.BoundingPolygons[key].Clone();
+				go.AddComponent(SpawnComponent(c));
 			}
 			
-			GameObject go = new GameObject(obj.Type);
+			TransformComponent tr = (TransformComponent)go.GetComponent("transform");
+			if (tr != null)
+				tr.Position.Set(position);
 			
-			switch (obj.Type)
-			{
-			case "player":
-			{
-				go.AddComponent(new Player(game, boundingPolygons, runSpeed, maxSpeed, state.PlayerState));
-				go.AddComponent(new PlayerController(game.Input));
-				go.AddComponent(new MarioControllerInterfaceComponent());
-				go.AddComponent(new GravityComponent(worldPhysics.Gravity));
-				go.AddComponent(new FrictionComponent(worldPhysics.GroundFrictionFactor * objectPhysics.Friction, true, false));
-				
-				//collision
-				CollisionResponseComponent cr = new CollisionResponseComponent();
-				cr.AddHandler(new PhysicalObjectCollisionHandler());
-				cr.AddHandler(new InAirCollisionHandler());
-				go.AddComponent(cr);
-				go.AddComponent(new CollidableComponent(boundingPolygons["small-standing"]));
-				
-				//states
-				StateMachineComponent su = new StateMachineComponent();
-				go.AddComponent(su);
-				su.AddState(new WalkState(su, runSpeed));
-				su.AddState(new RunState(su,runSpeed));
-				su.AddState(new StandState(su));
-				su.AddState(new InAirState(su));
-
-				go.BroadcastMessage(new SetStateMessage("state_stand"));
-				                   
-				
-				break;
-			}
-			
-			case "enemy":
-				switch (obj.Name)
-				{
-				case "goomba":
-				{
-					go.AddComponent(new BasicGroundEnemy(game, boundingPolygons, runSpeed, maxSpeed));
-					go.AddComponent(new DumbGroundAI());
-					go.AddComponent(new GravityComponent(worldPhysics.Gravity));
-					go.AddComponent(new FrictionComponent(worldPhysics.GroundFrictionFactor * objectPhysics.Friction, true, false));
-				
-					StateMachineComponent su = new StateMachineComponent();
-					go.AddComponent(su);
-					su.AddState(new WalkState(su, runSpeed));
-					su.AddState(new RunState(su,runSpeed));
-					su.AddState(new StandState(su));
-					su.AddState(new InAirState(su));
-	
-					go.AddComponent(new SpeedLimitComponent(maxSpeed));
-					
-					//collision
-					CollisionResponseComponent cr = new CollisionResponseComponent();
-					cr.AddHandler(new PhysicalObjectCollisionHandler());
-					cr.AddHandler(new InAirCollisionHandler());
-					go.AddComponent(cr);
-					go.AddComponent(new CollidableComponent(boundingPolygons["normal"]));
-					break;
-				}
-				default:
-					Log.Write("Unknown enemy object name: " + obj.Name, Log.WARNING);
-					break;
-				}
-				break;
-				
-			case "coin":
-				go.AddComponent(new Coin(game, boundingPolygons));
-				break;
-			
-			case "mushroom":
-				Mushroom.ItemType itemType = Mushroom.ItemType.RedMushroom;
-				switch (obj.Name)
-				{
-				case "mushroom-red":
-					itemType = Mushroom.ItemType.RedMushroom;
-					break;
-				case "mushroom-green":
-					itemType = Mushroom.ItemType.GreenMushroom;
-					break;
-				}
-				go.AddComponent(new Mushroom(game, boundingPolygons, itemType));
-				go.AddComponent(new DumbGroundAI());
-				go.AddComponent(new GravityComponent(worldPhysics.Gravity));
-				go.AddComponent(new FrictionComponent(worldPhysics.GroundFrictionFactor * objectPhysics.Friction, true, false));
-				break;
-			default:
-				Log.Write("Unknown object type: " + obj.Type, Log.WARNING);
-				break;
-			}
-			
-			go.AddComponent(new TransformComponent(position));
-			go.AddComponent(new RendererComponent(game.Display.Renderer));
-			go.AddComponent (new SpriteComponent(sprites[obj.DefaultSprite]));
-			//go.AddComponent(new PhysicsComponent(velocity, new Vector(0,0)));
-			go.AddComponent(new MotionComponent(velocity, new Vector(0,0)));
-			return go;
-		}
-		
-		public GameObject CreateIcon(string sprite, double scaling)
-		{
-			GameObject go = new GameObject("icon");
-			Sprite iconSprite = new Sprite(game.Resources.GetSpriteDescriptor(sprite), game.Resources);
-			Dictionary<string, Sprite> dict = new Dictionary<string, Sprite>();
-			dict["icon"] = iconSprite;
-			iconSprite.Scaling = scaling;
-			
-			go.AddComponent(new Icon(game, dict));
-			go.AddComponent(new RendererComponent(game.Display.Renderer));
-			go.AddComponent(new TransformComponent());
-			go.AddComponent(new SpriteComponent(iconSprite));
+//			GravityComponent g = (GravityComponent)go.GetComponent("gravity");
+//			if (g != null)
+//				g.
 			
 			return go;
 		}
+//		
+//		public GameObject CreateIcon(string sprite, double scaling)
+//		{
+//			GameObject go = new GameObject("icon");
+//			Sprite iconSprite = new Sprite(game.Resources.GetSpriteDescriptor(sprite), game.Resources);
+//			Dictionary<string, Sprite> dict = new Dictionary<string, Sprite>();
+//			dict["icon"] = iconSprite;
+//			iconSprite.Scaling = scaling;
+//			
+//			go.AddComponent(new Icon(game, dict));
+//			go.AddComponent(new RendererComponent(game.Display.Renderer));
+//			go.AddComponent(new TransformComponent());
+//			go.AddComponent(new SpriteComponent(iconSprite));
+//			
+//			return go;
+//		}
 	}
 }

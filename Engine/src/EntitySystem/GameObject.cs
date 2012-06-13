@@ -39,6 +39,13 @@ namespace Engine
 			messageSubscribers = new Dictionary<int, List<MessageSubscriber>>();
 		}
 		
+		#region Events
+		public delegate void ComponentAddedHandler(object sender, GOComponent component);
+		
+		public event ComponentAddedHandler ComponentAdded;
+		
+		#endregion
+		
 		#region Add/remove components
 		/// <summary>
 		/// Adds the component.
@@ -59,25 +66,9 @@ namespace Engine
 			
 			components.Add(component.Family, component);
 			component.Owner = this;
-		}
-		
-		/// <summary>
-		/// Removes the component.
-		/// </summary>
-		/// <param name='family'>
-		/// Family.
-		/// </param>
-		/// <exception cref='LoggedException'>
-		/// Is thrown when family is non-existant
-		/// </exception>
-		public void RemoveComponent(string family)
-		{
-			if (!components.ContainsKey(family))
-				throw new LoggedException("Cannot remove component. Object " + ObjectName + " has no component of family " + family);
-				
-			GOComponent c = components[family];
-			c.Owner = null;
-			components.Remove(family);
+			
+			if (ComponentAdded != null)
+				ComponentAdded(this, component);
 		}
 		
 		/// <summary>
@@ -86,11 +77,11 @@ namespace Engine
 		/// <param name='family'>
 		/// Family.
 		/// </param>
-		public void RemoveComponentSilently(string family)
-		{
-			if (!components.ContainsKey(family))
-				components.Remove(family);
-		}
+//		public void RemoveComponent(string family)
+//		{
+//			if (!components.ContainsKey(family))
+//				components.Remove(family);
+//		}
 		
 		/// <summary>
 		/// Retrieve a component; if non-existant, return null

@@ -4,10 +4,18 @@ namespace Engine
 {
 	public abstract class GOComponent : IMessageRecipient
 	{
+		protected ResourceManager resourceManager;
+		
 		public GOComponent()
 		{
 		}
 		
+		public GOComponent(ComponentDescriptor descriptor, ResourceManager resourceManager)
+		{
+			this.resourceManager = resourceManager;
+			LoadFromDescriptor(descriptor);
+		}
+
 		public abstract string Family
 		{
 			get;
@@ -36,7 +44,14 @@ namespace Engine
 		public event EventHandler OwnerSet;
 		public event EventHandler OwnerRemoved;
 		
+		public void SendMessage(Message message)
+		{
+			ReceiveMessage(message);
+		}
+		
 		public abstract void ReceiveMessage(Message message);
+		
+		protected abstract void LoadFromDescriptor(ComponentDescriptor descriptor);
 	}
 }
 

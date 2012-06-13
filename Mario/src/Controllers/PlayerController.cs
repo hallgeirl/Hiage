@@ -10,16 +10,20 @@ namespace Mario
 	public class PlayerController : ControllerComponent
 	{
 		InputManager input;
+		
 		public PlayerController(InputManager inputManager) : base()
 		{
 			input = inputManager;
 		}
+//		public PlayerController(ComponentDescriptor descriptor, ResourceManager resources, InputManager inputManager) : base(descriptor, resources)
+//		{
+//			input = inputManager;
+//		}
 		
 		//Control the object
 		public override void Update(double frameTime)
 		{
 			ControllerInterfaceComponent controllerInterface = (ControllerInterfaceComponent)Owner.GetComponent("controllerinterface");
-			//GameObjectComponent obj = ((GameObjectComponent)Owner.GetComponent("go"));
 			if (input.KeyPressed(HKey.LeftArrow))
 				controllerInterface.LeftAction();
 			if (input.KeyPressed(HKey.RightArrow))
@@ -29,18 +33,5 @@ namespace Mario
 			if (input.KeyPressed(HKey.DownArrow))
 				controllerInterface.DownAction();
 		}
-		
-		/*
-		 *  These are left empty since a player controller is fully controlled by the player, and thus don't need to respond to collisions automatically.
-		 */
-		#region Empty collision handlers
-		public override void HandleCollision(GameObjectComponent obj, BoundingPolygon p, Vector collisionNormal, CollisionResult collisionResult)
-		{
-		}
-			
-		public override void HandleCollision(GameObjectComponent obj1, GameObjectComponent obj2, CollisionResult collisionResult)
-		{
-		}
-		#endregion
 	}
 }

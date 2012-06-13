@@ -4,20 +4,24 @@ namespace Engine
 {
 	public class TransformComponent : GOComponent
 	{
-		public TransformComponent () : base()
-		{
-			Position = new Vector();
-		}
+		Vector position = new Vector();
 		
-		public TransformComponent (Vector pos) : base()
+		public TransformComponent(ComponentDescriptor descriptor, ResourceManager resources, Vector position) : base(descriptor, resources)
 		{
-			Position = pos.Copy();
+			if (position != null)
+				this.position = position.Copy();
+			
+			OwnerSet += delegate {
+				Owner.BroadcastMessage(new PositionChangedMessage(Position));
+				Owner.ComponentAdded += delegate(object sender, GOComponent component) {
+					component.SendMessage(new PositionChangedMessage(Position));
+				};
+			};
 		}
 		
 		public Vector Position
 		{
-			get;
-			private set;
+			get { return position; }
 		}
 		
 		public override string Family 
@@ -47,6 +51,18 @@ namespace Engine
 		public override void ReceiveMessage (Message message)
 		{
 		}
+				
+		protected override void LoadFromDescriptor (ComponentDescriptor descriptor)
+		{
+			if (descriptor.Name != "transform")
+				throw new LoggedException("Cannot load TransformComponent from descriptor " + descriptor.Name);	
+				
+			if (descriptor.Attributes.ContainsKey("x"))
+			    Position.X = double.Parse(descriptor["x"]);
+			if (descriptor.Attributes.ContainsKey("y"))
+			    Position.Y = double.Parse(descriptor["y"]);
+		}
+		
 	}
 }
 

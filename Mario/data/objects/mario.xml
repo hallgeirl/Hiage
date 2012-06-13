@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <object id="mario">
-    <type>player</type>
-    <defaults>
-        <sprite>small</sprite>
-    </defaults>
-    <sprites>
+    <sprites default="small">
         <sprite id="small">mario-small</sprite>
         <sprite id="big">mario-big</sprite>
     </sprites>
-    <elasticity>0</elasticity>
-    <friction>100</friction>
-    <run-speed>150</run-speed>
-    <max-speed>200</max-speed>
     
-    <bounding-polygons>
+    <friction friction="100" />
+    
+    <transform />
+    <gravity />
+    <motion />
+    <renderer />
+
+    <statemachine default="stand">
+        <state id="stand" />
+        <state id="walk" runspeed="150" />
+        <state id="run" runspeed="150" />
+        <state id="inair" />
+    </statemachine>
+
+    <speedlimit maxspeed="200" />
+    <collisionresponse />
+    <physicalobjectcollisionresponse />
+
+    <mariointerface />
+
+    <collidable default="small-standing">
         <polygon id="small-standing">
             <vertex x="-7" y="9" />
             <vertex x="7" y="9" />
@@ -32,5 +44,5 @@
             <vertex x="7" y="-9" />
             <vertex x="-7" y="-9" />
         </polygon>-->
-    </bounding-polygons>
+    </collidable>
 </object>

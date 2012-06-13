@@ -7,12 +7,16 @@ namespace Engine
 		double friction;
 		bool applyToX, applyToY;
 		
-		public FrictionComponent (double friction, bool applyToX, bool applyToY) : base()
+		public FrictionComponent(ComponentDescriptor descriptor, ResourceManager resources, bool applyToX, bool applyToY) : base(descriptor, resources)
 		{
-			this.friction = friction;
 			this.applyToX = applyToX;
 			this.applyToY = applyToY;
 		}
+		
+//		public FrictionComponent (double friction, bool applyToX, bool applyToY) : base()
+//		{
+//			this.friction = friction;
+//		}
 		
 		public override string Family {
 			get {
@@ -27,25 +31,28 @@ namespace Engine
 		
 		public override void Update (double frameTime)
 		{
-			MotionComponent motion = (MotionComponent)Owner.GetComponent("motion");
+			if (Velocity == null || Accelleration == null) return;
+			
 			if (applyToX)
 			{
-				if (motion.Velocity.X > friction*frameTime)
-					motion.Accelleration.X -= friction;
-				else if (motion.Velocity.X < -friction*frameTime)
-					motion.Accelleration.X += friction;
+				if (Velocity.X > friction*frameTime)
+					Accelleration.X -= friction;
+				else if (Velocity.X < -friction*frameTime)
+					Accelleration.X += friction;
 			}
 			else if (applyToY)
 			{
-				if (motion.Velocity.Y > friction*frameTime)
-					motion.Accelleration.Y -= friction;
-				else if (motion.Velocity.Y < -friction*frameTime)
-					motion.Accelleration.Y += friction;
+				if (Velocity.Y > friction*frameTime)
+					Accelleration.Y -= friction;
+				else if (Velocity.Y < -friction*frameTime)
+					Accelleration.Y += friction;
 			}
 		}
 		
 		public void ClampVelocity(Vector velocity, double frameTime)
 		{
+			if (Velocity == null) return;
+			
 			if (applyToX)
 			{
 				if (velocity.X <= Friction*frameTime && velocity.X >= -Friction*frameTime)
@@ -59,7 +66,29 @@ namespace Engine
 		}
 		
 		public override void ReceiveMessage (Message message)
+		{		
+			if (message is VelocityChangedMessage)
+				Velocity = ((VelocityChangedMessage)message).Velocity;
+			else if (message is AccellerationChangedMessage)
+				Accelleration = ((AccellerationChangedMessage)message).Accelleration;
+		}		
+		
+		private Vector Velocity
 		{
+			get;
+			set;
+		}
+		private Vector Accelleration
+		{
+			get;
+			set;
+		}
+		
+		protected override void LoadFromDescriptor (ComponentDescriptor descriptor)
+		{
+			if (descriptor.Name != "friction")
+				throw new LoggedException("Cannot load FrictionComponent from descriptor " + descriptor.Name);
+			friction = double.Parse(descriptor["friction"]);
 		}
 	}
 }

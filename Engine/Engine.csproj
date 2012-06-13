@@ -116,6 +116,10 @@
     <Compile Include="src\MessagePassing\VelocityProperty.cs" />
     <Compile Include="src\MessagePassing\Messages\RequestMessage.cs" />
     <Compile Include="src\MessagePassing\Messages\ResponseMessage.cs" />
+    <Compile Include="src\MessagePassing\Messages\AccellerationChangedMessage.cs" />
+    <Compile Include="src\MessagePassing\Messages\PositionChangedMessage.cs" />
+    <Compile Include="src\MessagePassing\Messages\PlayAnimationMessage.cs" />
+    <Compile Include="src\MessagePassing\Messages\CollisionEventMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

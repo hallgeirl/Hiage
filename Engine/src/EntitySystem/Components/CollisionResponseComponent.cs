@@ -16,13 +16,11 @@ namespace Engine
 	
 	public class CollisionResponseComponent : GOComponent
 	{
-		private List<CollisionResult> collisionEvents;
-		private List<CollisionHandler> collisionHandlers;
+		private List<CollisionResult> collisionEvents = new List<CollisionResult>();
+		private List<CollisionHandler> collisionHandlers = new List<CollisionHandler>();
 		
-		public CollisionResponseComponent ()
+		public CollisionResponseComponent(ComponentDescriptor descriptor, ResourceManager resources) : base(descriptor, resources)
 		{
-			collisionEvents = new List<CollisionResult>();
-			collisionHandlers = new List<CollisionHandler>();
 		}
 		
 		public override string Family 
@@ -37,10 +35,11 @@ namespace Engine
 		{
 			foreach (CollisionResult r in collisionEvents)
 			{
-				foreach (CollisionHandler h in collisionHandlers)
-				{
-					h.Collide(r, axis);
-				}
+				Owner.BroadcastMessage(new CollisionEventMessage(r, axis));
+//				foreach (CollisionHandler h in collisionHandlers)
+//				{
+//					h.Collide(r, axis);
+//				}
 			}
 			collisionEvents.Clear();
 		}
@@ -64,12 +63,10 @@ namespace Engine
 		public override void ReceiveMessage (Message message)
 		{
 		}
-		/*public void Collide(CollisionResult result)
-		{
-			Collide (result, -1);
-		}
 		
-		public abstract void Collide(CollisionResult result, int axis);*/
+		protected override void LoadFromDescriptor (ComponentDescriptor descriptor)
+		{
+		}
 	}
 }
 

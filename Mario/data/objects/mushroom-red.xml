@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <object id="mushroom-red">
-    <type>mushroom</type>
     <sprites>
         <sprite>mushroom-red</sprite>
     </sprites>
-    <elasticity>0</elasticity>
     
-    <bounding-polygons>
+	<collidable>
         <polygon id="normal">
             <vertex x="-8" y="8" />
             <vertex x="8" y="8" />
             <vertex x="8" y="-8" />
             <vertex x="-8" y="-8" />
         </polygon>
-    </bounding-polygons>
+	</collidable>
 </object>

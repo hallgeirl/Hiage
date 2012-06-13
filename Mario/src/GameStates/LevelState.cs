@@ -19,7 +19,7 @@ namespace Mario
 		TileMap 			tileMap;										 //The tiles used on this map
 		List<GameObject> 	objects = new List<GameObject>();				 //All objects currently on this map
 		ObjectFactory 		objectFactory;									 //Object factory used for creating objects
-		Player 				player;											 //Reference to the player object
+		GameObject			player;											 //Reference to the player object
 		WorldPhysics		worldPhysics = WorldPhysics.DefaultWorldPhysics; //Physics object used on this map. Attributes may be specified in the map file.		
 		Timer 				fullscreenTimer = new Timer();	//Used to prevent a lot of fullscreen on/offs when holding down alt+enter more than one frame
 		
@@ -54,17 +54,16 @@ namespace Mario
 			foreach (var o in map.Objects)
 			{
 				//TODO: debug
-				//if (!(o.Name == "mario")) continue;
+//				if (!(o.Name == "mario")) continue;
 				
 				GameObject obj = objectFactory.Spawn(o.Name, new Vector(o.X, o.Y), new Vector(0,0), worldPhysics);
 				if (obj != null)
 				{
 					objects.Add(obj);
-					GameObjectComponent go = (GameObjectComponent)obj.GetComponent("go");
-					
 					if (o.Name == "mario")
 					{
-						this.player = (Player)go;
+						this.player = obj;
+						obj.AddComponent(new PlayerController(game.Input));
 						//this.player = (Player)objects[objects.Count-1];
 					}
 				}
@@ -78,8 +77,8 @@ namespace Mario
 			
 			game.Audio.PlayMusic("overworld-intro", "overworld");
 			
-			icons["coin"] = objectFactory.CreateIcon("coin", 0.7); //new Icon(game, Helpers.
-			icons["mario"] = objectFactory.CreateIcon("mario-big", 0.5); //new Icon(game, marioIcon);
+			//icons["coin"] = objectFactory.CreateIcon("coin", 0.7); //new Icon(game, Helpers.
+			//icons["mario"] = objectFactory.CreateIcon("mario-big", 0.5); //new Icon(game, marioIcon);
 			
 		}
 
@@ -89,14 +88,14 @@ namespace Mario
 			for (int i = 1; i < objects.Count; i++)
 			{
 				GameObject obj1 = objects[i];
-				GameObjectComponent go1 = (GameObjectComponent)obj1.GetComponent("go");
+				CollidableComponent go1 = (CollidableComponent)obj1.GetComponent("collidable");
 				int j = i - 1;
 				bool done = false;
 				
 				do
 				{
 					GameObject obj2 = objects[j];
-					GameObjectComponent go2 = (GameObjectComponent)obj2.GetComponent("go");
+					CollidableComponent go2 = (CollidableComponent)obj2.GetComponent("collidable");
 					if (go1.Left < go2.Left)
 					{
 						objects[j+1] = objects[j];
@@ -121,24 +120,25 @@ namespace Mario
 			
 			SortObjects(frameTime);
 			
-			for (int i = 0; i < objects.Count; i++)
-			{
-				GameObjectComponent go1 = (GameObjectComponent)objects[i].GetComponent("go");
-				if (!go1.CanCollide) continue;
-				for (int j = i+1; j < objects.Count; j++)
-				{
-					GameObjectComponent go2 = (GameObjectComponent)objects[j].GetComponent("go");
-					if (go1.Right < go2.Left) break;
-					if (!go2.CanCollide) continue;
-					CollisionManager.TestCollision(go1, go2, frameTime);
-				}
-			}
-			
+//			for (int i = 0; i < objects.Count; i++)
+//			{
+//				GameObjectComponent go1 = (GameObjectComponent)objects[i].GetComponent("go");
+//				if (!go1.CanCollide) continue;
+//				for (int j = i+1; j < objects.Count; j++)
+//				{
+//					GameObjectComponent go2 = (GameObjectComponent)objects[j].GetComponent("go");
+//					if (go1.Right < go2.Left) break;
+//					if (!go2.CanCollide) continue;
+//					CollisionManager.TestCollision(go1, go2, frameTime);
+//				}
+//			}
+//			
 			CollisionManager.PerformCollisionEvents();
  		}
 
 		public void Update(double frameTime)
 		{
+			TransformComponent tr;
 			for (int i = 0; i < objects.Count; i++)
 			{
 				GameObject o = objects[i];
@@ -146,10 +146,9 @@ namespace Mario
 				GravityComponent gravity = (GravityComponent)objects[i].GetComponent("gravity");
 				FrictionComponent friction = (FrictionComponent)objects[i].GetComponent("friction");
 				MotionComponent motion = (MotionComponent)objects[i].GetComponent("motion");
-				GameObjectComponent go = (GameObjectComponent)objects[i].GetComponent("go");
 				CollidableComponent cc = (CollidableComponent)o.GetComponent("collidable");
 				CollisionResponseComponent cr = (CollisionResponseComponent)objects[i].GetComponent("collisionresponse");
-				TransformComponent tr = (TransformComponent)o.GetComponent("transform");
+				tr = (TransformComponent)o.GetComponent("transform");
 				StateMachineComponent stateUpdater = (StateMachineComponent)o.GetComponent("stateupdater");
 				SpeedLimitComponent speedlimit = (SpeedLimitComponent)o.GetComponent("speedlimit");
 				
@@ -175,7 +174,7 @@ namespace Mario
 					if (cc != null)
 					{
 						cc.Update(frameTime);
-						cc.TestCollision(tileMap.GetBoundingPolygonsInRegion(cc.GetCollisionCheckArea(frameTime), 0), frameTime, axis);
+						cc.TestCollision(tileMap.GetBoundingPolygonsInRegion(cc.GetCollisionCheckArea(frameTime, axis), 0), frameTime, axis);
 					}
 					if (cr != null)
 						cr.Update(frameTime, axis);
@@ -185,18 +184,19 @@ namespace Mario
 					stateUpdater.Update(frameTime);
 				
 				//go.Update(frameTime);
-					
-				if (go.Delete)
-				{
-					objects.RemoveAt(i);
-					if (i < objects.Count)
-						i--;
-				}
-				
+//					
+//				if (go.Delete)
+//				{
+//					objects.RemoveAt(i);
+//					if (i < objects.Count)
+//						i--;
+//				}
+//				
 			}
 			
-			camera.X = player.Position.X;
-			camera.Y = player.Position.Y;
+			tr = (TransformComponent)player.GetComponent("transform");
+			camera.X = tr.Position.X;
+			camera.Y = tr.Position.Y;
 		}
 		
 		public void HandleInput(double frameTime)
@@ -240,10 +240,10 @@ namespace Mario
 			game.Display.Renderer.DrawText("x" + playerInfo.Lives, left + 25, top - 16);
 			game.Display.Renderer.DrawText("x" + playerInfo.Coins, right - 30, top - 16);
 			
-			GameObjectComponent coinIcon = (GameObjectComponent)icons["coin"].GetComponent("go");
+			/*GameObjectComponent coinIcon = (GameObjectComponent)icons["coin"].GetComponent("go");
 			GameObjectComponent marioIcon = (GameObjectComponent)icons["mario"].GetComponent("go");
 			coinIcon.Position = new Vector(right - 35, top-13);
-			marioIcon.Position = new Vector(left + 20, top-13);
+			marioIcon.Position = new Vector(left + 20, top-13);*/
 			
 			//render icons
 			foreach (GameObject i in icons.Values)
@@ -260,11 +260,11 @@ namespace Mario
 		
 		public override void Run(double frameTime)
 		{
-			foreach (var o in objects)
-			{
-				GameObjectComponent go = (GameObjectComponent)o.GetComponent("go");
-				go.Prepare(frameTime);
-			}
+//			foreach (var o in objects)
+//			{
+//				GameObjectComponent go = (GameObjectComponent)o.GetComponent("go");
+//				go.Prepare(frameTime);
+//			}
 			
 			HandleInput(frameTime);
 			

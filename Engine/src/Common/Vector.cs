@@ -8,7 +8,7 @@ namespace Engine
 	/// <summary>
 	/// Mathematical 2D vector class which can be used for positioning, directions etc.
 	/// </summary>
-	public class Vector : ICloneable, INotifyPropertyChanged
+	public class Vector : ICloneable
 	{
 		double[] x = new double[2];
 		
@@ -153,7 +153,6 @@ namespace Engine
 			set
 			{
 				x[key] = value;
-				NotifyPropertyChanged(null);
 			}
 		}
 		
@@ -250,7 +249,6 @@ namespace Engine
 			set
 			{
 				x[0] = value;
-				NotifyPropertyChanged("X");
 			}
 		}
 		
@@ -266,7 +264,6 @@ namespace Engine
 			set
 			{
 				x[1] = value;
-				NotifyPropertyChanged("Y");
 			}
 		}
 		
@@ -289,17 +286,5 @@ namespace Engine
 		
 		#endregion Properties
 		
-		#region INotifyPropertyChanged
-		
-		private void NotifyPropertyChanged(string property)
-		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, null);
-//				PropertyChanged(new PropertyChangedEventArgs(property));
-		}
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		#endregion
 	}
 }

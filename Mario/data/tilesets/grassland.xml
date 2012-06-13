@@ -28,8 +28,8 @@ Tileset setup:
     <bounds>
         <point x="0" y="15" />
         <point x="15" y="15" />
-        <point x="15" y="14" />
-        <point x="0" y="14" />
+        <!--<point x="15" y="14" />
+        <point x="0" y="14" />-->
     </bounds>
   </tile>
   <tile texture="grassland/grass-flat-top.png" id="102">
@@ -105,7 +105,14 @@ Tileset setup:
   </tile>
   
 <!-- Rocks -->
-  <tile texture="grassland/rock-gray.png" id="220" />
+  <tile texture="grassland/rock-gray.png" id="220">
+    <bounds>
+      <point x="0" y="15" />
+      <point x="15" y="15" />
+      <point x="15" y="0" />
+      <point x="0" y="0" />
+    </bounds>
+  </tile>
   <tile texture="grassland/rock-hill-right.png" id="221">
     <bounds>
         <point x="0" y="15" />

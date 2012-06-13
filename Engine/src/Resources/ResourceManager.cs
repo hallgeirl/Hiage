@@ -125,8 +125,6 @@ namespace Engine
 						
 						switch (c.Name)
 						{
-
-							
 							case "sprite":
 								if (sprites.ContainsKey(name))
 									Log.Write("Sprite with name \"" + name + "\" already added. Resource ignored.", Log.WARNING);

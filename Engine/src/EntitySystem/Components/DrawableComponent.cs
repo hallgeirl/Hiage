@@ -4,13 +4,7 @@ namespace Engine
 {
 	public abstract class DrawableComponent : GOComponent
 	{
-		public static int PlayAnimationMessage;
-		static DrawableComponent()
-		{
-			PlayAnimationMessage = GameObject.RegisterMessage();
-		}
-		
-		public DrawableComponent () : base()
+		public DrawableComponent(ComponentDescriptor descriptor, ResourceManager resources) : base(descriptor, resources)
 		{
 		}
 		

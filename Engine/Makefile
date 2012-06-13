@@ -35,6 +35,10 @@ SOURCES =  \
 	src/Input/InputManager.cs \
 	src/MessagePassing/IMessageRecipient.cs \
 	src/MessagePassing/Message.cs \
+	src/MessagePassing/Messages/AccellerationChangedMessage.cs \
+	src/MessagePassing/Messages/CollisionEventMessage.cs \
+	src/MessagePassing/Messages/PlayAnimationMessage.cs \
+	src/MessagePassing/Messages/PositionChangedMessage.cs \
 	src/MessagePassing/Messages/RequestMessage.cs \
 	src/MessagePassing/Messages/ResponseMessage.cs \
 	src/MessagePassing/Messages/SetAnimationSpeedFactorMessage.cs \

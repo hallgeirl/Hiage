@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object id="coin_icon">
+    <sprites default="default">
+        <sprite id="default">coin</sprite>
+    </sprites>
+
+    <transform />
+</object>

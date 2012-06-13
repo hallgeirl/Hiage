@@ -4,39 +4,29 @@ namespace Engine
 {
 	public class MotionComponent : GOComponent
 	{
-		public MotionComponent() : base()
-		{
-			Velocity = new Vector();
-			Accelleration = new Vector();
-		}
+		Vector velocity = new Vector();
+		Vector accelleration = new Vector();
 		
-		public MotionComponent(Vector vel, Vector accel) : base()
+		public MotionComponent(ComponentDescriptor descriptor, ResourceManager resources) : base(descriptor, resources)
 		{
-			Velocity = vel.Copy();
-			Accelleration = accel.Copy();
-			
-			Velocity.PropertyChanged += delegate {
-				Owner.BroadcastMessage(new VelocityChangedMessage(Velocity));
-			};
-			
 			OwnerSet += delegate {
 				Owner.BroadcastMessage(new VelocityChangedMessage(Velocity));
+				Owner.BroadcastMessage(new AccellerationChangedMessage(Accelleration));
+				Owner.ComponentAdded += delegate(object sender, GOComponent component) {
+					component.SendMessage(new VelocityChangedMessage(Velocity));
+					component.SendMessage(new AccellerationChangedMessage(Accelleration));
+				};
 			};
-			
-			if (Owner != null)
-				Owner.BroadcastMessage(new VelocityChangedMessage(Velocity));
 		}
-		
+	
 		public Vector Velocity
 		{
-			get;
-			private set;
+			get { return velocity; } 
 		}
 		
 		public Vector Accelleration
 		{
-			get;
-			private set;
+			get { return accelleration; }
 		}
 		
 		public override string Family 
@@ -71,6 +61,20 @@ namespace Engine
 		
 		public override void ReceiveMessage (Message message)
 		{
+		}
+		
+		protected override void LoadFromDescriptor (ComponentDescriptor descriptor)
+		{
+			if (descriptor.Name != "motion")
+				throw new LoggedException("Cannot load MotionComponent from descriptor " + descriptor.Name);
+		
+			foreach (ComponentDescriptor d in descriptor.Subcomponents)
+			{
+				if (d.Name == "velocity")
+					Velocity.Set(double.Parse(d["x"]), double.Parse(d["y"]));
+				else if (d.Name == "accelleration")
+					Accelleration.Set(double.Parse(d["x"]), double.Parse(d["y"]));
+			}
 		}
 	}
 }

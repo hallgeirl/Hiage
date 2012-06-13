@@ -3,10 +3,11 @@ CONFIG=DEBUG_X86
 # Source files
 SOURCES =  \
 	src/Camera.cs \
-	src/CollisionHandlers/InAirCollisionHandler.cs \
-	src/CollisionHandlers/PhysicalObjectCollisionHandler.cs \
+	src/CollisionHandlers/InAirCollisionResponseComponent.cs \
+	src/CollisionHandlers/PhysicalObjectCollisionResponseComponent.cs \
 	src/Components/ControllerInterfaceComponent.cs \
-	src/Components/MarioControllerInterfaceComponent.cs \
+	src/Components/GroundEnemyInterfaceComponent.cs \
+	src/Components/MarioInterfaceComponent.cs \
 	src/Components/ObjectPropertiesComponent.cs \
 	src/Components/ObjectStates/InAirState.cs \
 	src/Components/ObjectStates/MovementAnimationState.cs \
@@ -18,7 +19,7 @@ SOURCES =  \
 	src/Components/StateMachineComponent.cs \
 	src/Controllers/ControllerComponent.cs \
 	src/Controllers/DebugController.cs \
-	src/Controllers/DumbGroundAI.cs \
+	src/Controllers/DumbGroundAIComponent.cs \
 	src/Controllers/MarioDiesController.cs \
 	src/Controllers/PlayerController.cs \
 	src/GameStates/DeadState.cs \

@@ -10,32 +10,39 @@ namespace Mario
 		public RunState(StateMachineComponent owner, double runSpeed) : base(owner)
 		{
 			this.runSpeed = runSpeed;
+			StateActivated += delegate {
+				if (Owner.Owner != null)
+					Owner.Owner.BroadcastMessage(new PlayAnimationMessage("run"));
+			};
 		}
 		
 		public override void Update (double frameTime)
 		{
-			if (Math.Abs(Velocity.Y) > 50)
+			base.Update(frameTime);
+			framesOnGround++;
+			if (framesOnGround > 3)
 			{
-				SetState("state_inair");
+				framesOnGround = 0;
+				SetState("inair");
 				Owner.Owner.BroadcastMessage(new InAirMessage());
 			}
 			else
 			{
 				if (Math.Abs(Velocity.X) < 1e-10)
-					SetState("state_stand");
+					SetState("stand");
 				else if (Math.Abs(Velocity.X) < runSpeed)
-					SetState("state_walk");
+					SetState("walk");
 			}
 			
-			Owner.Owner.SendMessage(DrawableComponent.PlayAnimationMessage, "run");
 		}
 		
 		public override string Name {
 			get {
-				return "state_run";
+				return "run";
 			}
 		}
 		
+
 //		public override string Family 
 //		{
 //			get 

@@ -44,7 +44,6 @@
   </ProjectExtensions>
   <ItemGroup>
     <Compile Include="src\Camera.cs" />
-    <Compile Include="src\Controllers\DumbGroundAI.cs" />
     <Compile Include="src\Controllers\PlayerController.cs" />
     <Compile Include="src\Main.cs" />
     <Compile Include="src\ObjectFactory.cs" />
@@ -66,10 +65,7 @@
     <Compile Include="src\Objects\GameObjectComponent.cs" />
     <Compile Include="src\Controllers\ControllerComponent.cs" />
     <Compile Include="src\Components\ControllerInterfaceComponent.cs" />
-    <Compile Include="src\Components\MarioControllerInterfaceComponent.cs" />
     <Compile Include="src\Components\ObjectStates\InAirState.cs" />
-    <Compile Include="src\CollisionHandlers\PhysicalObjectCollisionHandler.cs" />
-    <Compile Include="src\CollisionHandlers\InAirCollisionHandler.cs" />
     <Compile Include="src\Messages\CollidedWithGroundMessage.cs" />
     <Compile Include="src\Components\ObjectStates\MovementAnimationState.cs" />
     <Compile Include="src\Components\ObjectStates\ObjectState.cs" />
@@ -83,6 +79,11 @@
     <Compile Include="src\Messages\InAirMessage.cs" />
     <Compile Include="src\Components\ObjectPropertiesComponent.cs" />
     <Compile Include="src\Components\SpeedLimitComponent.cs" />
+    <Compile Include="src\CollisionHandlers\PhysicalObjectCollisionResponseComponent.cs" />
+    <Compile Include="src\CollisionHandlers\InAirCollisionResponseComponent.cs" />
+    <Compile Include="src\Components\MarioInterfaceComponent.cs" />
+    <Compile Include="src\Components\GroundEnemyInterfaceComponent.cs" />
+    <Compile Include="src\Controllers\DumbGroundAIComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj">

@@ -13,9 +13,6 @@ namespace Mario
 		protected void SetState(string stateId)
 		{
 			Owner.SendMessage(new SetStateMessage(stateId));
-//			ObjectState state = (ObjectState)Owner.GetComponent(stateName);
-//			if (state != null)
-//				Owner.SendMessage(StateMachineComponent.StateChangedMessage, state);
 		}
 		
 		public abstract string Name
@@ -27,11 +24,20 @@ namespace Mario
 		
 		public abstract void ReceiveMessage(Message message);
 		
+		public void ActivateState()
+		{
+			if (StateActivated != null)
+				StateActivated(this, null);
+		}
+		
 		public StateMachineComponent Owner
 		{
 			get;
 			private set;
 		}
+		
+		public event EventHandler StateActivated;
+		
 	}
 }
 

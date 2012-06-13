@@ -9,6 +9,10 @@ namespace Mario
 		{
 		}
 		
+		public ControllerInterfaceComponent(ComponentDescriptor descriptor, ResourceManager resources) : base(descriptor, resources)
+		{
+		}
+		
 		public abstract void UpAction();		
 		public abstract void LeftAction();
 		public abstract void DownAction();
@@ -33,20 +37,26 @@ namespace Mario
 				switch (((ControlIssuedMessage)message).ControlIssued)
 				{
 				case ControlIssuedMessage.Control.Left:
-				LeftAction();
-				break;
+					LeftAction();
+					break;
 				case ControlIssuedMessage.Control.Right:
-				RightAction();
-				break;
+					RightAction();
+					break;
 				case ControlIssuedMessage.Control.Down:
-				DownAction();
-				break;
+					DownAction();
+					break;
 				case ControlIssuedMessage.Control.Up:
-				UpAction ();
-				break;
+					UpAction ();
+					break;
 				}
 			}
-		}	
+		}
+		
+		protected override void LoadFromDescriptor (ComponentDescriptor descriptor)
+		{
+//			if (descriptor.Name != "controllerinterface")
+//				throw new LoggedException("Cannot load ControllerInterfaceComponent from descriptor " + descriptor.Name);
+		}
 	}
 }
 

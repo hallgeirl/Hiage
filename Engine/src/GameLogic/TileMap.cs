@@ -271,7 +271,7 @@ namespace Engine
 		public List<BoundingPolygon> GetBoundingPolygonsInRegion(Box boundingBox, int layer)
 		{
 			List<BoundingPolygon> polygons = new List<BoundingPolygon>();
-				
+			
 			int minTileX = (int)Math.Max((boundingBox.Left - OffsetX) / Tilesize, 0.0);
 			int maxTileX = (int)Math.Min((boundingBox.Right - OffsetX) / Tilesize, Width-1);
 			int minTileY = (int)Math.Max((boundingBox.Bottom - OffsetY) / Tilesize, 0);

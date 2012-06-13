@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <object id="coin">
-    <type>coin</type>
-    <defaults>
-        <sprite>default</sprite>
-    </defaults>
-    <sprites>
+    <sprites default="default">
         <sprite id="default">coin</sprite>
     </sprites>
-    <elasticity>0</elasticity>
     
-    <bounding-polygons>
+    <transform />
+    <renderer />
+
+    <collidable default="normal">
         <polygon id="normal">
             <vertex x="-6" y="8" />
             <vertex x="6" y="8" />
             <vertex x="6" y="-8" />
             <vertex x="-6" y="-8" />
         </polygon>
-    </bounding-polygons>
+    </collidable>
 </object>

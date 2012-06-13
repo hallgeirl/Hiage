@@ -6,7 +6,7 @@ namespace Engine
 	{
 		Renderer renderer;
 		
-		public RendererComponent (Renderer renderer) : base()
+		public RendererComponent(ComponentDescriptor descriptor, ResourceManager resources, Renderer renderer) : base(descriptor, resources)
 		{
 			this.renderer = renderer;
 		}
@@ -25,6 +25,12 @@ namespace Engine
 		
 		public override void ReceiveMessage (Message message)
 		{
+		}
+		
+		protected override void LoadFromDescriptor (ComponentDescriptor descriptor)
+		{
+			if (descriptor.Name != "renderer")
+				throw new LoggedException("Cannot load RendererComponent from descriptor " + descriptor.Name);
 		}
 	}
 }

@@ -7,12 +7,13 @@ namespace Mario
 	public class ObjectFactory
 	{
 		private Game game;
-		private MarioGameState state;
+		Dictionary<string, List<GOComponent>> components = new Dictionary<string, List<GOComponent>>();
+//		private MarioGameState state;
 		
 		public ObjectFactory (Game game, MarioGameState state)
 		{
 			this.game = game;
-			this.state = state;
+//			this.state = state;
 		}
 		
 		private double TryGetDoubleProperty(ObjectDescriptor obj, string prop)
@@ -35,7 +36,7 @@ namespace Mario
 			switch (descriptor.Name)
 			{
 			case "sprites":
-				return new SpriteComponent(descriptor, game.Resources);
+				return new SpriteComponent(descriptor, game.Resources, game.Display.Renderer);
 			case "friction":
 				return new FrictionComponent(descriptor, game.Resources, true, false);
 			case "gravity":
@@ -44,8 +45,8 @@ namespace Mario
 				return new TransformComponent(descriptor, game.Resources, new Vector(0,0));
 			case "motion":
 				return new MotionComponent(descriptor, game.Resources);
-			case "renderer":
-				return new RendererComponent(descriptor, game.Resources, game.Display.Renderer);
+//			case "renderer":
+//				return new RendererComponent(descriptor, game.Resources, game.Display.Renderer);
 			case "statemachine":
 				return new StateMachineComponent(descriptor, game.Resources);
 			case "speedlimit":
@@ -62,6 +63,8 @@ namespace Mario
 				return new GroundEnemyInterfaceComponent();
 			case "groundai":
 				return new DumbGroundAIComponent();
+			case "playercontroller":
+				return new PlayerController(game.Input);
 			}
 			return null;
 		}
@@ -76,7 +79,11 @@ namespace Mario
 			
 			foreach (ComponentDescriptor c in obj.Components)
 			{
-				go.AddComponent(SpawnComponent(c));
+				GOComponent goc = SpawnComponent(c);
+				if (!components.ContainsKey(goc.Family))
+					components[goc.Family] = new List<GOComponent>();
+				components[goc.Family].Add(goc);
+				go.AddComponent(goc);
 			}
 			
 			TransformComponent tr = (TransformComponent)go.GetComponent("transform");
@@ -89,6 +96,12 @@ namespace Mario
 			
 			return go;
 		}
+		
+		public Dictionary<string, List<GOComponent>> Components
+		{
+			get { return components; }
+		}
+		
 //		
 //		public GameObject CreateIcon(string sprite, double scaling)
 //		{

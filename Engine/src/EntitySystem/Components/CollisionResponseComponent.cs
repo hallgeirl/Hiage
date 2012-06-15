@@ -3,22 +3,16 @@ using System.Collections.Generic;
 
 namespace Engine
 {
-	public abstract class CollisionHandler
-	{
-		public abstract void Collide(CollisionResult result, int axis);
-		
-		public CollisionResponseComponent Owner
-		{
-			get; 
-			internal set;
-		}
-	}
-	
 	public class CollisionResponseComponent : GOComponent
 	{
-		private List<CollisionResult> collisionEvents = new List<CollisionResult>();
-		private List<CollisionHandler> collisionHandlers = new List<CollisionHandler>();
+		struct ObjectObjectCollision
+		{
+			public CollidableComponent o1, o2;
+			public CollisionResult result;
+		}
 		
+		private List<CollisionResult> collisionEvents = new List<CollisionResult>();
+		private List<ObjectObjectCollision> objectCollisionEvents = new List<ObjectObjectCollision>();
 		public CollisionResponseComponent(ComponentDescriptor descriptor, ResourceManager resources) : base(descriptor, resources)
 		{
 		}
@@ -42,6 +36,11 @@ namespace Engine
 //				}
 			}
 			collisionEvents.Clear();
+			
+			foreach (ObjectObjectCollision ooc in objectCollisionEvents)
+			{
+				Owner.BroadcastMessage(new ObjectObjectCollisionEventMessage(ooc.result, ooc.o1, ooc.o2));
+			}
 		}
 		
 		public override void Update (double frameTime)
@@ -49,15 +48,18 @@ namespace Engine
 			Update (frameTime, -1);
 		}
 		
-		public void AddHandler(CollisionHandler handler)
-		{
-			collisionHandlers.Add(handler);
-			handler.Owner = this;
-		}
-		
 		internal void RegisterCollision(CollisionResult result)
 		{
 			collisionEvents.Add(result);
+		}
+
+		internal void RegisterObjectObjectCollision(CollisionResult result, CollidableComponent o1, CollidableComponent o2)
+		{
+			ObjectObjectCollision ooc;
+			ooc.result = result;
+			ooc.o1 = o1;
+			ooc.o2 = o2;
+			objectCollisionEvents.Add(ooc);
 		}
 		
 		public override void ReceiveMessage (Message message)

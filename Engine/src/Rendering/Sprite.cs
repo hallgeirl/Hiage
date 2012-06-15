@@ -195,6 +195,7 @@ namespace Engine
 			animations[currentAnimation].AddFrame(0, 0, texture.Width, texture.Height, 0,0);
 			Flipped = false;
 			Scaling = 1;
+			AnimationSpeedFactor = 1;
 		}
 		
 		/// <summary>
@@ -225,6 +226,7 @@ namespace Engine
 			}
 			Flipped = false;
 			Scaling = 1;
+			AnimationSpeedFactor = 1;
 		}
 		
 		public bool HasAnimation(string name)
@@ -250,7 +252,7 @@ namespace Engine
 		
 		public void Update(double frameTime)
 		{
-			animations[currentAnimation].Update(frameTime);
+			animations[currentAnimation].Update(frameTime * AnimationSpeedFactor);
 		}
 		
 		
@@ -329,6 +331,11 @@ namespace Engine
 		{
 			get;
 			set;
+		}
+		
+		public double AnimationSpeedFactor
+		{
+			get;set;
 		}
 		
 		#endregion Position properties

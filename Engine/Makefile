@@ -37,13 +37,13 @@ SOURCES =  \
 	src/MessagePassing/Message.cs \
 	src/MessagePassing/Messages/AccellerationChangedMessage.cs \
 	src/MessagePassing/Messages/CollisionEventMessage.cs \
+	src/MessagePassing/Messages/ObjectObjectCollisionEventMessage.cs \
 	src/MessagePassing/Messages/PlayAnimationMessage.cs \
 	src/MessagePassing/Messages/PositionChangedMessage.cs \
+	src/MessagePassing/Messages/RenderableChangedMessage.cs \
 	src/MessagePassing/Messages/RequestMessage.cs \
 	src/MessagePassing/Messages/ResponseMessage.cs \
-	src/MessagePassing/Messages/SetAnimationSpeedFactorMessage.cs \
-	src/MessagePassing/Messages/SetDirectionMessage.cs \
-	src/MessagePassing/Messages/SetHorizontalFlipMessage.cs \
+	src/MessagePassing/Messages/ScalingChangedMessage.cs \
 	src/MessagePassing/Messages/VelocityChangedMessage.cs \
 	src/MessagePassing/Property.cs \
 	src/MessagePassing/VelocityProperty.cs \

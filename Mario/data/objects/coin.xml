@@ -5,7 +5,6 @@
     </sprites>
     
     <transform />
-    <renderer />
 
     <collidable default="normal">
         <polygon id="normal">

@@ -3,7 +3,6 @@ CONFIG=DEBUG_X86
 # Source files
 SOURCES =  \
 	src/Camera.cs \
-	src/CollisionHandlers/InAirCollisionResponseComponent.cs \
 	src/CollisionHandlers/PhysicalObjectCollisionResponseComponent.cs \
 	src/Components/ControllerInterfaceComponent.cs \
 	src/Components/GroundEnemyInterfaceComponent.cs \

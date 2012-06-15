@@ -109,9 +109,6 @@
     <Compile Include="src\MessagePassing\IMessageRecipient.cs" />
     <Compile Include="src\MessagePassing\Message.cs" />
     <Compile Include="src\MessagePassing\Messages\VelocityChangedMessage.cs" />
-    <Compile Include="src\MessagePassing\Messages\SetDirectionMessage.cs" />
-    <Compile Include="src\MessagePassing\Messages\SetHorizontalFlipMessage.cs" />
-    <Compile Include="src\MessagePassing\Messages\SetAnimationSpeedFactorMessage.cs" />
     <Compile Include="src\MessagePassing\Property.cs" />
     <Compile Include="src\MessagePassing\VelocityProperty.cs" />
     <Compile Include="src\MessagePassing\Messages\RequestMessage.cs" />
@@ -120,6 +117,9 @@
     <Compile Include="src\MessagePassing\Messages\PositionChangedMessage.cs" />
     <Compile Include="src\MessagePassing\Messages\PlayAnimationMessage.cs" />
     <Compile Include="src\MessagePassing\Messages\CollisionEventMessage.cs" />
+    <Compile Include="src\MessagePassing\Messages\ObjectObjectCollisionEventMessage.cs" />
+    <Compile Include="src\MessagePassing\Messages\RenderableChangedMessage.cs" />
+    <Compile Include="src\MessagePassing\Messages\ScalingChangedMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -29,7 +29,7 @@ namespace Mario
 		{
 			get 
 			{
-				return "stateupdater";
+				return "statemachine";
 			}
 		}
 
@@ -56,7 +56,7 @@ namespace Mario
 			
 			else if (CurrentState != null)
 			{
-				if (message is VelocityChangedMessage)
+				if (message is VelocityChangedMessage || message is RenderableChangedMessage)
 				{
 					foreach (ObjectState s in states.Values)
 						s.ReceiveMessage(message);

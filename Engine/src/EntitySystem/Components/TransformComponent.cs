@@ -5,6 +5,7 @@ namespace Engine
 	public class TransformComponent : GOComponent
 	{
 		Vector position = new Vector();
+		Vector scale = new Vector(1,1);
 		
 		public TransformComponent(ComponentDescriptor descriptor, ResourceManager resources, Vector position) : base(descriptor, resources)
 		{
@@ -13,8 +14,10 @@ namespace Engine
 			
 			OwnerSet += delegate {
 				Owner.BroadcastMessage(new PositionChangedMessage(Position));
+				Owner.BroadcastMessage(new ScalingChangedMessage(Scale));
 				Owner.ComponentAdded += delegate(object sender, GOComponent component) {
 					component.SendMessage(new PositionChangedMessage(Position));
+					component.SendMessage(new ScalingChangedMessage(Scale));
 				};
 			};
 		}
@@ -22,6 +25,13 @@ namespace Engine
 		public Vector Position
 		{
 			get { return position; }
+			set { position = value; if (Owner != null) Owner.BroadcastMessage(new PositionChangedMessage(Position)); }
+		}
+	
+		public Vector Scale
+		{
+			get { return scale; }
+			set { scale = value; if (Owner != null) Owner.BroadcastMessage(new ScalingChangedMessage(scale)); }
 		}
 		
 		public override string Family 
@@ -61,6 +71,9 @@ namespace Engine
 			    Position.X = double.Parse(descriptor["x"]);
 			if (descriptor.Attributes.ContainsKey("y"))
 			    Position.Y = double.Parse(descriptor["y"]);
+			if (descriptor.Attributes.ContainsKey("scale"))
+				Scale.X = double.Parse(descriptor["scale"]);
+			
 		}
 		
 	}

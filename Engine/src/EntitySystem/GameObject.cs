@@ -145,8 +145,17 @@ namespace Engine
 			}
 		}
 		
+//		static Dictionary<string, int> msgs = new Dictionary<string, int>();
 		public void BroadcastMessage(Message message)
 		{
+//			string mname = message.GetType().Name;
+//			if (!msgs.ContainsKey(mname))
+//				msgs[mname] = 0;
+//	    	msgs[mname]++;
+			 
+//			foreach (string key in msgs.Keys)
+//				Console.WriteLine(key + ":\t" + msgs[key]);
+			
 			foreach (IMessageRecipient c in components.Values)
 			{
 				c.ReceiveMessage(message);

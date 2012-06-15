@@ -7,10 +7,11 @@
     
     <friction friction="100" />
     
+    <playercontroller />
+
     <transform />
     <gravity />
     <motion />
-    <renderer />
 
     <statemachine default="stand">
         <state id="stand" />

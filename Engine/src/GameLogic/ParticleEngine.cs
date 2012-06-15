@@ -242,6 +242,19 @@ namespace Engine
 					return 1;
 				}
 			}
+			
+			public bool Flipped
+			{
+				get;
+				set;
+			}
+			
+			public double AnimationSpeedFactor
+			{
+				get;
+				set;
+			}
+			
 			#endregion IRenderable implementation
 		}
 		

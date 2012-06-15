@@ -4,5 +4,5 @@
         <sprite id="default">coin</sprite>
     </sprites>
 
-    <transform />
+    <transform scale="0.8" />
 </object>

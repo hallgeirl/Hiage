@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object id="mario_icon">
+    <sprites default="default">
+        <sprite id="default">mario-big</sprite>
+    </sprites>
+
+    <transform scale="0.6" />
+</object>

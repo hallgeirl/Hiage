@@ -13,13 +13,13 @@ namespace Mario
 		public override void UpAction()
 		{
 				
-			/*if (OnGround)
+			if (onGround)
 			{
 				Velocity.Y = 200;
-				game.Audio.PlaySound("mario-jump");
-				OnGround = false;
+//				game.Audio.PlaySound("mario-jump");
+				onGround = false;
 				//Accellerate(new Vector(0,200));
-			}*/
+			}
 		}
 		
 		public override void DownAction()

@@ -7,7 +7,7 @@
     <!-- Physical properties -->
     <friction friction="100" />
     <transform />
-    <renderer />
+
     <motion />
     <gravity />
     <groundai />

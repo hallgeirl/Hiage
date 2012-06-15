@@ -80,7 +80,6 @@
     <Compile Include="src\Components\ObjectPropertiesComponent.cs" />
     <Compile Include="src\Components\SpeedLimitComponent.cs" />
     <Compile Include="src\CollisionHandlers\PhysicalObjectCollisionResponseComponent.cs" />
-    <Compile Include="src\CollisionHandlers\InAirCollisionResponseComponent.cs" />
     <Compile Include="src\Components\MarioInterfaceComponent.cs" />
     <Compile Include="src\Components\GroundEnemyInterfaceComponent.cs" />
     <Compile Include="src\Controllers\DumbGroundAIComponent.cs" />

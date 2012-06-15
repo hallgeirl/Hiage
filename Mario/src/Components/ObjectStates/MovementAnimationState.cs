@@ -9,23 +9,25 @@ namespace Mario
 		
 		public MovementAnimationState (StateMachineComponent owner) : base(owner)
 		{
+			StateActivated += delegate {
+				if (Owner.Owner != null)
+				if (Owner.Owner.ObjectName == "mario")
+					Console.WriteLine("State set to " + Name);
+			};
 		}
 		
 		public override void ReceiveMessage (Message message)
 		{
-			
 			if (message is CollisionEventMessage)
 			{
 				CollisionResult result = ((CollisionEventMessage)message).Result;
 				if (result.hasIntersected && result.hitNormal.Y > 0.1)
 					framesOnGround = 0;
 			}
-			
-//			if (message is CollidedWithGroundMessage)
-//				framesOnGround = 0;
-//			
-			if (message is VelocityChangedMessage)
+			else if (message is VelocityChangedMessage)
 				Velocity = ((VelocityChangedMessage)message).Velocity;
+			else if (message is RenderableChangedMessage)
+				Renderable = ((RenderableChangedMessage)message).Renderable;
 		}
 		
 		protected Vector Velocity
@@ -34,14 +36,23 @@ namespace Mario
 			private set;
 		}
 		
+		private IRenderable Renderable
+		{
+			get;set;
+		}
+		
 		public override void Update(double frameTime)
 		{
+			if (Renderable == null) 
+				return;
+			
 			if (Velocity.X < -1e-10)
-				Owner.Owner.BroadcastMessage(new SetHorizontalFlipMessage(true));
+				Renderable.Flipped = true;
 			else if (Velocity.X > 1e-10)
-				Owner.Owner.BroadcastMessage(new SetHorizontalFlipMessage(false));
+				Renderable.Flipped = false;	
 				
-			Owner.Owner.BroadcastMessage(new SetAnimationSpeedFactorMessage(Math.Abs(Velocity.X)*5/400+0.1));
+			Renderable.AnimationSpeedFactor = Math.Abs(Velocity.X)*5.0/400.0+0.1;
+			
 		}
 	}
 }

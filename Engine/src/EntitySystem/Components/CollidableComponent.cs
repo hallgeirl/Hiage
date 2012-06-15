@@ -7,6 +7,7 @@ namespace Engine
 	{
 		Dictionary<string, BoundingPolygon> boundingPolygons = new Dictionary<string, BoundingPolygon>();
 		double frameTime;
+		
 		public CollidableComponent(ComponentDescriptor descriptor, ResourceManager resources) : base(descriptor, resources)
 		{
 			if (descriptor.Attributes.ContainsKey("default"))
@@ -40,7 +41,19 @@ namespace Engine
 				if (cr != null)
 					cr.RegisterCollision(r);
 			}
-		}		
+		}
+		
+		public void TestCollision(CollidableComponent o2, double frameTime)
+		{
+			CollisionResult r = CollisionManager.TestCollision(this.CurrentBoundingPolygon, this.Velocity, o2.CurrentBoundingPolygon, o2.Velocity, frameTime);
+			
+			if (r.isIntersecting || r.hasIntersected)
+			{
+				CollisionResponseComponent cr = (CollisionResponseComponent)Owner.GetComponent("collisionresponse");
+				if (cr != null)
+					cr.RegisterObjectObjectCollision(r, this, o2);
+			}
+		}
 		
 		public Box GetCollisionCheckArea(double frameTime, int axis)
 		{

@@ -92,6 +92,16 @@ namespace Engine
 			get;
 		}
 		
+		bool Flipped
+		{
+			get;set;
+		}
+		
+		double AnimationSpeedFactor
+		{
+			get;set;
+		}
+		
 		//// <value>
 		/// If this returns true, the object will be deleted on the next pass in the renderer
 		/// </value>

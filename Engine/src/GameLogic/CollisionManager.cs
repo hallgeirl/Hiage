@@ -464,7 +464,7 @@ namespace Engine
 		/// <summary>
 		/// Test collision between two objects. 
 		/// </summary>
-		public static void TestCollision(ICollidable o1, ICollidable o2, double frameTime)
+		public static CollisionResult TestCollision(BoundingPolygon p1, Vector vel1, BoundingPolygon p2, Vector vel2, double frameTime)
 		{
 			#if DEBUG_COLLISION_OBJECT_OBJECT
 			Log.Write("Begin collision test object vs object", Log.DEBUG);
@@ -473,16 +473,15 @@ namespace Engine
 			#endif
 			
 			//Calculate relative velocity between o1 and o2, as seen from o1
-			Vector relativeVelocity  = (o1.Velocity - o2.Velocity)*frameTime;
+			Vector relativeVelocity  = (vel1 - vel2)*frameTime;
 			#if DEBUG_COLLISION_OBJECT_OBJECT
 			Log.Write("Velocity 1 " + o1.Velocity + " Velocity 2 " + o2.Velocity, Log.DEBUG);
 			#endif
 			CollisionResult result = new CollisionResult();
 			result.frameTime = frameTime;
 			bool separating = false;
-			int normalOwner = -1;
 			
-			List<Vector>[] polygons = {o1.BoundingPolygon.EdgeNormals, o2.BoundingPolygon.EdgeNormals};
+			List<Vector>[] polygons = {p1.EdgeNormals, p2.EdgeNormals};
 			
 			// Find each edge normal in the bounding polygons, which is used as axes.
 			//foreach (var poly in polygons)
@@ -494,10 +493,10 @@ namespace Engine
 				foreach (var axis in poly)
 				{
 					//Test for collision on one axis
-					testAxis(ProjectPolygon(o1.BoundingPolygon, axis), ProjectPolygon(o2.BoundingPolygon, axis), relativeVelocity, axis, result, 1, i);
+					testAxis(ProjectPolygon(p1, axis), ProjectPolygon(p2, axis), relativeVelocity, axis, result, 1, i);
 					
 					if (object.ReferenceEquals(axis, result.hitNormal))
-						normalOwner = i;
+						result.normalOwner = i;
 					
 					//No intersection (now or in the future)
 					if (!result.isIntersecting && !result.hasIntersected)
@@ -518,8 +517,8 @@ namespace Engine
 					result.minimumTranslationVector = result.hitNormal * result.distance * frameTime;
 
 				result.frameTime = frameTime;
-				collisionEvents.Add(new CollisionEvent(o1, o2, normalOwner == 1 ? result.hitNormal : -result.hitNormal, result));
-				collisionEvents.Add(new CollisionEvent(o2, o1, normalOwner == 0 ? result.hitNormal : -result.hitNormal, result));
+//				collisionEvents.Add(new CollisionEvent(o1, o2, normalOwner == 1 ? result.hitNormal : -result.hitNormal, result));
+//				collisionEvents.Add(new CollisionEvent(o2, o1, normalOwner == 0 ? result.hitNormal : -result.hitNormal, result));
 			}
 			#if DEBUG_COLLISION_OBJECT_OBJECT
 			else
@@ -528,6 +527,7 @@ namespace Engine
 			}
 			Log.Write("");
 			#endif
+			return result;
 		}
 	}
 }

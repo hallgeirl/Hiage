@@ -2,6 +2,7 @@
 using System;
 using System.Xml;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Engine
 {
@@ -57,8 +58,8 @@ namespace Engine
 			foreach (XmlNode objectNode in doc.SelectNodes("/map/objects/object"))
 			{
 				string objectName = objectNode.SelectSingleNode("name").InnerText;
-				double xPos = double.Parse(objectNode.SelectSingleNode("x-pos").InnerText), 
-					   yPos = double.Parse(objectNode.SelectSingleNode("y-pos").InnerText);
+				double xPos = double.Parse(objectNode.SelectSingleNode("x-pos").InnerText, CultureInfo.InvariantCulture), 
+					   yPos = double.Parse(objectNode.SelectSingleNode("y-pos").InnerText, CultureInfo.InvariantCulture);
 				//Dictionary<string, string> extraProps = new Dictionary<string, string>();
 				
 				MapDescriptor.MapObject obj = new MapDescriptor.MapObject(xPos, yPos, objectName);

@@ -1,49 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{BD44EADC-A057-49A5-83A5-570E93F20F15}</ProjectGuid>
-    <OutputType>Exe</OutputType>
     <AssemblyName>MapEditor</AssemblyName>
     <RootNamespace>MapEditor</RootNamespace>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>release</OutputPath>
-    <DefineConstants>DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <additionalargs>-unsafe</additionalargs>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <GenerateDocumentation>true</GenerateDocumentation>
-    <additionalargs>/unsafe</additionalargs>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeExecute" command="bash ${ProjectDir}/copy_data" workingdir="${ProjectDir}" />
-      </CustomCommands>
-    </CustomCommands>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'WindowsRelease|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>release</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <additionalargs>/platform:x86 /unsafe</additionalargs>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.csproj">
+      <Project>{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}</Project>
+      <Name>Engine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\GameStates\" />
+  </ItemGroup>
+
+
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
@@ -77,46 +50,11 @@
       <LogicalName>gui.stetic</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="gtk-gui\generated.cs" />
-    <Compile Include="gtk-gui\MainWindow.cs" />
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="gtk-gui\MapEditor.TileChooser.cs" />
-    <Compile Include="gtk-gui\MapEditor.NewMapDialog.cs" />
-    <Compile Include="gtk-gui\MapEditor.ObjectChooser.cs" />
-    <Compile Include="src\EditorModel.cs" />
-    <Compile Include="src\InteractThread.cs" />
-    <Compile Include="src\Main.cs" />
-    <Compile Include="src\MainWindow.cs" />
-    <Compile Include="src\MapEditorState.cs" />
-    <Compile Include="src\MapObject.cs" />
-    <Compile Include="src\NewMapDialog.cs" />
-    <Compile Include="src\ObjectChooser.cs" />
-    <Compile Include="src\TileChooser.cs" />
-  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj">
       <Project>{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}</Project>
       <Name>Engine</Name>
     </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties>
-        <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="true" RelativeMakefileName="Makefile" SyncReferences="true">
-          <BuildFilesVar Sync="true" Name="SOURCES" />
-          <DeployFilesVar />
-          <ResourcesVar />
-          <OthersVar />
-          <GacRefVar Sync="true" Name="ASSEMBLIES" Prefix="/r:" />
-          <AsmRefVar Sync="true" Name="ASSEMBLIES" Prefix="/r:" />
-          <ProjectRefVar Sync="true" Name="ASSEMBLIES" Prefix="/r:" />
-        </MonoDevelop.Autotools.MakefileInfo>
-      </Properties>
-    </MonoDevelop>
-  </ProjectExtensions>
-  <ItemGroup>
-    <Folder Include="src\" />
   </ItemGroup>
 </Project>

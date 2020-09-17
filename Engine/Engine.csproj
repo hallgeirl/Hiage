@@ -1,41 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}</ProjectGuid>
-    <OutputType>Library</OutputType>
     <AssemblyName>Hiage</AssemblyName>
     <RootNamespace>Engine</RootNamespace>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>release</OutputPath>
-    <DefineConstants>DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <GenerateDocumentation>true</GenerateDocumentation>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'WindowsRelease|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>release</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <additionalargs>/platform:x86</additionalargs>
-  </PropertyGroup>
+  
   <ItemGroup>
     <Reference Include="Tao.DevIl">
       <HintPath>lib\Tao.DevIl.dll</HintPath>
@@ -46,56 +16,16 @@
     <Reference Include="Tao.OpenGl">
       <HintPath>lib\Tao.OpenGl.dll</HintPath>
     </Reference>
-    <Reference Include="SdlDotNet">
-      <HintPath>lib\SdlDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
     <Reference Include="Tao.Sdl">
       <HintPath>lib\Tao.Sdl.dll</HintPath>
     </Reference>
+    <Reference Include="Tao.Sdl">
+      <HintPath>lib\Tao.Sdl.dll</HintPath>
+    </Reference>
+    <Reference Include="SdlDotNet">
+      <HintPath>lib\SdlDotNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="src\Resources\ResourceManager.cs" />
-    <Compile Include="src\Resources\IResourceLoader.cs" />
-    <Compile Include="src\Resources\ObjectDescriptor.cs" />
-    <Compile Include="src\Resources\SpriteDescriptor.cs" />
-    <Compile Include="src\Resources\MapDescriptor.cs" />
-    <Compile Include="src\GameLogic\Game.cs" />
-    <Compile Include="src\GameLogic\SpatialGrid.cs" />
-    <Compile Include="src\GameLogic\TileMap.cs" />
-    <Compile Include="src\GameLogic\Sprite.cs" />
-    <Compile Include="src\GameLogic\ParticleEngine.cs" />
-    <Compile Include="src\GameLogic\ParallaxBackground.cs" />
-    <Compile Include="src\GameLogic\ICollidable.cs" />
-    <Compile Include="src\GameLogic\CollisionManager.cs" />
-    <Compile Include="src\Common\Timer.cs" />
-    <Compile Include="src\Common\Vector.cs" />
-    <Compile Include="src\Common\RandomGenerator.cs" />
-    <Compile Include="src\Common\Log.cs" />
-    <Compile Include="src\Common\Exceptions.cs" />
-    <Compile Include="src\Common\Constants.cs" />
-    <Compile Include="src\Common\Box.cs" />
-    <Compile Include="src\Rendering\Display.cs" />
-    <Compile Include="src\Rendering\IRenderable.cs" />
-    <Compile Include="src\Rendering\Renderer.cs" />
-    <Compile Include="src\Rendering\Texture.cs" />
-    <Compile Include="lib\FTclass.cs" />
-    <Compile Include="src\Resources\Loaders\SpriteLoader.cs" />
-    <Compile Include="src\Resources\Loaders\TextureLoader.cs" />
-    <Compile Include="src\Resources\Loaders\TilesetLoader.cs" />
-    <Compile Include="src\Resources\Loaders\FontLoader.cs" />
-    <Compile Include="src\Resources\Loaders\MapLoader.cs" />
-    <Compile Include="src\Resources\Loaders\ObjectLoader.cs" />
-    <Compile Include="src\Input\InputManager.cs" />
-    <Compile Include="src\Audio\AudioManager.cs" />
-    <Compile Include="src\Resources\Loaders\AudioClipLoader.cs" />
-    <Compile Include="src\Resources\Loaders\MusicLoader.cs" />
-    <Compile Include="src\GameLogic\GameState.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="lib\" />
     <Folder Include="libs_src\" />
@@ -104,19 +34,4 @@
     <Folder Include="src\Input\" />
     <Folder Include="src\Audio\" />
   </ItemGroup>
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties>
-        <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="true" RelativeMakefileName="Makefile" SyncReferences="true" RelativeConfigureInPath="..">
-          <BuildFilesVar Sync="true" Name="SOURCES" />
-          <DeployFilesVar />
-          <ResourcesVar />
-          <OthersVar />
-          <GacRefVar Sync="true" Name="PACKAGES" Prefix="/r:" />
-          <AsmRefVar Sync="true" Name="ASSEMBLIES" Prefix="/r:" />
-          <ProjectRefVar Sync="true" Name="PROJECTS" />
-        </MonoDevelop.Autotools.MakefileInfo>
-      </Properties>
-    </MonoDevelop>
-  </ProjectExtensions>
 </Project>

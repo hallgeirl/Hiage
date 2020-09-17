@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csproj", "{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditor", "MapEditor\MapEditor.csproj", "{BD44EADC-A057-49A5-83A5-570E93F20F15}"
@@ -14,24 +16,30 @@ Global
 		WindowsRelease|Any CPU = WindowsRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.WindowsRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.WindowsRelease|Any CPU.Build.0 = Release|Any CPU
+		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{BD44EADC-A057-49A5-83A5-570E93F20F15}.WindowsRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{BD44EADC-A057-49A5-83A5-570E93F20F15}.WindowsRelease|Any CPU.Build.0 = Release|Any CPU
 		{504E013F-FBCE-4FE8-A3B2-50501076761C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{504E013F-FBCE-4FE8-A3B2-50501076761C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{504E013F-FBCE-4FE8-A3B2-50501076761C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{504E013F-FBCE-4FE8-A3B2-50501076761C}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{504E013F-FBCE-4FE8-A3B2-50501076761C}.WindowsRelease|Any CPU.ActiveCfg = Debug|Any CPU
 		{504E013F-FBCE-4FE8-A3B2-50501076761C}.WindowsRelease|Any CPU.Build.0 = Debug|Any CPU
-		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD44EADC-A057-49A5-83A5-570E93F20F15}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{BD44EADC-A057-49A5-83A5-570E93F20F15}.WindowsRelease|Any CPU.ActiveCfg = WindowsRelease|Any CPU
-		{BD44EADC-A057-49A5-83A5-570E93F20F15}.WindowsRelease|Any CPU.Build.0 = WindowsRelease|Any CPU
-		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.WindowsRelease|Any CPU.ActiveCfg = WindowsRelease|Any CPU
-		{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}.WindowsRelease|Any CPU.Build.0 = WindowsRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0B382F1D-77E5-495F-A18F-4F5D0ED2C70D}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Mario\Mario.csproj

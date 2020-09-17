@@ -2,6 +2,7 @@
 using System;
 using System.Xml;
 using System.IO;
+using System.Globalization;
 
 namespace Engine
 {
@@ -62,7 +63,7 @@ namespace Engine
 					double delay = defaultFrameDelay;
 					x = int.Parse(frameNode.SelectSingleNode("@x").InnerText);
 					y = int.Parse(frameNode.SelectSingleNode("@y").InnerText);
-					try { delay = double.Parse(frameNode.SelectSingleNode("@delay").InnerText); } catch (NullReferenceException){}
+					try { delay = double.Parse(frameNode.SelectSingleNode("@delay").InnerText, CultureInfo.InvariantCulture); } catch (NullReferenceException){}
 					next = int.Parse(frameNode.SelectSingleNode("@next").InnerText);
 					try { width = int.Parse(frameNode.SelectSingleNode("@w").InnerText); } catch (NullReferenceException){}
 					try { height = int.Parse(frameNode.SelectSingleNode("@h").InnerText); } catch (NullReferenceException){}

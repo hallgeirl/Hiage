@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Hiage
+/Engine/obj
+/Engine/release
+/Mario/bin
+/Mario/obj
+/Mario/release
+/MapEditor/obj

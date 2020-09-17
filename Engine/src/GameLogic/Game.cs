@@ -156,7 +156,6 @@ namespace Engine
 			done = true;
 			Events.QuitApplication();
 			audioManager.PlayMusic(null, null);
-			Thread.CurrentThread.Abort();
 		}
 		
 		#region Event handlers

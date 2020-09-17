@@ -3188,12 +3188,7 @@
         </member>
         <member name="P:SdlDotNet.Core.Vector.Length">
             <summary>
-            Gets and sets the length of the vector. Direction part needs to be updated
-            </summary>
-        </member>
-        <member name="P:SdlDotNet.Core.Vector.SquareLength">
-            <summary>
-            Returns quare of the length 
+            Gets and sets the length of the vector. Direction part needs to be updatet
             </summary>
         </member>
         <member name="P:SdlDotNet.Core.Vector.Direction">
@@ -6448,7 +6443,7 @@
         </member>
         <member name="M:SdlDotNet.Graphics.Surface.#ctor(System.IntPtr)">
             <summary>
-            Use this in conjuntion with Tao.Sdl
+            
             </summary>
             <param name="handle"></param>
         </member>
@@ -7882,7 +7877,7 @@
         </member>
         <member name="F:SdlDotNet.Graphics.OpenGLAttr.DoubleBuffer">
             <summary>
-            0 to disable or 1 to enable double buffering
+            0 or 1, enable or disable double buffering
             </summary>
         </member>
         <member name="F:SdlDotNet.Graphics.OpenGLAttr.DepthSize">

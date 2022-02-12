@@ -9,63 +9,12 @@ namespace Engine
 	
 	public class OpenGLRenderer : IRenderer
 	{
-		List<IRenderable> renderTargets;
 		int currentTexture = -1;
 		
 		public OpenGLRenderer()
 		{
-			renderTargets = new List<IRenderable>();
 		}
 
-		public void AddTarget(IRenderable target)
-		{
-			renderTargets.Add(target);
-		}
-		
-		public void RenderFrame()
-		{
-			//Gl.glBegin(Gl.GL_QUADS);
-			
-			currentTexture = -1;
-			
-			for (int i = 0; i < renderTargets.Count; i++)
-			{
-				IRenderable r = renderTargets[i];
-				/*if (r.DeleteFromRenderer)
-				{
-					renderTargets.Remove(r);
-					i--;
-					continue;
-				}*/
-				
-				if (r.Texture.TextureID != currentTexture)
-				{
-					currentTexture = r.Texture.TextureID;
-					Gl.glEnd();
-					Gl.glBindTexture(Gl.GL_TEXTURE_2D, currentTexture);
-					Gl.glBegin(Gl.GL_QUADS);
-				}
-				
-				double x1 = (double)r.TextureLeft / (double)r.Texture.Width;
-				double x2 = (double)r.TextureRight / (double)r.Texture.Width;
-				double y1 = (double)r.TextureTop / (double)r.Texture.Height;
-				double y2 = (double)r.TextureBottom / (double)r.Texture.Height;
-				
-				Gl.glTexCoord2d(x1, y2);
-				Gl.glVertex2d(r.Left, r.Top);
-				Gl.glTexCoord2d(x2, y2);
-				Gl.glVertex2d(r.Right, r.Top);
-				Gl.glTexCoord2d(x2, y1);
-				Gl.glVertex2d(r.Right, r.Bottom);
-				Gl.glTexCoord2d(x1, y1);
-				Gl.glVertex2d(r.Left, r.Bottom);
-			}
-			//Gl.glEnd();
-			
-			renderTargets.Clear();
-		}
-		
-		
 		/// <summary>
 		/// Render a IRenderable object
 		/// </summary>
@@ -74,7 +23,30 @@ namespace Engine
 		/// </param>
 		public void Render(IRenderable target)
 		{
-			Render(target.Left, target.Top, target.Right, target.Bottom, target.TextureLeft, target.TextureTop, target.TextureRight, target.TextureBottom, target.Texture);
+			Render(target.Left, target.Top, target.Right, target.Bottom, target.TextureLeft, target.TextureTop, target.TextureRight, target.TextureBottom, target.Texture, target.Rotation, 1, 1, 1, 1);
+		}
+		
+		/// <summary>
+		/// Render and specify color.
+		/// </summary>
+		/// <param name="target">
+		/// A <see cref="IRenderable"/>
+		/// </param>
+		/// <param name="red">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		/// <param name="green">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		/// <param name="blue">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		/// <param name="alpha">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		public void Render(IRenderable target, double red, double green, double blue, double alpha)
+		{
+			Render(target.Left, target.Top, target.Right, target.Bottom, target.TextureLeft, target.TextureTop, target.TextureRight, target.TextureBottom, target.Texture, target.Rotation, red, green, blue, alpha);
 		}
 		
 		/// <summary>
@@ -100,11 +72,12 @@ namespace Engine
 			if (currentTexture != texture.TextureID)
 			{
 				currentTexture = texture.TextureID;
-				Gl.glEnd();
+				
 				Gl.glBindTexture(Gl.GL_TEXTURE_2D, currentTexture);
-				Gl.glBegin(Gl.GL_QUADS);
+				
 			}
 
+			Gl.glBegin(Gl.GL_QUADS);
 			Gl.glTexCoord2d(0.0, 1.0);
 			Gl.glVertex2d(x1, y1);
 			Gl.glTexCoord2d(1.0, 1.0);
@@ -113,65 +86,135 @@ namespace Engine
 			Gl.glVertex2d(x2, y2);
 			Gl.glTexCoord2d(0.0, 0.0);
 			Gl.glVertex2d(x1, y2);
+			Gl.glEnd();
 		}
 		
 		/// <summary>
 		/// "Raw" rendering function
 		/// </summary>
 		/// <param name="x1">
-		/// A <see cref="System.Double"/>
+		/// A <see cref="System.Double"/>. Left edge.
 		/// </param>
 		/// <param name="y1">
-		/// A <see cref="System.Double"/>
+		/// A <see cref="System.Double"/>. Top edge.
 		/// </param>
 		/// <param name="x2">
-		/// A <see cref="System.Double"/>
+		/// A <see cref="System.Double"/>. Right edge.
 		/// </param>
 		/// <param name="y2">
-		/// A <see cref="System.Double"/>
+		/// A <see cref="System.Double"/>. Bottom edge.
 		/// </param>
-		/// <param name="texLeft">
+		/// <param name="texX1">
 		/// A <see cref="System.Int32"/>
 		/// </param>
-		/// <param name="texTop">
+		/// <param name="texY1">
 		/// A <see cref="System.Int32"/>
 		/// </param>
-		/// <param name="texRight">
+		/// <param name="texX2">
 		/// A <see cref="System.Int32"/>
 		/// </param>
-		/// <param name="texBottom">
+		/// <param name="texY2">
 		/// A <see cref="System.Int32"/>
 		/// </param>
 		/// <param name="texture">
 		/// A <see cref="Texture"/>
+		/// </param>		
+		/// <param name="rotation">
+		/// A <see cref="System.Double"/>
 		/// </param>
-		public void Render(double x1, double y1, double x2, double y2, int texLeft, int texTop, int texRight, int texBottom, Texture texture)
+		/// <param name="red">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		/// <param name="green">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		/// <param name="blue">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		/// <param name="alpha">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		public void Render(double x1, double y1, double x2, double y2, int texLeft, int texTop, int texRight, int texBottom, Texture texture, double rotation, double red, double green, double blue, double alpha)
 		{
+			//Check the bounds of the color values.
+			if (red < 0 || red > 1)
+			{
+				throw new ArgumentOutOfRangeException("Value of 'red' must be between 0.0 and 1.0.");
+			}
+			if (green < 0 || green > 1)
+			{
+				throw new ArgumentOutOfRangeException("Value of 'green' must be between 0.0 and 1.0.");
+			}
+			if (blue < 0 || blue > 1)
+			{
+				throw new ArgumentOutOfRangeException("Value of 'blue' must be between 0.0 and 1.0.");
+			}
+			if (alpha < 0 || alpha > 1)
+			{
+				throw new ArgumentOutOfRangeException("Value of 'alpha' must be between 0.0 and 1.0.");
+			}
+			
 			if (currentTexture != texture.TextureID)
 			{
 				currentTexture = texture.TextureID;
-				Gl.glEnd();
+				
 				Gl.glBindTexture(Gl.GL_TEXTURE_2D, currentTexture);
-				Gl.glBegin(Gl.GL_QUADS);
+				
 			}
+			//Rotate and translate
+			Gl.glLoadIdentity();
+			Gl.glPushMatrix();
+			//Gl.glTranslated((x1+x2)/2, (y1+y2)/2, 0);
+			Gl.glTranslated(x1, y1, 0);
+			Gl.glRotated(rotation, 0, 0, 1);
 			
-			double tx1 = (double)texLeft / (double)texture.Width;
-			double tx2 = (double)texRight / (double)texture.Width;
-			double ty1 = (double)texTop / (double)texture.Height;
-			double ty2 = (double)texBottom / (double)texture.Height;
+			Gl.glColor4d(red,green,blue,alpha);
+			Gl.glBegin(Gl.GL_QUADS);
+			
+			double tleft = (double)texLeft / (double)texture.Width;
+			double tright = (double)texRight / (double)texture.Width;
+			double ttop = (double)texTop / (double)texture.Height;
+			double tbottom = (double)texBottom / (double)texture.Height;
+			
+			double left = (x1-x2)/2;
+			double right = (x2-x1)/2;
+			double top = (y2-y1)/2;
+			double bottom = (y1-y2)/2;
+			
+			/*double left = 0;
+			double right = x2-x1;
+			double top = 0;
+			double bottom = y2-y1;*/
 			
 			//Upper left
-			Gl.glTexCoord2d(tx1, ty1);
-			Gl.glVertex2d(x1, y1);
+			Gl.glTexCoord2d(tleft, ttop);
+			Gl.glVertex2d(left, top);
 			//Upper right
-			Gl.glTexCoord2d(tx2, ty1);
-			Gl.glVertex2d(x2, y1);
+			Gl.glTexCoord2d(tright, ttop);
+			Gl.glVertex2d(right, top);
 			//Lower right
-			Gl.glTexCoord2d(tx2, ty2);
-			Gl.glVertex2d(x2, y2);
+			Gl.glTexCoord2d(tright, tbottom);
+			Gl.glVertex2d(right, bottom);
 			//Lower left
-			Gl.glTexCoord2d(tx1, ty2);
-			Gl.glVertex2d(x1, y2);
+			Gl.glTexCoord2d(tleft, tbottom);
+			Gl.glVertex2d(left, bottom);
+			
+			Gl.glEnd();
+			
+			Gl.glColor4d(1,1,1,1);
+			
+			Gl.glPopMatrix();
+		}
+		
+		public void DrawLine(double x1, double y1, double x2, double y2)
+		{
+			Gl.glDisable(Gl.GL_TEXTURE_2D);
+			Gl.glBegin(Gl.GL_LINES);
+			Gl.glVertex2d(x1,y1);
+			Gl.glVertex2d(x2,y2);
+			Gl.glEnd();
+			Gl.glEnable(Gl.GL_TEXTURE_2D);
+			
 		}
 	}
 }

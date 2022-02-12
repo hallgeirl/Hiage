@@ -86,6 +86,12 @@ namespace Engine
 			return (x * v.X + y * v.Y);
 		}
 		
+		public Vector Normalize()
+		{
+			Scale(1/Length);
+			return this;
+		}
+		
 		#region Operator overloads
 		public static Vector operator +(Vector v1, Vector v2)
 		{
@@ -137,6 +143,22 @@ namespace Engine
 			set
 			{
 				y = value;
+			}
+		}
+		
+		public double Length
+		{
+			get
+			{
+				return Math.Sqrt(x*x+y*y);
+			}
+		}
+		
+		public Vector Copy
+		{
+			get
+			{
+				return new Vector(X, Y);
 			}
 		}
 		#endregion Properties

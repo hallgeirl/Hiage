@@ -47,18 +47,19 @@ namespace Engine
 			//Create the window
 			screen = Video.SetVideoMode(width, height, 32, true, true, false);
 			
+			Gl.glEnable(Gl.GL_DOUBLEBUFFER);
+			
 			//Set some OpenGL attributes
-			Gl.glEnable(Gl.GL_DEPTH_TEST);
+			Gl.glDisable(Gl.GL_DEPTH_TEST);
 			Gl.glEnable(Gl.GL_TEXTURE_2D);
-			//Gl.glDisable(Gl.GL_TEXTURE_2D);
 			Gl.glShadeModel(Gl.GL_SMOOTH);
 			Gl.glHint(Gl.GL_PERSPECTIVE_CORRECTION_HINT, Gl.GL_NICEST);
 			
 			//Enable alpha blending
 			Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA);
 			Gl.glEnable(Gl.GL_BLEND);
-			Gl.glAlphaFunc(Gl.GL_GREATER, 0.1f);
-			Gl.glEnable(Gl.GL_ALPHA_TEST);
+			//Gl.glAlphaFunc(Gl.GL_GREATER, 0.1f);
+			//Gl.glEnable(Gl.GL_ALPHA_TEST);
 			
 			PrepareViewport();
 			
@@ -102,7 +103,7 @@ namespace Engine
 			//Set the perspective
 			if (width > height)
 			{
-				Gl.glOrtho(-Zoom * AspectRatio, Zoom * AspectRatio, -Zoom, Zoom, -1.0, 1000.0);
+				Gl.glOrtho(-Zoom * AspectRatio+CameraX, Zoom * AspectRatio+CameraX, -Zoom+CameraY, Zoom+CameraY, -1.0, 1000.0);
 			}
 			else
 			{
@@ -122,10 +123,6 @@ namespace Engine
 			Gl.glLoadIdentity();
 			Gl.glClearColor(0, 0, 0, 1);
 			Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
-			
-			Gl.glTranslated(-CameraX, -CameraY, 0);
-			
-			Gl.glBegin(Gl.GL_QUADS);
 		}
 		
 		/// <summary>
@@ -133,8 +130,9 @@ namespace Engine
 		/// </summary>
 		public void Render()
 		{
-			renderer.RenderFrame();
-			Gl.glEnd();
+			Gl.glTranslated(-CameraX, -CameraY, 0);
+			//PrepareViewport();
+
 			Video.GLSwapBuffers();
 		}
 		
@@ -178,8 +176,7 @@ namespace Engine
 			set
 			{
 				cameraX = value;
-				//Gl.glLoadIdentity();
-				//Gl.glTranslated(-CameraX, -CameraY, 0);
+				PrepareViewport();
 			}
 		}
 		
@@ -196,8 +193,7 @@ namespace Engine
 			set
 			{
 				cameraY = value;
-				//Gl.glLoadIdentity();
-				//Gl.glTranslated(-CameraX, -CameraY, 0);
+				PrepareViewport();
 			}
 		}
 		
@@ -260,6 +256,11 @@ namespace Engine
 				{
 					zoom = value;
 				}
+				else
+				{
+					zoom = 1;
+				}
+				PrepareViewport();
 			}
 		}
 		

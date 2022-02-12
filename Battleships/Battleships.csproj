@@ -34,6 +34,7 @@
     <Compile Include="SimpleGunTurret.cs" />
     <Compile Include="ComponentFactory.cs" />
     <Compile Include="Arena.cs" />
+    <Compile Include="PlayerShipBody.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj">

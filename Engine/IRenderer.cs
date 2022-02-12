@@ -9,25 +9,32 @@ namespace Engine
 	public interface IRenderer
 	{
 		/// <summary>
-		/// Add a target for rendering
-		/// </summary>
-		/// <param name="target">
-		/// A <see cref="IRenderable"/>
-		/// </param>
-		void AddTarget(IRenderable target);
-
-		/// <summary>
-		/// Renders all objects in the buffer
-		/// </summary>
-		void RenderFrame();
-		
-		/// <summary>
 		/// Render a IRenderable object
 		/// </summary>
 		/// <param name="target">
 		/// A <see cref="IRenderable"/>
 		/// </param>
 		void Render(IRenderable target);
+		
+		/// <summary>
+		/// Render and specify rendering color.
+		/// </summary>
+		/// <param name="target">
+		/// A <see cref="IRenderable"/>
+		/// </param>
+		/// <param name="red">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		/// <param name="green">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		/// <param name="blue">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		/// <param name="alpha">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		void Render(IRenderable target, double red, double green, double blue, double alpha);
 		
 		/// <summary>
 		/// Render an object, ignoring texture coordinates (that is, render a full texture)
@@ -53,16 +60,16 @@ namespace Engine
 		/// "Raw" rendering function
 		/// </summary>
 		/// <param name="x1">
-		/// A <see cref="System.Double"/>
+		/// A <see cref="System.Double"/>. Left edge.
 		/// </param>
 		/// <param name="y1">
-		/// A <see cref="System.Double"/>
+		/// A <see cref="System.Double"/>. Top edge.
 		/// </param>
 		/// <param name="x2">
-		/// A <see cref="System.Double"/>
+		/// A <see cref="System.Double"/>. Right edge.
 		/// </param>
 		/// <param name="y2">
-		/// A <see cref="System.Double"/>
+		/// A <see cref="System.Double"/>. Bottom edge.
 		/// </param>
 		/// <param name="texX1">
 		/// A <see cref="System.Int32"/>
@@ -78,7 +85,24 @@ namespace Engine
 		/// </param>
 		/// <param name="texture">
 		/// A <see cref="Texture"/>
+		/// </param>		
+		/// <param name="rotation">
+		/// A <see cref="System.Double"/>
 		/// </param>
-		void Render(double x1, double y1, double x2, double y2, int texX1, int texY1, int texX2, int texY2, Texture texture);
+		/// <param name="red">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		/// <param name="green">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		/// <param name="blue">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		/// <param name="alpha">
+		/// A <see cref="System.Double"/>
+		/// </param>
+		void Render(double x1, double y1, double x2, double y2, int texX1, int texY1, int texX2, int texY2, Texture texture, double rotation, double red, double green, double blue, double alpha);
+		
+		void DrawLine(double x1, double y1, double x2, double y2);
 	}
 }

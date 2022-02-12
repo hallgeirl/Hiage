@@ -22,6 +22,7 @@ namespace Battleships
 			game.Initialize(640, 480, false);
 			game.PushState(new FlyingState());
 			game.MaxFPS = 60;
+			game.Display.Zoom = 200;			
 			
 			int i = 0;
 			Events.Quit += new EventHandler<QuitEventArgs>(this.OnQuit);
@@ -29,6 +30,7 @@ namespace Battleships
 			{
 				while (Events.Poll()){}
 				i++;
+				//game.Display.Zoom += 0.1;
 				if (i%60 == 0)
 				{
 					Console.WriteLine(game.FPS);

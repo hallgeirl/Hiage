@@ -1,15 +1,29 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ctype="Workbench">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Battleships/FlyingState.cs" ctype="Workbench">
     <Files>
-      <File FileName="Engine/SpatialGrid.cs" Line="37" Column="32" />
+      <File FileName="Battleships/MainApp.cs" Line="25" Column="27" />
+      <File FileName="Battleships/Component.cs" Line="37" Column="33" />
+      <File FileName="Engine/SpatialGrid.cs" Line="87" Column="63" />
+      <File FileName="Battleships/Arena.cs" Line="14" Column="24" />
+      <File FileName="Battleships/SimpleGunTurret.cs" Line="29" Column="4" />
+      <File FileName="Battleships/Ship.cs" Line="83" Column="45" />
+      <File FileName="Battleships/ComponentFactory.cs" Line="1" Column="1" />
+      <File FileName="Battleships/FlyingState.cs" Line="99" Column="4" />
+      <File FileName="Engine/OpenGLRenderer.cs" Line="190" Column="4" />
+      <File FileName="Engine/OpenGLDisplay.cs" Line="64" Column="22" />
+      <File FileName="Engine/ParticleEngine.cs" Line="137" Column="18" />
+      <File FileName="Engine/Vector.cs" Line="91" Column="18" />
+      <File FileName="Engine/IRenderer.cs" Line="106" Column="3" />
+      <File FileName="Battleships/PlayerShipBody.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Battleships" expanded="True">
             <Node name="References" expanded="True" />
+            <Node name="FlyingState.cs" selected="True" />
           </Node>
-          <Node name="Engine" expanded="True" selected="True" />
+          <Node name="Engine" expanded="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">

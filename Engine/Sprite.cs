@@ -116,7 +116,7 @@ namespace Engine
 				{
 					get
 					{
-						return y;
+						return y+height;
 					}
 				}
 				
@@ -138,7 +138,7 @@ namespace Engine
 				{
 					get
 					{
-						return y+height;
+						return y;
 					}
 				}
 				
@@ -238,6 +238,7 @@ namespace Engine
 
 		Texture texture;	//Texture(sprite sheet) used to render the sprite
 		double x, y;			//Where is the sprite rendered?
+		double rotation;		//Orientation
 		string currentAnimation;
 		Dictionary<string, Animation> animations = new Dictionary<string, Animation>(); //All animations for this sprite.
 		
@@ -360,6 +361,18 @@ namespace Engine
 			}
 		}
 		
+		
+		public double Rotation
+		{
+			get
+			{
+				return rotation;
+			}
+			set
+			{
+				rotation = value;
+			}
+		}
 #endregion
 		
 #region Texture properties

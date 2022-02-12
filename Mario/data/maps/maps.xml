@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <resource type="map" name="level1" path="test.xml" />
+    <resource type="map" name="test_multi" path="test_multi.xml" />
+</resources>

@@ -1,37 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <AssemblyName>Hiage</AssemblyName>
-    <RootNamespace>Engine</RootNamespace>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FCA838B0-B2E2-4C06-B4C7-EA5820BBBF9A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Engine</AssemblyName>
   </PropertyGroup>
-  
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Tao.DevIl">
-      <HintPath>lib\Tao.DevIl.dll</HintPath>
+    <Reference Include="System" />
+    <Reference Include="Tao.OpenGl, Version=2.1.0.7, Culture=neutral, PublicKeyToken=1ca010269a4501ef">
+      <Package>tao-opengl</Package>
     </Reference>
-    <Reference Include="Tao.FreeType">
-      <HintPath>lib\Tao.FreeType.dll</HintPath>
+    <Reference Include="SdlDotNet, Version=6.1.0.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\sdldotnet-6.1.0\SdlDotNet.dll</HintPath>
     </Reference>
-    <Reference Include="Tao.OpenGl">
-      <HintPath>lib\Tao.OpenGl.dll</HintPath>
+    <Reference Include="Tao.Sdl, Version=1.2.13.0, Culture=neutral, PublicKeyToken=9c7a200e36c0094e">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\sdldotnet-6.1.0\Tao.Sdl.dll</HintPath>
     </Reference>
-    <Reference Include="Tao.Sdl">
-      <HintPath>lib\Tao.Sdl.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.Sdl">
-      <HintPath>lib\Tao.Sdl.dll</HintPath>
-    </Reference>
-    <Reference Include="SdlDotNet">
-      <HintPath>lib\SdlDotNet.dll</HintPath>
+    <Reference Include="System.Xml" />
+    <Reference Include="Tao.DevIl, Version=1.6.8.0, Culture=neutral, PublicKeyToken=7ec4053013524957">
+      <Package>tao-devil</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="lib\" />
-    <Folder Include="libs_src\" />
-    <Folder Include="src\" />
-    <Folder Include="src\Resources\Loaders\" />
-    <Folder Include="src\Input\" />
-    <Folder Include="src\Audio\" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="IRenderer.cs" />
+    <Compile Include="IDisplay.cs" />
+    <Compile Include="OpenGLDisplay.cs" />
+    <Compile Include="OpenGLRenderer.cs" />
+    <Compile Include="IRenderable.cs" />
+    <Compile Include="TextureLoader.cs" />
+    <Compile Include="Texture.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="ResourceManager.cs" />
+    <Compile Include="IResourceLoader.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Sprite.cs" />
+    <Compile Include="SpriteLoader.cs" />
+    <Compile Include="IGameState.cs" />
+    <Compile Include="InputManager.cs" />
+    <Compile Include="Vector.cs" />
+    <Compile Include="SpatialGrid.cs" />
   </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

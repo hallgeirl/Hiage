@@ -10,3 +10,4 @@
 /Mario/release
 /MapEditor/obj
 **/*.xml~
+**/*.pidb
